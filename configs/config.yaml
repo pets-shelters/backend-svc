@@ -1,0 +1,54 @@
+app:
+  name: 'go-clean-template'
+  version: '1.0.0'
+
+http:
+  port: '8080'
+
+logger:
+  log_level: 'debug'
+  rollbar_env: 'go-clean-template'
+
+postgres:
+  pool_max: 2
+
+rabbitmq:
+  rpc_server_exchange: 'rpc_server'
+  rpc_client_exchange: 'rpc_client'
+--
+log:
+  level: debug
+  disable_sentry: true
+
+db:
+  url: db_url
+
+listener:
+  addr: :8000
+
+keys:
+  source:
+  signer:
+
+client:
+  endpoint:
+  signer:
+  source:
+
+runner:
+  name: confirm_time_runner
+  confirm_time: 24h
+  runner:
+    normal_period: 10s
+    min_abnormal_period: 20s
+    max_abnormal_period: 30s
+
+doorman:
+  skip_sign_check: false
+
+cop:
+  disabled: true
+  endpoint: "http://..."
+  upstream: "http://..."
+  service_name: property-reviewer-svc
+  service_port: 80
