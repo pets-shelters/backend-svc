@@ -2,13 +2,13 @@ package configs
 
 import (
 	"fmt"
+	"gopkg.in/yaml.v2"
 	"os"
 )
 
 type (
-	// Config -.
 	Config struct {
-		HTTP `yaml:"http"`
+		HTTP `yaml:"rest"`
 		Log  `yaml:"logger"`
 		PG   `yaml:"postgres"`
 	}
