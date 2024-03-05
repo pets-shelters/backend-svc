@@ -3,6 +3,7 @@ package configs
 import (
 	"fmt"
 	"gopkg.in/yaml.v2"
+	"log"
 	"os"
 )
 
@@ -27,7 +28,12 @@ type (
 )
 
 func NewConfig() (*Config, error) {
-	file, err := os.Open("config.yaml")
+	filepath, ok := os.LookupEnv("CONFIG_FILE")
+	if !ok {
+		log.Fatalf("migrate: environment variable not declared: CONFIG_FILE")
+	}
+
+	file, err := os.Open(filepath)
 	if err != nil {
 		return nil, fmt.Errorf("config error: %w", err)
 	}
