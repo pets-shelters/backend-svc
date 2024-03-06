@@ -2,28 +2,29 @@ package configs
 
 import (
 	"fmt"
-	"gopkg.in/yaml.v2"
+	"github.com/go-playground/validator/v10"
+	"github.com/goccy/go-yaml"
 	"log"
 	"os"
 )
 
 type (
 	Config struct {
-		HTTP `yaml:"rest"`
-		Log  `yaml:"logger"`
-		PG   `yaml:"postgres"`
+		HTTP `yaml:"http" validate:"required"`
+		Log  `yaml:"logger" validate:"required"`
+		PG   `yaml:"postgres" validate:"required"`
 	}
 
 	HTTP struct {
-		Port string `yaml:"port"`
+		Addr string `yaml:"addr" validate:"required"`
 	}
 
 	Log struct {
-		Level string `yaml:"log_level"`
+		Level string `yaml:"log_level" validate:"required"`
 	}
 
 	PG struct {
-		URL string `yaml:"db_url"`
+		URL string `yaml:"db_url" validate:"required"`
 	}
 )
 
@@ -40,7 +41,12 @@ func NewConfig() (*Config, error) {
 	defer file.Close()
 
 	var cfg Config
-	decoder := yaml.NewDecoder(file)
+	validate := validator.New()
+	decoder := yaml.NewDecoder(
+		file,
+		yaml.Validator(validate),
+		yaml.Strict(),
+	)
 	err = decoder.Decode(&cfg)
 	if err != nil {
 		return nil, fmt.Errorf("config error: %w", err)

@@ -3,7 +3,7 @@ package repo
 import (
 	"context"
 	"github.com/fatih/structs"
-	"github.com/lib/pq"
+	"github.com/jackc/pgconn"
 	"github.com/pets-shelters/backend-svc/internal/entity"
 	"github.com/pets-shelters/backend-svc/internal/exceptions"
 	"github.com/pets-shelters/backend-svc/pkg/postgres"
@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	usersTableName   = "users"
-	uniqueConstraint = "unique_user_email"
+	usersTableName        = "users"
+	emailUniqueConstraint = "unique_user_email"
 )
 
 type UsersRepo struct {
@@ -36,11 +36,11 @@ func (r *UsersRepo) CreateWithConn(ctx context.Context, conn Connection, user en
 	var id int64
 	err = conn.QueryRow(ctx, sql, args...).Scan(&id)
 	if err != nil {
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) && pgErr.ConstraintName == emailUniqueConstraint {
+			return 0, exceptions.NewUserExistsException("")
+		}
 		return 0, errors.Wrap(err, "failed to QueryRow user insert query")
-	}
-
-	if err, ok := err.(*pq.Error); ok && err.Constraint == uniqueConstraint {
-		return 0, exceptions.NewUserExistsException("")
 	}
 
 	return id, nil

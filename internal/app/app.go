@@ -38,7 +38,7 @@ func Run(cfg *configs.Config) {
 
 	handler := gin.New()
 	rest.NewRouter(handler, log, useCases)
-	httpServer := httpserver.New(handler, cfg.HTTP.Port)
+	httpServer := httpserver.New(handler, cfg.HTTP.Addr)
 
 	interrupt := make(chan os.Signal, 1)
 	signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)

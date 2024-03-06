@@ -15,15 +15,15 @@ import (
 type registrationRequest struct {
 	Name        string `json:"name" binding:"required"`
 	Email       string `json:"email" binding:"required,email"`
-	Logo        string `json:"logo" binding:"required,url"`
+	Logo        string `json:"logo" binding:"required"`
 	City        string `json:"city" binding:"required"`
 	PhoneNumber string `json:"phone_number" binding:"required,len=12"`
-	Instagram   string `json:"instagram" binding:"url"`
-	Facebook    string `json:"facebook" binding:"url"`
+	Instagram   string `json:"instagram" binding:"-"`
+	Facebook    string `json:"facebook" binding:"-"`
 }
 
 func (r *routes) registration(c *gin.Context) {
-	var request registrationRequest
+	var request helpers.JsonData[registrationRequest]
 	err := c.BindJSON(&request)
 	if err != nil {
 		r.log.Error(err, "failed to bind json - registration")
@@ -34,20 +34,20 @@ func (r *routes) registration(c *gin.Context) {
 	err = r.useCase.Registration(
 		c.Request.Context(),
 		entity.Shelter{
-			Name:        request.Name,
-			Logo:        request.Logo,
-			PhoneNumber: request.PhoneNumber,
-			City:        request.City,
-			Instagram:   request.Instagram,
-			Facebook:    request.Facebook,
+			Name:        request.Data.Name,
+			Logo:        request.Data.Logo,
+			PhoneNumber: request.Data.PhoneNumber,
+			City:        request.Data.City,
+			Instagram:   request.Data.Instagram,
+			Facebook:    request.Data.Facebook,
 			CreatedAt:   time.Now(),
 		},
-		request.Email,
+		request.Data.Email,
 	)
 	if err != nil {
 		switch errors.Cause(err).(type) {
 		case exceptions.UserExistsException:
-			c.AbortWithStatusJSON(http.StatusConflict, helpers.FormCustomError(helpers.UserAlreadyExists, err.Error()))
+			c.AbortWithStatusJSON(http.StatusConflict, helpers.FormCustomError(helpers.UserAlreadyExists, ""))
 		default:
 			r.log.Error(err, "failed to process usecase - registration")
 			c.AbortWithStatusJSON(http.StatusInternalServerError, helpers.FormInternalError(err.Error()))
@@ -55,5 +55,5 @@ func (r *routes) registration(c *gin.Context) {
 		return
 	}
 
-	c.Status(http.StatusOK)
+	c.Status(http.StatusCreated)
 }

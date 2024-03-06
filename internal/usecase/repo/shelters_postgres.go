@@ -2,11 +2,10 @@ package repo
 
 import (
 	"context"
+	"github.com/fatih/structs"
 	"github.com/pets-shelters/backend-svc/internal/entity"
 	"github.com/pets-shelters/backend-svc/pkg/postgres"
 	"github.com/pkg/errors"
-
-	"github.com/fatih/structs"
 )
 
 const sheltersTableName = "shelters"

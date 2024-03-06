@@ -1,7 +1,5 @@
 package helpers
 
-import "go/types"
-
-type JsonData[T types.Struct] struct {
-	Data T `json:"data"`
+type JsonData[T any] struct {
+	Data T `json:"data" binding:"required"`
 }

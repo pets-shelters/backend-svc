@@ -1,5 +1,5 @@
 http:
-  port: '8080'
+  addr: 'localhost:80'
 
 logger:
   log_level: 'debug'
