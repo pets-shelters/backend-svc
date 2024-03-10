@@ -1,5 +1,7 @@
 package usecase
 
 type UseCases struct {
-	Authorization Authorization
+	Authorization IAuthorization
+	Jwt           IJwt
+	Shelters      IShelters
 }

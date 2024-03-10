@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"github.com/jackc/pgx/v4"
+	"github.com/pets-shelters/backend-svc/internal/usecase"
 	"github.com/pets-shelters/backend-svc/pkg/postgres"
 	"github.com/pkg/errors"
 )
@@ -15,11 +16,11 @@ func NewDBRepo(pg *postgres.Postgres) *DBRepo {
 	return &DBRepo{pg}
 }
 
-func (r *DBRepo) GetSheltersRepo() *SheltersRepo {
+func (r *DBRepo) GetSheltersRepo() usecase.ISheltersRepo {
 	return NewSheltersRepo(r.Postgres)
 }
 
-func (r *DBRepo) GetUsersRepo() *UsersRepo {
+func (r *DBRepo) GetUsersRepo() usecase.IUsersRepo {
 	return NewUsersRepo(r.Postgres)
 }
 

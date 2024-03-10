@@ -6,3 +6,14 @@ logger:
 
 postgres:
   db_url: ''
+
+oauth:
+  client_id: ''
+  client_secret: ''
+  state_lifetime: 300s
+
+jwt:
+  access_secret: 'accesssecret'
+  access_lifetime: 10m
+  refresh_secret: 'refreshsecret'
+  refresh_lifetime: 30m

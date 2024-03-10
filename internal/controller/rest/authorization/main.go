@@ -2,17 +2,32 @@ package authorization
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/pets-shelters/backend-svc/internal/controller/helpers"
 	"github.com/pets-shelters/backend-svc/internal/usecase"
 	"github.com/pets-shelters/backend-svc/pkg/logger"
 )
 
 type routes struct {
-	useCase usecase.Authorization
-	log     logger.Interface
+	authUseCase          usecase.IAuthorization
+	jwtUseCase           usecase.IJwt
+	log                  logger.Interface
+	loginCookieLifetime  int
+	accessTokenLifetime  int
+	refreshTokenLifetime int
 }
 
-func NewRoutes(handler *gin.RouterGroup, useCase usecase.Authorization, log logger.Interface) {
-	r := &routes{useCase, log}
+func NewRoutes(handler *gin.RouterGroup, authUseCase usecase.IAuthorization,
+	jwtUseCase usecase.IJwt, log logger.Interface, routerConfigs helpers.RouterConfigs) {
+	r := &routes{
+		authUseCase,
+		jwtUseCase,
+		log,
+		routerConfigs.LoginCookieLifetime,
+		routerConfigs.AccessTokenLifetime,
+		routerConfigs.RefreshTokenLifetime,
+	}
 
-	handler.POST("/sign-up", r.registration)
+	handler.GET("/refresh", r.refreshJwts)
+	handler.GET("/login", r.login)
+	handler.GET("/callback", r.callback)
 }

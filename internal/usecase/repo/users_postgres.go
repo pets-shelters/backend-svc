@@ -2,10 +2,12 @@ package repo
 
 import (
 	"context"
-	"github.com/fatih/structs"
+	sql2 "database/sql"
+	"github.com/Masterminds/squirrel"
 	"github.com/jackc/pgconn"
-	"github.com/pets-shelters/backend-svc/internal/entity"
 	"github.com/pets-shelters/backend-svc/internal/exceptions"
+	"github.com/pets-shelters/backend-svc/internal/usecase"
+	"github.com/pets-shelters/backend-svc/internal/usecase/repo/entity"
 	"github.com/pets-shelters/backend-svc/pkg/postgres"
 	"github.com/pkg/errors"
 )
@@ -23,10 +25,11 @@ func NewUsersRepo(pg *postgres.Postgres) *UsersRepo {
 	return &UsersRepo{pg}
 }
 
-func (r *UsersRepo) CreateWithConn(ctx context.Context, conn Connection, user entity.User) (int64, error) {
+func (r *UsersRepo) CreateWithConn(ctx context.Context, conn usecase.IConnection, user entity.User) (int64, error) {
 	sql, args, err := r.Builder.
 		Insert(usersTableName).
-		SetMap(structs.Map(user)).
+		Columns("email", "role", "shelter_id").
+		Values(user.Email, user.Role, user.ShelterID).
 		Suffix("returning id").
 		ToSql()
 	if err != nil {
@@ -38,7 +41,7 @@ func (r *UsersRepo) CreateWithConn(ctx context.Context, conn Connection, user en
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) && pgErr.ConstraintName == emailUniqueConstraint {
-			return 0, exceptions.NewUserExistsException("")
+			return 0, exceptions.NewUserExistsException()
 		}
 		return 0, errors.Wrap(err, "failed to QueryRow user insert query")
 	}
@@ -50,7 +53,7 @@ func (r *UsersRepo) Create(ctx context.Context, user entity.User) (int64, error)
 	return r.CreateWithConn(ctx, r.Pool, user)
 }
 
-func (r *UsersRepo) SelectUsersWithConn(ctx context.Context, conn Connection) ([]entity.User, error) {
+func (r *UsersRepo) SelectUsersWithConn(ctx context.Context, conn usecase.IConnection) ([]entity.User, error) {
 	sql, _, err := r.Builder.
 		Select("*").
 		From(usersTableName).
@@ -75,4 +78,23 @@ func (r *UsersRepo) SelectUsersWithConn(ctx context.Context, conn Connection) ([
 
 func (r *UsersRepo) SelectUsers(ctx context.Context) ([]entity.User, error) {
 	return r.SelectUsersWithConn(ctx, r.Pool)
+}
+
+func (r *UsersRepo) UpdateShelterIDWithConn(ctx context.Context, conn usecase.IConnection, userEmail string, shelterId int64) (int64, error) {
+	sql, args, err := r.Builder.
+		Update(usersTableName).
+		Set("shelter_id", shelterId).
+		Where(squirrel.Eq{"email": userEmail}).
+		Where(squirrel.Eq{"shelter_id": sql2.NullInt64{}}).
+		ToSql()
+	if err != nil {
+		return 0, errors.Wrap(err, "failed to build user update shelter_id query")
+	}
+
+	commandTag, err := conn.Exec(ctx, sql, args...)
+	if err != nil {
+		return 0, errors.Wrap(err, "failed to Exec user update shelter_id query")
+	}
+
+	return commandTag.RowsAffected(), nil
 }

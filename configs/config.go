@@ -6,13 +6,18 @@ import (
 	"github.com/goccy/go-yaml"
 	"log"
 	"os"
+	"time"
 )
 
 type (
 	Config struct {
-		HTTP `yaml:"http" validate:"required"`
-		Log  `yaml:"logger" validate:"required"`
-		PG   `yaml:"postgres" validate:"required"`
+		HTTP    `yaml:"http" validate:"required"`
+		Log     `yaml:"logger" validate:"required"`
+		PG      `yaml:"postgres" validate:"required"`
+		OAuth   `yaml:"oauth" validate:"required"`
+		Jwt     `yaml:"jwt" validate:"required"`
+		Domains `yaml:"domains" validate:"required"`
+		Redis   `yaml:"redis" validate:"required"`
 	}
 
 	HTTP struct {
@@ -25,6 +30,29 @@ type (
 
 	PG struct {
 		URL string `yaml:"db_url" validate:"required"`
+	}
+
+	OAuth struct {
+		ClientID      string        `yaml:"client_id" validate:"required"`
+		ClientSecret  string        `yaml:"client_secret" validate:"required"`
+		StateLifetime time.Duration `yaml:"state_lifetime" validate:"required"`
+	}
+
+	Jwt struct {
+		AccessSecret    string        `yaml:"access_secret" validate:"required"`
+		AccessLifetime  time.Duration `yaml:"access_lifetime" validate:"required"`
+		RefreshSecret   string        `yaml:"refresh_secret" validate:"required"`
+		RefreshLifetime time.Duration `yaml:"refresh_lifetime" validate:"required"`
+	}
+
+	Domains struct {
+		Service   string `yaml:"service" validate:"required"`
+		WebClient string `yaml:"webclient" validate:"required"`
+	}
+
+	Redis struct {
+		Addr     string `yaml:"addr" validate:"required"`
+		Password string `yaml:"password" validate:"required"`
 	}
 )
 

@@ -2,8 +2,8 @@ package repo
 
 import (
 	"context"
-	"github.com/fatih/structs"
-	"github.com/pets-shelters/backend-svc/internal/entity"
+	"github.com/pets-shelters/backend-svc/internal/usecase"
+	entity "github.com/pets-shelters/backend-svc/internal/usecase/repo/entity"
 	"github.com/pets-shelters/backend-svc/pkg/postgres"
 	"github.com/pkg/errors"
 )
@@ -18,10 +18,11 @@ func NewSheltersRepo(pg *postgres.Postgres) *SheltersRepo {
 	return &SheltersRepo{pg}
 }
 
-func (r *SheltersRepo) CreateWithConn(ctx context.Context, conn Connection, shelter entity.Shelter) (int64, error) {
+func (r *SheltersRepo) CreateWithConn(ctx context.Context, conn usecase.IConnection, shelter entity.Shelter) (int64, error) {
 	sql, args, err := r.Builder.
 		Insert(sheltersTableName).
-		SetMap(structs.Map(shelter)).
+		Columns("name", "logo", "city", "phone_number", "instagram", "facebook", "created_at").
+		Values(shelter.Name, shelter.Logo, shelter.City, shelter.PhoneNumber, shelter.Instagram, shelter.Facebook, shelter.CreatedAt).
 		Suffix("returning id").
 		ToSql()
 	if err != nil {
@@ -41,7 +42,7 @@ func (r *SheltersRepo) Create(ctx context.Context, shelter entity.Shelter) (int6
 	return r.CreateWithConn(ctx, r.Pool, shelter)
 }
 
-func (r *SheltersRepo) SelectSheltersWithConn(ctx context.Context, conn Connection) ([]entity.Shelter, error) {
+func (r *SheltersRepo) SelectSheltersWithConn(ctx context.Context, conn usecase.IConnection) ([]entity.Shelter, error) {
 	sql, _, err := r.Builder.
 		Select("*").
 		From(sheltersTableName).

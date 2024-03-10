@@ -6,7 +6,8 @@ type JsonError struct {
 }
 
 const (
-	UserAlreadyExists = "user_already_exists"
+	UserAlreadyExists     = "user_already_exists"
+	UserAlreadyHasShelter = "user_already_has_shelter"
 )
 
 func FormCustomError(code string, detail string) JsonData[JsonError] {
