@@ -17,3 +17,11 @@ jwt:
   access_lifetime: 10m
   refresh_secret: 'refreshsecret'
   refresh_lifetime: 30m
+
+redis:
+  addr: "redis:6379"
+  password: "redispassword"
+
+domains:
+  service: "http://localhost:80"
+  webclient: "http://localhost:8090"
