@@ -5,7 +5,7 @@ import (
 	"github.com/jackc/pgx/v4"
 	"github.com/pets-shelters/backend-svc/internal/exceptions"
 	"github.com/pets-shelters/backend-svc/internal/structs/requests"
-	"github.com/pets-shelters/backend-svc/internal/usecase/repo/entity"
+	"github.com/pets-shelters/backend-svc/internal/usecase/postgres/entity"
 	"github.com/pkg/errors"
 	"time"
 )

@@ -1,4 +1,4 @@
-package repo
+package postgres
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"github.com/jackc/pgconn"
 	"github.com/pets-shelters/backend-svc/internal/exceptions"
 	"github.com/pets-shelters/backend-svc/internal/usecase"
-	"github.com/pets-shelters/backend-svc/internal/usecase/repo/entity"
+	"github.com/pets-shelters/backend-svc/internal/usecase/postgres/entity"
 	"github.com/pets-shelters/backend-svc/pkg/postgres"
 	"github.com/pkg/errors"
 )
@@ -53,7 +53,7 @@ func (r *UsersRepo) Create(ctx context.Context, user entity.User) (int64, error)
 	return r.CreateWithConn(ctx, r.Pool, user)
 }
 
-func (r *UsersRepo) SelectUsersWithConn(ctx context.Context, conn usecase.IConnection) ([]entity.User, error) {
+func (r *UsersRepo) SelectWithConn(ctx context.Context, conn usecase.IConnection) ([]entity.User, error) {
 	sql, _, err := r.Builder.
 		Select("*").
 		From(usersTableName).
@@ -76,8 +76,8 @@ func (r *UsersRepo) SelectUsersWithConn(ctx context.Context, conn usecase.IConne
 	return shelters, nil
 }
 
-func (r *UsersRepo) SelectUsers(ctx context.Context) ([]entity.User, error) {
-	return r.SelectUsersWithConn(ctx, r.Pool)
+func (r *UsersRepo) Select(ctx context.Context) ([]entity.User, error) {
+	return r.SelectWithConn(ctx, r.Pool)
 }
 
 func (r *UsersRepo) UpdateShelterIDWithConn(ctx context.Context, conn usecase.IConnection, userEmail string, shelterId int64) (int64, error) {

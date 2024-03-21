@@ -1,27 +1,35 @@
 http:
-  addr: 'localhost:80'
+  addr: :80
 
 logger:
-  log_level: 'debug'
+  log_level: "debug"
 
 postgres:
-  db_url: ''
+  db_url: ""
 
 oauth:
-  client_id: ''
-  client_secret: ''
+  client_id: ""
+  client_secret: ""
   state_lifetime: 300s
 
 jwt:
-  access_secret: 'accesssecret'
+  access_secret: "accesssecret"
   access_lifetime: 10m
-  refresh_secret: 'refreshsecret'
+  refresh_secret: "refreshsecret"
   refresh_lifetime: 30m
 
 redis:
   addr: "redis:6379"
   password: "redispassword"
 
-domains:
-  service: "http://localhost:80"
-  webclient: "http://localhost:8090"
+s3:
+  region: "us-east-1"
+  access_key: ""
+  secret_key: ""
+  endpoint: "" #set only for local s3-compatibles
+  public_read_bucket: ""
+
+infrastructure:
+  service_url: "http://localhost:80/api"
+  webclient_url: "http://localhost:80"
+  domain: "localhost:80"

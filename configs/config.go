@@ -5,19 +5,21 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/goccy/go-yaml"
 	"log"
+	"net/url"
 	"os"
 	"time"
 )
 
 type (
 	Config struct {
-		HTTP    `yaml:"http" validate:"required"`
-		Log     `yaml:"logger" validate:"required"`
-		PG      `yaml:"postgres" validate:"required"`
-		OAuth   `yaml:"oauth" validate:"required"`
-		Jwt     `yaml:"jwt" validate:"required"`
-		Domains `yaml:"domains" validate:"required"`
-		Redis   `yaml:"redis" validate:"required"`
+		HTTP           `yaml:"http" validate:"required"`
+		Log            `yaml:"logger" validate:"required"`
+		PG             `yaml:"postgres" validate:"required"`
+		OAuth          `yaml:"oauth" validate:"required"`
+		Jwt            `yaml:"jwt" validate:"required"`
+		Infrastructure `yaml:"infrastructure" validate:"required"`
+		Redis          `yaml:"redis" validate:"required"`
+		S3             `yaml:"s3" validate:"required"`
 	}
 
 	HTTP struct {
@@ -45,14 +47,23 @@ type (
 		RefreshLifetime time.Duration `yaml:"refresh_lifetime" validate:"required"`
 	}
 
-	Domains struct {
-		Service   string `yaml:"service" validate:"required"`
-		WebClient string `yaml:"webclient" validate:"required"`
+	Infrastructure struct {
+		ServiceUrl   string `yaml:"service_url" validate:"required"`
+		WebClientUrl string `yaml:"webclient_url" validate:"required"`
+		Domain       string `yaml:"domain" validate:"required"`
 	}
 
 	Redis struct {
 		Addr     string `yaml:"addr" validate:"required"`
 		Password string `yaml:"password" validate:"required"`
+	}
+
+	S3 struct {
+		Region           string   `yaml:"region" validate:"required"`
+		AccessKey        string   `yaml:"access_key" validate:"required"`
+		SecretKey        string   `yaml:"secret_key" validate:"required"`
+		Endpoint         *url.URL `yaml:"endpoint" validate:"-"`
+		PublicReadBucket string   `yaml:"public_read_bucket" validate:"required"`
 	}
 )
 

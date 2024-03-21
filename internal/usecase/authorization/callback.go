@@ -6,7 +6,7 @@ import (
 	"github.com/bradfitz/gomemcache/memcache"
 	"github.com/pets-shelters/backend-svc/internal/exceptions"
 	"github.com/pets-shelters/backend-svc/internal/structs"
-	"github.com/pets-shelters/backend-svc/internal/usecase/repo/entity"
+	"github.com/pets-shelters/backend-svc/internal/usecase/postgres/entity"
 	"github.com/pkg/errors"
 	"io/ioutil"
 	"net/http"

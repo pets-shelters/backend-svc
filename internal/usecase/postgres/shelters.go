@@ -1,9 +1,9 @@
-package repo
+package postgres
 
 import (
 	"context"
 	"github.com/pets-shelters/backend-svc/internal/usecase"
-	entity "github.com/pets-shelters/backend-svc/internal/usecase/repo/entity"
+	entity "github.com/pets-shelters/backend-svc/internal/usecase/postgres/entity"
 	"github.com/pets-shelters/backend-svc/pkg/postgres"
 	"github.com/pkg/errors"
 )
@@ -42,7 +42,7 @@ func (r *SheltersRepo) Create(ctx context.Context, shelter entity.Shelter) (int6
 	return r.CreateWithConn(ctx, r.Pool, shelter)
 }
 
-func (r *SheltersRepo) SelectSheltersWithConn(ctx context.Context, conn usecase.IConnection) ([]entity.Shelter, error) {
+func (r *SheltersRepo) SelectWithConn(ctx context.Context, conn usecase.IConnection) ([]entity.Shelter, error) {
 	sql, _, err := r.Builder.
 		Select("*").
 		From(sheltersTableName).
@@ -65,6 +65,6 @@ func (r *SheltersRepo) SelectSheltersWithConn(ctx context.Context, conn usecase.
 	return shelters, nil
 }
 
-func (r *SheltersRepo) SelectShelters(ctx context.Context) ([]entity.Shelter, error) {
-	return r.SelectSheltersWithConn(ctx, r.Pool)
+func (r *SheltersRepo) Select(ctx context.Context) ([]entity.Shelter, error) {
+	return r.SelectWithConn(ctx, r.Pool)
 }

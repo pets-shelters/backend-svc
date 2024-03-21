@@ -14,6 +14,6 @@ func (r *routes) login(ctx *gin.Context) {
 		return
 	}
 
-	ctx.SetCookie(helpers.LoginCookieName, loginResult.CookieSession, r.loginCookieLifetime, "/", ctx.Request.Host, false, true)
+	ctx.SetCookie(helpers.LoginCookieName, loginResult.CookieSession, r.loginCookieLifetime, "/", r.domain, false, true)
 	ctx.Redirect(http.StatusTemporaryRedirect, loginResult.Url)
 }

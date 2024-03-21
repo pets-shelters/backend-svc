@@ -20,7 +20,7 @@ func (r *routes) callback(ctx *gin.Context) {
 		return
 	}
 
-	ctx.SetCookie(helpers.AccessTokenCookieName, tokensPair.AccessToken, r.accessTokenLifetime, "/", ctx.Request.Host, false, true)
-	ctx.SetCookie(helpers.RefreshTokenCookieName, tokensPair.RefreshToken, r.refreshTokenLifetime, "/", ctx.Request.Host, false, true)
+	ctx.SetCookie(helpers.AccessTokenCookieName, tokensPair.AccessToken, r.accessTokenLifetime, "/", r.domain, false, true)
+	ctx.SetCookie(helpers.RefreshTokenCookieName, tokensPair.RefreshToken, r.refreshTokenLifetime, "/", r.domain, false, true)
 	//TODO add redirect to front
 }

@@ -11,6 +11,7 @@ type routes struct {
 	authUseCase          usecase.IAuthorization
 	jwtUseCase           usecase.IJwt
 	log                  logger.Interface
+	domain               string
 	loginCookieLifetime  int
 	accessTokenLifetime  int
 	refreshTokenLifetime int
@@ -22,6 +23,7 @@ func NewRoutes(handler *gin.RouterGroup, authUseCase usecase.IAuthorization,
 		authUseCase,
 		jwtUseCase,
 		log,
+		routerConfigs.Domain,
 		routerConfigs.LoginCookieLifetime,
 		routerConfigs.AccessTokenLifetime,
 		routerConfigs.RefreshTokenLifetime,

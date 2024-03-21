@@ -8,8 +8,8 @@ import (
 	"github.com/pets-shelters/backend-svc/internal/usecase/authorization"
 	"github.com/pets-shelters/backend-svc/internal/usecase/jwt"
 	"github.com/pets-shelters/backend-svc/internal/usecase/oauth"
+	"github.com/pets-shelters/backend-svc/internal/usecase/postgres"
 	"github.com/pets-shelters/backend-svc/internal/usecase/redis"
-	"github.com/pets-shelters/backend-svc/internal/usecase/repo"
 	"github.com/pets-shelters/backend-svc/internal/usecase/shelters"
 	"github.com/pets-shelters/backend-svc/pkg/httpserver"
 	"github.com/pets-shelters/backend-svc/pkg/logger"
@@ -37,8 +37,8 @@ func Run(cfg *configs.Config) {
 	}
 
 	stateLifetimeSecs := cfg.OAuth.StateLifetime.Seconds()
-	dbRepo := repo.NewDBRepo(pg)
-	oauth := oauth.NewOAuth(cfg.OAuth, cfg.Domains.Service)
+	dbRepo := postgres.NewDBRepo(pg)
+	oauth := oauth.NewOAuth(cfg.OAuth, cfg.Infrastructure.ServiceUrl)
 	cache := redis.NewRedis(cfg.Redis)
 	jwt := jwt.NewUseCase(cfg.Jwt)
 	useCases := usecase.UseCases{
@@ -52,6 +52,7 @@ func Run(cfg *configs.Config) {
 		LoginCookieLifetime:  int(stateLifetimeSecs),
 		AccessTokenLifetime:  int(cfg.Jwt.AccessLifetime.Seconds()),
 		RefreshTokenLifetime: int(cfg.Jwt.RefreshLifetime.Seconds()),
+		Domain:               cfg.Infrastructure.Domain,
 	}
 	rest.NewRouter(handler, log, useCases, routerConfigs)
 	httpServer := httpserver.New(handler, cfg.HTTP.Addr)

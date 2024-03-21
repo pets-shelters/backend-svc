@@ -1,4 +1,4 @@
-package repo
+package postgres
 
 const (
 	UniqueConstraintError = "unique_constraint_error"
