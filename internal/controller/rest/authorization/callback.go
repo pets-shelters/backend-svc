@@ -15,7 +15,7 @@ func (r *routes) callback(ctx *gin.Context) {
 
 	tokensPair, err := r.authUseCase.Callback(ctx, cookie, ctx.Query("state"), ctx.Query("code"))
 	if err != nil {
-		r.log.Error(err, "failed to process usecase - callback")
+		r.log.Error(err.Error(), "failed to process usecase - callback")
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, helpers.FormInternalError(err.Error()))
 		return
 	}

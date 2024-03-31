@@ -1,4 +1,4 @@
-package postgres
+package repo
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 )
 
 type DBRepo struct {
-	*postgres.Postgres
+	db *postgres.Postgres
 }
 
 func NewDBRepo(pg *postgres.Postgres) *DBRepo {
@@ -17,15 +17,23 @@ func NewDBRepo(pg *postgres.Postgres) *DBRepo {
 }
 
 func (r *DBRepo) GetSheltersRepo() usecase.ISheltersRepo {
-	return NewSheltersRepo(r.Postgres)
+	return NewSheltersRepo(r.db)
 }
 
 func (r *DBRepo) GetUsersRepo() usecase.IUsersRepo {
-	return NewUsersRepo(r.Postgres)
+	return NewUsersRepo(r.db)
+}
+
+func (r *DBRepo) GetFilesRepo() usecase.IFilesRepo {
+	return NewFilesRepo(r.db)
+}
+
+func (r *DBRepo) GetTemporaryFilesRepo() usecase.ITemporaryFilesRepo {
+	return NewTemporaryFilesRepo(r.db)
 }
 
 func (r *DBRepo) Transaction(ctx context.Context, f func(pgx.Tx) error) error {
-	err := r.Pool.BeginTxFunc(ctx, pgx.TxOptions{}, f)
+	err := r.db.Pool.BeginTxFunc(ctx, pgx.TxOptions{}, f)
 	if err != nil {
 		return errors.Wrap(err, "failed to BeginTxFunc")
 	}

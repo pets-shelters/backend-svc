@@ -26,10 +26,14 @@ s3:
   region: "us-east-1"
   access_key: ""
   secret_key: ""
-  endpoint: "" #set only for local s3-compatibles
+  endpoint: ""
   public_read_bucket: ""
+
+temporary_files:
+  scheduler_period: 1h
+  lifetime: 1h
 
 infrastructure:
   service_url: "http://localhost:80/api"
   webclient_url: "http://localhost:80"
-  domain: "localhost:80"
+  domain: "localhost"

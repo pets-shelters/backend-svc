@@ -6,10 +6,11 @@ import (
 	"github.com/bradfitz/gomemcache/memcache"
 	"github.com/pets-shelters/backend-svc/internal/exceptions"
 	"github.com/pets-shelters/backend-svc/internal/structs"
-	"github.com/pets-shelters/backend-svc/internal/usecase/postgres/entity"
+	"github.com/pets-shelters/backend-svc/internal/usecase/repo/entity"
 	"github.com/pkg/errors"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 )
 
 const googleUserinfoUrl = "https://www.googleapis.com/oauth2/v2/userinfo"
@@ -29,7 +30,7 @@ func (uc *UseCase) Callback(ctx context.Context, cookie string, googleState stri
 		return nil, errors.Wrap(err, "failed to get google userinfo")
 	}
 
-	_, err = uc.repo.GetUsersRepo().Create(ctx, entity.User{
+	id, err := uc.repo.GetUsersRepo().Create(ctx, entity.User{
 		Email: userinfo.Email,
 		Role:  entity.ManagerUserRole,
 	})
@@ -39,7 +40,14 @@ func (uc *UseCase) Callback(ctx context.Context, cookie string, googleState stri
 		}
 	}
 
-	tokensPair, err := uc.jwt.CreateTokensPair(userinfo.Email)
+	if id == 0 {
+		users, err := uc.repo.GetUsersRepo().Select(ctx, entity.UsersFilters{Email: &userinfo.Email})
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to select users")
+		}
+		id = users[0].ID
+	}
+	tokensPair, err := uc.jwt.CreateTokensPair(strconv.Itoa(int(id)))
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to create tokens pair")
 	}

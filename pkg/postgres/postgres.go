@@ -35,7 +35,7 @@ func New(url string) (*Postgres, error) {
 	pg.Builder = squirrel.StatementBuilder.PlaceholderFormat(squirrel.Dollar)
 	poolConfig, err := pgxpool.ParseConfig(url)
 	if err != nil {
-		return nil, fmt.Errorf("postgres - NewPostgres - pgxpool.ParseConfig: %w", err)
+		return nil, fmt.Errorf("repo - NewPostgres - pgxpool.ParseConfig: %w", err)
 	}
 	poolConfig.MaxConns = int32(pg.maxPoolSize)
 
@@ -49,7 +49,7 @@ func New(url string) (*Postgres, error) {
 		pg.connAttempts--
 	}
 	if err != nil {
-		return nil, fmt.Errorf("postgres - NewPostgres - connAttempts == 0: %w", err)
+		return nil, fmt.Errorf("repo - NewPostgres - connAttempts == 0: %w", err)
 	}
 
 	return pg, nil

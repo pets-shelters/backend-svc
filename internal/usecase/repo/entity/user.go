@@ -17,3 +17,8 @@ type User struct {
 	ShelterID sql.NullInt64 `db:"shelter_id" structs:"shelter_id" json:"shelter_id"`
 	Role      UserRole      `db:"role" structs:"role" json:"role"`
 }
+
+type UsersFilters struct {
+	Email     *string
+	ShelterID *int64
+}

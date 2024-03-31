@@ -1,9 +1,9 @@
-package postgres
+package repo
 
 import (
 	"context"
 	"github.com/pets-shelters/backend-svc/internal/usecase"
-	entity "github.com/pets-shelters/backend-svc/internal/usecase/postgres/entity"
+	entity "github.com/pets-shelters/backend-svc/internal/usecase/repo/entity"
 	"github.com/pets-shelters/backend-svc/pkg/postgres"
 	"github.com/pkg/errors"
 )
@@ -51,15 +51,22 @@ func (r *SheltersRepo) SelectWithConn(ctx context.Context, conn usecase.IConnect
 		return nil, errors.Wrap(err, "failed to build select shelters query")
 	}
 
-	var shelters []entity.Shelter
 	rows, err := conn.Query(ctx, sql)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to Query select shelters query")
 	}
 
-	err = rows.Scan(&shelters)
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to scan shelters")
+	var shelters []entity.Shelter
+	defer rows.Close()
+	for rows.Next() {
+		var shelter entity.Shelter
+		err = rows.Scan(&shelter.ID, &shelter.Logo, &shelter.Name, &shelter.City, &shelter.PhoneNumber,
+			&shelter.CreatedAt, &shelter.Instagram, &shelter.Facebook)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to scan shelter entity")
+		}
+
+		shelters = append(shelters, shelter)
 	}
 
 	return shelters, nil

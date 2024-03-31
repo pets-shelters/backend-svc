@@ -9,11 +9,11 @@ import (
 )
 
 type Interface interface {
-	Debug(message interface{}, args ...interface{})
+	Debug(message string, args ...interface{})
 	Info(message string, args ...interface{})
 	Warn(message string, args ...interface{})
-	Error(message interface{}, args ...interface{})
-	Fatal(message interface{}, args ...interface{})
+	Error(message string, args ...interface{})
+	Fatal(message string, args ...interface{})
 }
 
 type Logger struct {
@@ -48,7 +48,7 @@ func New(level string) *Logger {
 	}
 }
 
-func (l *Logger) Debug(message interface{}, args ...interface{}) {
+func (l *Logger) Debug(message string, args ...interface{}) {
 	l.msg("debug", message, args...)
 }
 
@@ -60,7 +60,7 @@ func (l *Logger) Warn(message string, args ...interface{}) {
 	l.log(message, args...)
 }
 
-func (l *Logger) Error(message interface{}, args ...interface{}) {
+func (l *Logger) Error(message string, args ...interface{}) {
 	if l.logger.GetLevel() == zerolog.DebugLevel {
 		l.Debug(message, args...)
 	}
@@ -68,7 +68,7 @@ func (l *Logger) Error(message interface{}, args ...interface{}) {
 	l.msg("error", message, args...)
 }
 
-func (l *Logger) Fatal(message interface{}, args ...interface{}) {
+func (l *Logger) Fatal(message string, args ...interface{}) {
 	l.msg("fatal", message, args...)
 
 	os.Exit(1)

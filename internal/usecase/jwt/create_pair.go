@@ -7,13 +7,13 @@ import (
 	"time"
 )
 
-func (uc *UseCase) CreateTokensPair(userEmail string) (*structs.TokensPair, error) {
-	accessToken, err := uc.createAccessToken(userEmail)
+func (uc *UseCase) CreateTokensPair(userId string) (*structs.TokensPair, error) {
+	accessToken, err := uc.createAccessToken(userId)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to create access token")
 	}
 
-	refreshToken, err := uc.createRefreshToken(userEmail)
+	refreshToken, err := uc.createRefreshToken(userId)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to create refresh token")
 	}
@@ -24,10 +24,10 @@ func (uc *UseCase) CreateTokensPair(userEmail string) (*structs.TokensPair, erro
 	}, nil
 }
 
-func (uc *UseCase) createAccessToken(userEmail string) (string, error) {
+func (uc *UseCase) createAccessToken(userId string) (string, error) {
 	accessToken := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.StandardClaims{
-			Id:        userEmail,
+			Id:        userId,
 			ExpiresAt: time.Now().Add(uc.cfg.AccessLifetime).Unix(),
 		})
 	accessTokenString, err := accessToken.SignedString([]byte(uc.cfg.AccessSecret))

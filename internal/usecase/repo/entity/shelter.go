@@ -7,7 +7,7 @@ import (
 type Shelter struct {
 	ID          int64     `db:"id" structs:"-" json:"id"`
 	Name        string    `db:"name" structs:"name" json:"name"`
-	Logo        string    `db:"logo" structs:"logo" json:"logo"`
+	Logo        int64     `db:"logo" structs:"logo" json:"logo"`
 	City        string    `db:"city" structs:"city" json:"city"`
 	PhoneNumber string    `db:"phone_number" structs:"phone_number" json:"phone_number"`
 	Instagram   string    `db:"instagram" structs:"instagram" json:"instagram"`

@@ -6,10 +6,13 @@ import (
 	"github.com/pets-shelters/backend-svc/internal/controller/rest"
 	"github.com/pets-shelters/backend-svc/internal/usecase"
 	"github.com/pets-shelters/backend-svc/internal/usecase/authorization"
+	"github.com/pets-shelters/backend-svc/internal/usecase/files"
 	"github.com/pets-shelters/backend-svc/internal/usecase/jwt"
 	"github.com/pets-shelters/backend-svc/internal/usecase/oauth"
-	"github.com/pets-shelters/backend-svc/internal/usecase/postgres"
 	"github.com/pets-shelters/backend-svc/internal/usecase/redis"
+	"github.com/pets-shelters/backend-svc/internal/usecase/repo"
+	"github.com/pets-shelters/backend-svc/internal/usecase/s3"
+	"github.com/pets-shelters/backend-svc/internal/usecase/schedulers"
 	"github.com/pets-shelters/backend-svc/internal/usecase/shelters"
 	"github.com/pets-shelters/backend-svc/pkg/httpserver"
 	"github.com/pets-shelters/backend-svc/pkg/logger"
@@ -27,25 +30,41 @@ func Run(cfg *configs.Config) {
 
 	pg, err := postgres.New(cfg.PG.URL)
 	if err != nil {
-		log.Fatal(errors.Wrap(err, "failed to define postgres db"))
+		log.Fatal(errors.Wrap(err, "failed to define repo db").Error())
 	}
 	defer pg.Close()
 
 	err = migrateUp(cfg.PG.URL)
 	if err != nil {
-		log.Fatal(errors.Wrap(err, "failed to migrateUp"))
+		log.Fatal(errors.Wrap(err, "failed to migrateUp").Error())
 	}
 
 	stateLifetimeSecs := cfg.OAuth.StateLifetime.Seconds()
-	dbRepo := postgres.NewDBRepo(pg)
+	dbRepo := repo.NewDBRepo(pg)
 	oauth := oauth.NewOAuth(cfg.OAuth, cfg.Infrastructure.ServiceUrl)
 	cache := redis.NewRedis(cfg.Redis)
 	jwt := jwt.NewUseCase(cfg.Jwt)
+	s3Provider, err := s3.NewProvider(cfg.S3)
+	if err != nil {
+		log.Fatal(errors.Wrap(err, "failed to init s3 provider").Error())
+	}
 	useCases := usecase.UseCases{
 		Authorization: authorization.NewUseCase(dbRepo, *oauth, *cache, jwt),
 		Jwt:           jwt,
-		Shelters:      shelters.NewUseCase(dbRepo),
+		Shelters:      shelters.NewUseCase(dbRepo, cfg.S3.Endpoint),
+		Files:         files.NewUseCase(dbRepo, s3Provider, cfg.S3.PublicReadBucket),
 	}
+
+	jobsScheduler, err := schedulers.NewJobsScheduler(log, dbRepo)
+	if err != nil {
+		log.Fatal(errors.Wrap(err, "failed to init jobs scheduler").Error())
+	}
+	err = jobsScheduler.WithCleanTemporaryFilesJob(s3Provider, cfg.TemporaryFiles)
+	if err != nil {
+		log.Fatal(errors.Wrap(err, "failed to add clean_temporary_files job").Error())
+	}
+	jobsScheduler.Start()
+	defer jobsScheduler.Shutdown()
 
 	handler := gin.New()
 	routerConfigs := helpers.RouterConfigs{
@@ -53,6 +72,7 @@ func Run(cfg *configs.Config) {
 		AccessTokenLifetime:  int(cfg.Jwt.AccessLifetime.Seconds()),
 		RefreshTokenLifetime: int(cfg.Jwt.RefreshLifetime.Seconds()),
 		Domain:               cfg.Infrastructure.Domain,
+		TemporaryFilesCfg:    cfg.TemporaryFiles,
 	}
 	rest.NewRouter(handler, log, useCases, routerConfigs)
 	httpServer := httpserver.New(handler, cfg.HTTP.Addr)
@@ -64,11 +84,11 @@ func Run(cfg *configs.Config) {
 	case s := <-interrupt:
 		log.Info("app - Run - signal: " + s.String())
 	case err = <-httpServer.Notify():
-		log.Error(errors.Wrap(err, "app - Run - httpServer.Notify"))
+		log.Error(errors.Wrap(err, "app - Run - httpServer.Notify").Error())
 	}
 
 	err = httpServer.Shutdown()
 	if err != nil {
-		log.Error(errors.Wrap(err, "failed to shutdown httpServer"))
+		log.Error(errors.Wrap(err, "failed to shutdown httpServer").Error())
 	}
 }

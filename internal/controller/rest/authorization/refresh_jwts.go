@@ -15,20 +15,20 @@ func (r *routes) refreshJwts(ctx *gin.Context) {
 		return
 	}
 
-	userEmail, err := r.jwtUseCase.VerifyRefreshToken(refreshToken)
+	userId, err := r.jwtUseCase.VerifyRefreshToken(refreshToken)
 	if err != nil {
 		if errors.As(err, &exceptions.InvalidJwtException{}) {
 			ctx.AbortWithStatusJSON(http.StatusForbidden, helpers.FormCustomError("code", err.Error()))
 			return
 		}
-		r.log.Error(err, "failed to process usecase - verify refresh token")
+		r.log.Error(err.Error(), "failed to process usecase - verify refresh token")
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, helpers.FormInternalError(err.Error()))
 		return
 	}
 
-	tokensPair, err := r.jwtUseCase.CreateTokensPair(userEmail)
+	tokensPair, err := r.jwtUseCase.CreateTokensPair(userId)
 	if err != nil {
-		r.log.Error(err, "failed to process usecase - create tokens pair")
+		r.log.Error(err.Error(), "failed to process usecase - create tokens pair")
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, helpers.FormInternalError(err.Error()))
 		return
 	}

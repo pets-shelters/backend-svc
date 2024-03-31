@@ -28,12 +28,12 @@ func migrateUp(dbUrl string) error {
 			break
 		}
 
-		log.Printf("Migrate: postgres is trying to connect, attempts left: %d", attempts)
+		log.Printf("Migrate: repo is trying to connect, attempts left: %d", attempts)
 		time.Sleep(_defaultTimeout)
 		attempts--
 	}
 	if err != nil {
-		return errors.Wrap(err, "migrate: postgres connect error")
+		return errors.Wrap(err, "migrate: repo connect error")
 	}
 
 	err = m.Up()

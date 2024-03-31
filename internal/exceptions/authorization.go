@@ -27,3 +27,16 @@ func NewInvalidStateException() InvalidStateException {
 func (g InvalidStateException) Error() string {
 	return g.err.Error()
 }
+
+type PermissionDeniedException struct {
+	err error
+}
+
+func NewPermissionDeniedException() PermissionDeniedException {
+	return PermissionDeniedException{
+		err: errors.New("permission_denied_error"),
+	}
+}
+func (g PermissionDeniedException) Error() string {
+	return g.err.Error()
+}

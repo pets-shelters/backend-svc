@@ -8,6 +8,9 @@ type JsonError struct {
 const (
 	UserAlreadyExists     = "user_already_exists"
 	UserAlreadyHasShelter = "user_already_has_shelter"
+	FilesOverload         = "files_overload"
+	InvalidFileType       = "invalid_filetype"
+	FileNotFound          = "file_not_found"
 )
 
 func FormCustomError(code string, detail string) JsonData[JsonError] {

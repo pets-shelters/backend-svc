@@ -5,7 +5,6 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/goccy/go-yaml"
 	"log"
-	"net/url"
 	"os"
 	"time"
 )
@@ -20,6 +19,7 @@ type (
 		Infrastructure `yaml:"infrastructure" validate:"required"`
 		Redis          `yaml:"redis" validate:"required"`
 		S3             `yaml:"s3" validate:"required"`
+		TemporaryFiles `yaml:"temporary_files" validate:"required"`
 	}
 
 	HTTP struct {
@@ -59,11 +59,16 @@ type (
 	}
 
 	S3 struct {
-		Region           string   `yaml:"region" validate:"required"`
-		AccessKey        string   `yaml:"access_key" validate:"required"`
-		SecretKey        string   `yaml:"secret_key" validate:"required"`
-		Endpoint         *url.URL `yaml:"endpoint" validate:"-"`
-		PublicReadBucket string   `yaml:"public_read_bucket" validate:"required"`
+		Region           string `yaml:"region" validate:"required"`
+		AccessKey        string `yaml:"access_key" validate:"required"`
+		SecretKey        string `yaml:"secret_key" validate:"required"`
+		Endpoint         string `yaml:"endpoint" validate:"-"`
+		PublicReadBucket string `yaml:"public_read_bucket" validate:"required"`
+	}
+
+	TemporaryFiles struct {
+		SchedulerPeriod time.Duration `yaml:"scheduler_period" validate:"required"`
+		Lifetime        time.Duration `yaml:"lifetime" validate:"required"`
 	}
 )
 
