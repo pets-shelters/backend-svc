@@ -1,13 +1,13 @@
 package shelters
 
 import (
+	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"github.com/pets-shelters/backend-svc/internal/controller/helpers"
 	"github.com/pets-shelters/backend-svc/internal/exceptions"
 	"github.com/pets-shelters/backend-svc/internal/structs/requests"
 	"github.com/pkg/errors"
 	"net/http"
-
-	"github.com/gin-gonic/gin"
 )
 
 func (r *routes) create(ctx *gin.Context) {
@@ -17,10 +17,20 @@ func (r *routes) create(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, helpers.FormBadRequestError(err.Error()))
 		return
 	}
+	err = validator.New().Struct(request)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, helpers.FormBadRequestError(err.Error()))
+		return
+	}
+
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, helpers.FormBadRequestError("instagram and facebook must be of type url"))
+		return
+	}
 
 	userId, ok := ctx.Get(helpers.JwtIdCtx)
 	if !ok {
-		ctx.AbortWithStatusJSON(http.StatusForbidden, helpers.FormCustomError("code", err.Error()))
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, helpers.FormCustomError(helpers.Unauthorized, ""))
 		return
 	}
 	err = r.useCase.Create(
@@ -34,15 +44,15 @@ func (r *routes) create(ctx *gin.Context) {
 			return
 		}
 		if errors.As(err, &exceptions.PermissionDeniedException{}) {
-			ctx.AbortWithStatus(http.StatusForbidden)
+			ctx.AbortWithStatusJSON(http.StatusForbidden, helpers.FormCustomError(helpers.PermissionDenied, ""))
 			return
 		}
 		if errors.As(err, &exceptions.UserHasShelterException{}) {
-			ctx.AbortWithStatus(http.StatusConflict)
+			ctx.AbortWithStatusJSON(http.StatusConflict, helpers.FormCustomError(helpers.UserAlreadyHasShelter, ""))
 			return
 		}
 		r.log.Error(err.Error(), "failed to process usecase - create shelter")
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, helpers.FormInternalError(err.Error()))
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, helpers.FormInternalError())
 		return
 	}
 

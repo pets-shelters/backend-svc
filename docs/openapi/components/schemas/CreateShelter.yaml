@@ -1,0 +1,33 @@
+type: object
+description: File upload response
+required:
+  - attributes
+properties:
+  attributes:
+    type: object
+    required:
+      - name
+      - logo
+      - city
+      - phone_number
+    properties:
+      name:
+        type: string
+        description: Shelter name.
+      logo:
+        type: integer
+        format: int64
+        description: Temporary file id from /files/upload.
+      city:
+        type: string
+        description: Shelter city.
+      phone_number:
+        type: string
+        length: 12
+        description: Shelter phone number.
+      instagram:
+        type: string
+        description: Shelter's instagram url.
+      facebook:
+        type: string
+        description: Shelter's facebook url.

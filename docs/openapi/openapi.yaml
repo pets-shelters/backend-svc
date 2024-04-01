@@ -1,0 +1,19 @@
+openapi: 3.0.3
+info:
+  title: PetsShelters
+  version: 1.0.0
+  description: ''
+servers:
+  - url: http://localhost:80/api
+    description: Developer edition
+paths:
+  /authorization/login:
+    $ref: paths/authorization_login.yaml
+  /authorization/callback:
+    $ref: paths/authorization_callback.yaml
+  /authorization/refresh:
+    $ref: paths/authorization_refresh.yaml
+  /files/upload:
+    $ref: paths/files_upload.yaml
+  /shelters:
+    $ref: paths/shelters.yaml

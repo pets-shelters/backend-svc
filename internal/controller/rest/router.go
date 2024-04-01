@@ -14,19 +14,16 @@ func NewRouter(handler *gin.Engine, log logger.Interface, useCases usecase.UseCa
 	handler.Use(gin.Logger())
 	handler.Use(gin.Recovery())
 
-	handlerGroup := handler.Group("/")
+	authorizationGroup := handler.Group("/authorization")
 	{
-		authorizationGroup := handlerGroup.Group("/authorization")
-		{
-			authorization.NewRoutes(authorizationGroup, useCases.Authorization, useCases.Jwt, log, routerConfigs)
-		}
-		sheltersGroup := handlerGroup.Group("/shelters")
-		{
-			shelters.NewRoutes(sheltersGroup, useCases.Shelters, useCases.Jwt, log, routerConfigs)
-		}
-		filesGroup := handlerGroup.Group("/files")
-		{
-			files.NewRoutes(filesGroup, useCases.Files, useCases.Jwt, log, routerConfigs.TemporaryFilesCfg)
-		}
+		authorization.NewRoutes(authorizationGroup, useCases.Authorization, useCases.Jwt, log, routerConfigs)
+	}
+	sheltersGroup := handler.Group("/shelters")
+	{
+		shelters.NewRoutes(sheltersGroup, useCases.Shelters, useCases.Jwt, log, routerConfigs)
+	}
+	filesGroup := handler.Group("/files")
+	{
+		files.NewRoutes(filesGroup, useCases.Files, useCases.Jwt, log, routerConfigs.TemporaryFilesCfg)
 	}
 }

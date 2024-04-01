@@ -1,0 +1,30 @@
+get:
+  tags:
+    - Authorization
+  summary: Callback
+  description: >-
+    Called by Google OAuth.
+    Sets access and refresh tokens to user's cookies.
+  operationId: callback
+  parameters:
+    - $ref: ../components/parameters/loginCookieParam.yaml
+  responses:
+    200:
+      description: Success
+      headers:
+        Set-Cookie:
+          description: Access and refresh tokens cookies.
+          schema:
+            type: string
+    400:
+      description: Bad request error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/schemas/BadRequestError.yaml
+    500:
+      description: Internal error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/schemas/InternalError.yaml

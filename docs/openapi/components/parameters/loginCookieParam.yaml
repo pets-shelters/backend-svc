@@ -1,0 +1,6 @@
+name: login
+in: cookie
+description: Token in cookie granted to user in process of login via Google.
+required: true
+schema:
+  type: string

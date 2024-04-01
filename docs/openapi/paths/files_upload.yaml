@@ -1,0 +1,64 @@
+post:
+  tags:
+    - Files
+  summary: Upload file
+  description: >-
+    This endpoint allows any user to upload a file.
+  operationId: postFile
+  parameters:
+    - $ref: ../components/parameters/accessTokenCookieParam.yaml
+    - name: Content-Type
+      in: headers
+      description: File content type.
+      required: true
+      schema:
+        type: string
+        enum:
+          - image/jpeg
+          - image/png
+          - image/svg+xml
+          - image/webp
+  responses:
+    201:
+      description: Success
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: object
+                $ref: ../components/schemas/FileUploadResponse.yaml
+    400:
+      description: Bad request error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/schemas/BadRequestError.yaml
+    401:
+      description: Unauthorized
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/schemas/UnauthorizedError.yaml
+    405:
+      description: Method not allowed
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            required:
+              - code
+            properties:
+              code:
+                type: string
+                enum:
+                  - files_overload
+    500:
+      description: Internal error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/schemas/InternalError.yaml

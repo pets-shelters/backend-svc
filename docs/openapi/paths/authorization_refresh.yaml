@@ -1,0 +1,29 @@
+get:
+  tags:
+    - Authorization
+  summary: Refresh
+  description: >-
+    Refresh user's authorization tokens in cookies.
+  operationId: refresh
+  parameters:
+    - $ref: ../components/parameters/refreshTokenCookieParam.yaml
+  responses:
+    200:
+      description: Success
+      headers:
+        Set-Cookie:
+          description: Access and refresh tokens cookies.
+          schema:
+            type: string
+    401:
+      description: Unauthorized
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/schemas/UnauthorizedError.yaml
+    500:
+      description: Internal error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/schemas/InternalError.yaml

@@ -1,0 +1,22 @@
+get:
+  tags:
+    - Authorization
+  summary: Login
+  description: >-
+    Redirects user to Google OAuth. 
+    Sets login cookie to manage google_state later.
+  operationId: login
+  responses:
+    307:
+      description: Success
+      headers:
+        Set-Cookie:
+          description: Login cookie.
+          schema:
+            type: string
+    500:
+      description: Internal error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/schemas/InternalError.yaml

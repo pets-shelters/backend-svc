@@ -11,6 +11,8 @@ const (
 	FilesOverload         = "files_overload"
 	InvalidFileType       = "invalid_filetype"
 	FileNotFound          = "file_not_found"
+	Unauthorized          = "unauthorized"
+	PermissionDenied      = "permission_denied"
 )
 
 func FormCustomError(code string, detail string) JsonData[JsonError] {
@@ -26,6 +28,6 @@ func FormBadRequestError(detail string) JsonData[JsonError] {
 	return FormCustomError("bad_request", detail)
 }
 
-func FormInternalError(detail string) JsonData[JsonError] {
-	return FormCustomError("internal", detail)
+func FormInternalError() JsonData[JsonError] {
+	return FormCustomError("internal", "")
 }

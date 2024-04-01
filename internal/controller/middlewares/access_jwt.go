@@ -14,23 +14,23 @@ func ValidateAccessJwt(jwt usecase.IJwt) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		accessToken, err := ctx.Cookie(helpers.AccessTokenCookieName)
 		if err != nil {
-			ctx.AbortWithStatusJSON(http.StatusForbidden, helpers.FormCustomError("forb", err.Error()))
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, helpers.FormCustomError(helpers.Unauthorized, ""))
 			return
 		}
 
 		userId, err := jwt.VerifyAccessToken(accessToken)
 		if err != nil {
 			if errors.As(err, &exceptions.InvalidJwtException{}) {
-				ctx.AbortWithStatusJSON(http.StatusForbidden, helpers.FormCustomError("forb", "invalid jwt"))
+				ctx.AbortWithStatusJSON(http.StatusUnauthorized, helpers.FormCustomError(helpers.Unauthorized, ""))
 				return
 			}
-			ctx.AbortWithStatusJSON(http.StatusInternalServerError, helpers.FormInternalError(err.Error()))
+			ctx.AbortWithStatusJSON(http.StatusInternalServerError, helpers.FormInternalError())
 			return
 		}
 
 		userIdInt, err := strconv.Atoi(userId)
 		if err != nil {
-			ctx.AbortWithStatusJSON(http.StatusForbidden, helpers.FormCustomError("forb", err.Error()))
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, helpers.FormCustomError(helpers.Unauthorized, ""))
 			return
 		}
 		ctx.Set(helpers.JwtIdCtx, int64(userIdInt))

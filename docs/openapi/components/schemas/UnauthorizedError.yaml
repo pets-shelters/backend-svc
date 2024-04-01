@@ -1,0 +1,15 @@
+type: object
+description: Error
+required:
+  - attributes
+properties:
+  attributes:
+    type: object
+    required:
+      - code
+    properties:
+      code:
+        type: string
+        enum:
+          - unauthorized
+        description: Custom error code.

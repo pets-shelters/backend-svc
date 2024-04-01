@@ -10,7 +10,7 @@ func (r *routes) login(ctx *gin.Context) {
 	loginResult, err := r.authUseCase.Login()
 	if err != nil {
 		r.log.Error(err.Error(), "failed to process usecase - login")
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, helpers.FormInternalError(err.Error()))
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, helpers.FormInternalError())
 		return
 	}
 

@@ -1,0 +1,6 @@
+name: refresh_token
+in: cookie
+description: Token in cookie granted to user after successful login via Google.
+required: true
+schema:
+  type: string

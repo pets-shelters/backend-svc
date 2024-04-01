@@ -1,0 +1,552 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "PetsShelters",
+    "version": "1.0.0",
+    "description": ""
+  },
+  "servers": [
+    {
+      "url": "http://localhost:80/api",
+      "description": "Developer edition"
+    }
+  ],
+  "paths": {
+    "/authorization/login": {
+      "get": {
+        "tags": [
+          "Authorization"
+        ],
+        "summary": "Login",
+        "description": "Redirects user to Google OAuth.  Sets login cookie to manage google_state later.",
+        "operationId": "login",
+        "responses": {
+          "307": {
+            "description": "Success",
+            "headers": {
+              "Set-Cookie": {
+                "description": "Login cookie.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authorization/callback": {
+      "get": {
+        "tags": [
+          "Authorization"
+        ],
+        "summary": "Callback",
+        "description": "Called by Google OAuth. Sets access and refresh tokens to user's cookies.",
+        "operationId": "callback",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/loginCookieParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "Set-Cookie": {
+                "description": "Access and refresh tokens cookies.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authorization/refresh": {
+      "get": {
+        "tags": [
+          "Authorization"
+        ],
+        "summary": "Refresh",
+        "description": "Refresh user's authorization tokens in cookies.",
+        "operationId": "refresh",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/refreshTokenCookieParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "Set-Cookie": {
+                "description": "Access and refresh tokens cookies.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/files/upload": {
+      "post": {
+        "tags": [
+          "Files"
+        ],
+        "summary": "Upload file",
+        "description": "This endpoint allows any user to upload a file.",
+        "operationId": "postFile",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessTokenCookieParam"
+          },
+          {
+            "name": "Content-Type",
+            "in": "headers",
+            "description": "File content type.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "image/jpeg",
+                "image/png",
+                "image/svg+xml",
+                "image/webp"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/FileUploadResponse"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not allowed",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "files_overload"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shelters": {
+      "post": {
+        "tags": [
+          "Shelters"
+        ],
+        "summary": "Create shelter",
+        "description": "Shelter creating. Each user can have only one shelter.",
+        "operationId": "postShelter",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessTokenCookieParam"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/CreateShelter"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad request error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "permission_denied"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "file_not_found"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "user_already_has_shelter"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "InternalError": {
+        "type": "object",
+        "description": "Error",
+        "required": [
+          "attributes"
+        ],
+        "properties": {
+          "attributes": {
+            "type": "object",
+            "required": [
+              "code"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "internal"
+                ],
+                "description": "Custom error code."
+              }
+            }
+          }
+        }
+      },
+      "BadRequestError": {
+        "type": "object",
+        "description": "Error",
+        "required": [
+          "attributes"
+        ],
+        "properties": {
+          "attributes": {
+            "type": "object",
+            "required": [
+              "code"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "bad_request"
+                ],
+                "description": "Custom error code."
+              },
+              "detail": {
+                "type": "string",
+                "description": "Error description."
+              }
+            }
+          }
+        }
+      },
+      "UnauthorizedError": {
+        "type": "object",
+        "description": "Error",
+        "required": [
+          "attributes"
+        ],
+        "properties": {
+          "attributes": {
+            "type": "object",
+            "required": [
+              "code"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "unauthorized"
+                ],
+                "description": "Custom error code."
+              }
+            }
+          }
+        }
+      },
+      "FileUploadResponse": {
+        "type": "object",
+        "description": "File upload response",
+        "required": [
+          "attributes"
+        ],
+        "properties": {
+          "attributes": {
+            "type": "object",
+            "required": [
+              "temporary_file_id"
+            ],
+            "properties": {
+              "temporary_file_id": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Id of a temporary file."
+              }
+            }
+          }
+        }
+      },
+      "CreateShelter": {
+        "type": "object",
+        "description": "File upload response",
+        "required": [
+          "attributes"
+        ],
+        "properties": {
+          "attributes": {
+            "type": "object",
+            "required": [
+              "name",
+              "logo",
+              "city",
+              "phone_number"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Shelter name."
+              },
+              "logo": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Temporary file id from /files/upload."
+              },
+              "city": {
+                "type": "string",
+                "description": "Shelter city."
+              },
+              "phone_number": {
+                "type": "string",
+                "length": 12,
+                "description": "Shelter phone number."
+              },
+              "instagram": {
+                "type": "string",
+                "description": "Shelter's instagram url."
+              },
+              "facebook": {
+                "type": "string",
+                "description": "Shelter's facebook url."
+              }
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "loginCookieParam": {
+        "name": "login",
+        "in": "cookie",
+        "description": "Token in cookie granted to user in process of login via Google.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "refreshTokenCookieParam": {
+        "name": "refresh_token",
+        "in": "cookie",
+        "description": "Token in cookie granted to user after successful login via Google.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "accessTokenCookieParam": {
+        "name": "access_token",
+        "in": "cookie",
+        "description": "Token in cookie granted to user after successful login via Google.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

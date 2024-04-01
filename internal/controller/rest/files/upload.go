@@ -19,7 +19,7 @@ func (r *routes) upload(ctx *gin.Context) {
 
 	userId, ok := ctx.Get(helpers.JwtIdCtx)
 	if !ok {
-		ctx.AbortWithStatus(http.StatusForbidden)
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, helpers.FormCustomError(helpers.Unauthorized, ""))
 		return
 	}
 
@@ -32,15 +32,15 @@ func (r *routes) upload(ctx *gin.Context) {
 	)
 	if err != nil {
 		if errors.As(err, &exceptions.FilesOverloadException{}) {
-			ctx.AbortWithStatusJSON(http.StatusForbidden, helpers.FormCustomError(helpers.FilesOverload, ""))
+			ctx.AbortWithStatusJSON(http.StatusMethodNotAllowed, helpers.FormCustomError(helpers.FilesOverload, ""))
 			return
 		}
 		if errors.As(err, &exceptions.InvalidFileTypeException{}) {
-			ctx.AbortWithStatusJSON(http.StatusBadRequest, helpers.FormBadRequestError(helpers.InvalidFileType))
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, helpers.FormBadRequestError("invalid file_type"))
 			return
 		}
 		r.log.Error(err.Error(), "failed to process usecase - upload file")
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, helpers.FormInternalError(err.Error()))
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, helpers.FormInternalError())
 		return
 	}
 
