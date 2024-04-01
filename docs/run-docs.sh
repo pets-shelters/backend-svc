@@ -1,0 +1,1 @@
+redocly preview-docs -p 8888 ./openapi/openapi.yaml

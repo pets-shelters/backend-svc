@@ -14,6 +14,8 @@ func NewRouter(handler *gin.Engine, log logger.Interface, useCases usecase.UseCa
 	handler.Use(gin.Logger())
 	handler.Use(gin.Recovery())
 
+	handler.StaticFile("/dist.json", "./docs/dist.json")
+
 	authorizationGroup := handler.Group("/authorization")
 	{
 		authorization.NewRoutes(authorizationGroup, useCases.Authorization, useCases.Jwt, log, routerConfigs)
