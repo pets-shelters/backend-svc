@@ -5,4 +5,5 @@ type UseCases struct {
 	Jwt           IJwt
 	Shelters      IShelters
 	Files         IFiles
+	Employees     IEmployees
 }

@@ -13,6 +13,7 @@ const (
 	FileNotFound          = "file_not_found"
 	Unauthorized          = "unauthorized"
 	PermissionDenied      = "permission_denied"
+	EntityNotFound        = "entity_not_found"
 )
 
 func FormCustomError(code string, detail string) JsonData[JsonError] {

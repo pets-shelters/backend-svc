@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/pets-shelters/backend-svc/internal/controller/helpers"
 	"github.com/pets-shelters/backend-svc/internal/controller/rest/authorization"
+	"github.com/pets-shelters/backend-svc/internal/controller/rest/employees"
 	"github.com/pets-shelters/backend-svc/internal/controller/rest/files"
 	"github.com/pets-shelters/backend-svc/internal/controller/rest/shelters"
 	"github.com/pets-shelters/backend-svc/internal/usecase"
@@ -27,5 +28,9 @@ func NewRouter(handler *gin.Engine, log logger.Interface, useCases usecase.UseCa
 	filesGroup := handler.Group("/files")
 	{
 		files.NewRoutes(filesGroup, useCases.Files, useCases.Jwt, log, routerConfigs.TemporaryFilesCfg)
+	}
+	employeesGroup := handler.Group("/employees")
+	{
+		employees.NewRoutes(employeesGroup, useCases.Employees, useCases.Jwt, log)
 	}
 }

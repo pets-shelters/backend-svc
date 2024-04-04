@@ -29,6 +29,14 @@ s3:
   endpoint: ""
   public_read_bucket: ""
 
+mailjet:
+  public_key: ""
+  private_key: ""
+  sender_email: ""
+  sender_name: ""
+  invitation_template_id: ""
+  invitation_url: ""
+
 temporary_files:
   scheduler_period: 1h
   lifetime: 1h

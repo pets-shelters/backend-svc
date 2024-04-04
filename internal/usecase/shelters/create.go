@@ -26,7 +26,6 @@ func (uc *UseCase) Create(ctx context.Context, req requests.CreateShelter, userI
 		id, err := uc.repo.GetSheltersRepo().CreateWithConn(ctx, tx, entity.Shelter{
 			Name:        req.Name,
 			Logo:        tempFile.FileID,
-			City:        req.City,
 			PhoneNumber: req.PhoneNumber,
 			Instagram:   req.Instagram,
 			Facebook:    req.Facebook,

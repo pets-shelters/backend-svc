@@ -19,6 +19,7 @@ type (
 		Infrastructure `yaml:"infrastructure" validate:"required"`
 		Redis          `yaml:"redis" validate:"required"`
 		S3             `yaml:"s3" validate:"required"`
+		Mailjet        `yaml:"mailjet" validate:"required"`
 		TemporaryFiles `yaml:"temporary_files" validate:"required"`
 	}
 
@@ -62,8 +63,17 @@ type (
 		Region           string `yaml:"region" validate:"required"`
 		AccessKey        string `yaml:"access_key" validate:"required"`
 		SecretKey        string `yaml:"secret_key" validate:"required"`
-		Endpoint         string `yaml:"endpoint" validate:"-"`
+		Endpoint         string `yaml:"endpoint" validate:"required"`
 		PublicReadBucket string `yaml:"public_read_bucket" validate:"required"`
+	}
+
+	Mailjet struct {
+		PublicKey            string `yaml:"public_key" validate:"required"`
+		PrivateKey           string `yaml:"private_key" validate:"required"`
+		SenderEmail          string `yaml:"sender_email" validate:"required"`
+		SenderName           string `yaml:"sender_name" validate:"required"`
+		InvitationTemplateId string `yaml:"invitation_template_id" validate:"required"`
+		InvitationUrl        string `yaml:"invitation_url" validate:"required"`
 	}
 
 	TemporaryFiles struct {

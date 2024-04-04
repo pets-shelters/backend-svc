@@ -8,10 +8,11 @@ import (
 	"github.com/pets-shelters/backend-svc/internal/structs/requests"
 	"github.com/pkg/errors"
 	"net/http"
+	"strconv"
 )
 
-func (r *routes) create(ctx *gin.Context) {
-	var request helpers.JsonData[requests.CreateShelter]
+func (r *routes) update(ctx *gin.Context) {
+	var request helpers.JsonData[requests.UpdateShelter]
 	err := ctx.BindJSON(&request)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, helpers.FormBadRequestError(err.Error()))
@@ -23,17 +24,30 @@ func (r *routes) create(ctx *gin.Context) {
 		return
 	}
 
+	shelterIdString := ctx.Param("id")
+	shelterId, err := strconv.Atoi(shelterIdString)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, helpers.FormBadRequestError(err.Error()))
+		return
+	}
+
 	userId, ok := ctx.Get(helpers.JwtIdCtx)
 	if !ok {
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, helpers.FormCustomError(helpers.Unauthorized, ""))
 		return
 	}
-	err = r.useCase.Create(
+
+	err = r.useCase.Update(
 		ctx.Request.Context(),
 		request.Data,
 		userId.(int64),
+		int64(shelterId),
 	)
 	if err != nil {
+		if errors.As(err, &exceptions.NotFoundException{}) {
+			ctx.AbortWithStatusJSON(http.StatusNotFound, helpers.FormCustomError(helpers.EntityNotFound, ""))
+			return
+		}
 		if errors.As(err, &exceptions.FileNotFoundException{}) {
 			ctx.AbortWithStatusJSON(http.StatusNotFound, helpers.FormCustomError(helpers.FileNotFound, ""))
 			return
@@ -42,14 +56,10 @@ func (r *routes) create(ctx *gin.Context) {
 			ctx.AbortWithStatusJSON(http.StatusForbidden, helpers.FormCustomError(helpers.PermissionDenied, ""))
 			return
 		}
-		if errors.As(err, &exceptions.UserHasShelterException{}) {
-			ctx.AbortWithStatusJSON(http.StatusConflict, helpers.FormCustomError(helpers.UserAlreadyHasShelter, ""))
-			return
-		}
-		r.log.Error(err.Error(), "failed to process usecase - create shelter")
+		r.log.Error(err.Error(), "failed to process usecase - update shelter")
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, helpers.FormInternalError())
 		return
 	}
 
-	ctx.Status(http.StatusCreated)
+	ctx.Status(http.StatusOK)
 }

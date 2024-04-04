@@ -1,7 +1,7 @@
 package entity
 
 type File struct {
-	ID     int64  `db:"id" structs:"-" json:"id"`
-	Bucket string `db:"bucket" structs:"bucket" json:"bucket"`
-	Path   string `db:"path" structs:"path" json:"path"`
+	ID     int64  `db:"id" structs:"-"`
+	Bucket string `db:"bucket" structs:"bucket"`
+	Path   string `db:"path" structs:"path"`
 }

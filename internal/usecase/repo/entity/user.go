@@ -2,20 +2,14 @@ package entity
 
 import (
 	"database/sql"
-)
-
-type UserRole string
-
-const (
-	EmployeeUserRole UserRole = "employee"
-	ManagerUserRole  UserRole = "manager"
+	"github.com/pets-shelters/backend-svc/internal/structs"
 )
 
 type User struct {
-	ID        int64         `db:"id" structs:"-" json:"id"`
-	Email     string        `db:"email" structs:"email" json:"email"`
-	ShelterID sql.NullInt64 `db:"shelter_id" structs:"shelter_id" json:"shelter_id"`
-	Role      UserRole      `db:"role" structs:"role" json:"role"`
+	ID        int64            `db:"id" structs:"-"`
+	Email     string           `db:"email" structs:"email"`
+	ShelterID sql.NullInt64    `db:"shelter_id" structs:"shelter_id"`
+	Role      structs.UserRole `db:"role" structs:"role"`
 }
 
 type UsersFilters struct {

@@ -8,7 +8,6 @@ properties:
     required:
       - name
       - logo
-      - city
       - phone_number
     properties:
       name:
@@ -18,9 +17,6 @@ properties:
         type: integer
         format: int64
         description: Temporary file id from /files/upload.
-      city:
-        type: string
-        description: Shelter city.
       phone_number:
         type: string
         length: 12

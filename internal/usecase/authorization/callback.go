@@ -32,7 +32,7 @@ func (uc *UseCase) Callback(ctx context.Context, cookie string, googleState stri
 
 	id, err := uc.repo.GetUsersRepo().Create(ctx, entity.User{
 		Email: userinfo.Email,
-		Role:  entity.ManagerUserRole,
+		Role:  structs.ManagerUserRole,
 	})
 	if err != nil {
 		if !errors.As(err, &exceptions.UserExistsException{}) {
@@ -43,7 +43,7 @@ func (uc *UseCase) Callback(ctx context.Context, cookie string, googleState stri
 	if id == 0 {
 		users, err := uc.repo.GetUsersRepo().Select(ctx, entity.UsersFilters{Email: &userinfo.Email})
 		if err != nil {
-			return nil, errors.Wrap(err, "failed to select users")
+			return nil, errors.Wrap(err, "failed to select user")
 		}
 		id = users[0].ID
 	}

@@ -6,8 +6,10 @@ import (
 	"github.com/pets-shelters/backend-svc/internal/controller/rest"
 	"github.com/pets-shelters/backend-svc/internal/usecase"
 	"github.com/pets-shelters/backend-svc/internal/usecase/authorization"
+	"github.com/pets-shelters/backend-svc/internal/usecase/employees"
 	"github.com/pets-shelters/backend-svc/internal/usecase/files"
 	"github.com/pets-shelters/backend-svc/internal/usecase/jwt"
+	"github.com/pets-shelters/backend-svc/internal/usecase/mailjet"
 	"github.com/pets-shelters/backend-svc/internal/usecase/oauth"
 	"github.com/pets-shelters/backend-svc/internal/usecase/redis"
 	"github.com/pets-shelters/backend-svc/internal/usecase/repo"
@@ -48,11 +50,13 @@ func Run(cfg *configs.Config) {
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "failed to init s3 provider").Error())
 	}
+	emailsProvider := mailjet.NewMailjet(cfg.Mailjet)
 	useCases := usecase.UseCases{
 		Authorization: authorization.NewUseCase(dbRepo, *oauth, *cache, jwt),
 		Jwt:           jwt,
 		Shelters:      shelters.NewUseCase(dbRepo, cfg.S3.Endpoint),
 		Files:         files.NewUseCase(dbRepo, s3Provider, cfg.S3.PublicReadBucket),
+		Employees:     employees.NewUseCase(dbRepo, emailsProvider),
 	}
 
 	jobsScheduler, err := schedulers.NewJobsScheduler(log, dbRepo)

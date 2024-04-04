@@ -1,4 +1,4 @@
-package shelters
+package employees
 
 import (
 	"github.com/gin-gonic/gin"
@@ -11,7 +11,7 @@ import (
 )
 
 func (r *routes) create(ctx *gin.Context) {
-	var request helpers.JsonData[requests.CreateShelter]
+	var request helpers.JsonData[requests.CreateEmployee]
 	err := ctx.BindJSON(&request)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, helpers.FormBadRequestError(err.Error()))
@@ -28,25 +28,22 @@ func (r *routes) create(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, helpers.FormCustomError(helpers.Unauthorized, ""))
 		return
 	}
+
 	err = r.useCase.Create(
 		ctx.Request.Context(),
-		request.Data,
 		userId.(int64),
+		request.Data,
 	)
 	if err != nil {
-		if errors.As(err, &exceptions.FileNotFoundException{}) {
-			ctx.AbortWithStatusJSON(http.StatusNotFound, helpers.FormCustomError(helpers.FileNotFound, ""))
-			return
-		}
 		if errors.As(err, &exceptions.PermissionDeniedException{}) {
 			ctx.AbortWithStatusJSON(http.StatusForbidden, helpers.FormCustomError(helpers.PermissionDenied, ""))
 			return
 		}
-		if errors.As(err, &exceptions.UserHasShelterException{}) {
-			ctx.AbortWithStatusJSON(http.StatusConflict, helpers.FormCustomError(helpers.UserAlreadyHasShelter, ""))
+		if errors.As(err, &exceptions.UserExistsException{}) {
+			ctx.AbortWithStatusJSON(http.StatusConflict, helpers.FormCustomError(helpers.UserAlreadyExists, ""))
 			return
 		}
-		r.log.Error(err.Error(), "failed to process usecase - create shelter")
+		r.log.Error(err.Error(), "failed to process usecase - create employee")
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, helpers.FormInternalError())
 		return
 	}

@@ -11,6 +11,7 @@ import (
 	"github.com/pets-shelters/backend-svc/internal/usecase/repo/entity"
 	"github.com/pets-shelters/backend-svc/pkg/postgres"
 	"github.com/pkg/errors"
+	"log"
 )
 
 const (
@@ -37,6 +38,8 @@ func (r *UsersRepo) CreateWithConn(ctx context.Context, conn usecase.IConnection
 		return 0, errors.Wrap(err, "failed to build user insert query")
 	}
 
+	log.Printf("%+v", sql)
+	log.Printf("%+v", args)
 	var id int64
 	err = conn.QueryRow(ctx, sql, args...).Scan(&id)
 	if err != nil {
@@ -54,18 +57,18 @@ func (r *UsersRepo) Create(ctx context.Context, user entity.User) (int64, error)
 	return r.CreateWithConn(ctx, r.Pool, user)
 }
 
-func (r *UsersRepo) SelectWithConn(ctx context.Context, conn usecase.IConnection, filters entity.UsersFilters) ([]entity.User, error) {
+func (r *UsersRepo) Select(ctx context.Context, filters entity.UsersFilters) ([]entity.User, error) {
 	sql, args, err := r.applyFilters(filters).ToSql()
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to build select users query")
+		return nil, errors.Wrap(err, "failed to build select employees query")
 	}
 
-	rows, err := conn.Query(ctx, sql, args...)
+	rows, err := r.Pool.Query(ctx, sql, args...)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to Query select users query")
+		return nil, errors.Wrap(err, "failed to Query select employees query")
 	}
 
-	var users []entity.User
+	users := make([]entity.User, 0)
 	defer rows.Close()
 	for rows.Next() {
 		var user entity.User
@@ -80,10 +83,6 @@ func (r *UsersRepo) SelectWithConn(ctx context.Context, conn usecase.IConnection
 	return users, nil
 }
 
-func (r *UsersRepo) Select(ctx context.Context, filters entity.UsersFilters) ([]entity.User, error) {
-	return r.SelectWithConn(ctx, r.Pool, filters)
-}
-
 func (r *UsersRepo) applyFilters(filters entity.UsersFilters) squirrel.SelectBuilder {
 	builder := r.Builder.Select("*").From(usersTableName)
 	if filters.Email != nil {
@@ -96,7 +95,7 @@ func (r *UsersRepo) applyFilters(filters entity.UsersFilters) squirrel.SelectBui
 	return builder
 }
 
-func (r *UsersRepo) Get(ctx context.Context, conn usecase.IConnection, id int64) (*entity.User, error) {
+func (r *UsersRepo) Get(ctx context.Context, id int64) (*entity.User, error) {
 	sql, args, err := r.Builder.
 		Select("*").
 		From(usersTableName).
@@ -107,12 +106,34 @@ func (r *UsersRepo) Get(ctx context.Context, conn usecase.IConnection, id int64)
 	}
 
 	var user entity.User
-	err = conn.QueryRow(ctx, sql, args...).Scan(&user.ID, &user.Email, &user.ShelterID, &user.Role)
+	err = r.Pool.QueryRow(ctx, sql, args...).Scan(&user.ID, &user.Email, &user.ShelterID, &user.Role)
 	if err != nil {
 		if errors.As(err, &pgx.ErrNoRows) {
 			return nil, nil
 		}
 		return nil, errors.Wrap(err, "failed to Query get user query")
+	}
+
+	return &user, nil
+}
+
+func (r *UsersRepo) DeleteWithConn(ctx context.Context, conn usecase.IConnection, id int64) (*entity.User, error) {
+	sql, args, err := r.Builder.
+		Delete(usersTableName).
+		Where(squirrel.Eq{"id": id}).
+		Suffix("returning *").
+		ToSql()
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to build delete user query")
+	}
+
+	var user entity.User
+	err = conn.QueryRow(ctx, sql, args...).Scan(&user.ID, &user.Email, &user.ShelterID, &user.Role)
+	if err != nil {
+		if errors.As(err, &pgx.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, errors.Wrap(err, "failed to QueryRow delete user query")
 	}
 
 	return &user, nil

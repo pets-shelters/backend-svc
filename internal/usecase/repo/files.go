@@ -46,7 +46,7 @@ func (r *FilesRepo) Create(ctx context.Context, file entity.File) (int64, error)
 	return r.CreateWithConn(ctx, r.Pool, file)
 }
 
-func (r *FilesRepo) GetWithConn(ctx context.Context, conn usecase.IConnection, id int64) (*entity.File, error) {
+func (r *FilesRepo) Get(ctx context.Context, id int64) (*entity.File, error) {
 	sql, args, err := r.Builder.
 		Select("*").
 		From(filesTableName).
@@ -57,7 +57,7 @@ func (r *FilesRepo) GetWithConn(ctx context.Context, conn usecase.IConnection, i
 	}
 
 	var file entity.File
-	err = conn.QueryRow(ctx, sql, args...).Scan(&file.ID, &file.Bucket, &file.Path)
+	err = r.Pool.QueryRow(ctx, sql, args...).Scan(&file.ID, &file.Bucket, &file.Path)
 	if err != nil {
 		if errors.As(err, &pgx.ErrNoRows) {
 			return nil, nil
@@ -66,10 +66,6 @@ func (r *FilesRepo) GetWithConn(ctx context.Context, conn usecase.IConnection, i
 	}
 
 	return &file, nil
-}
-
-func (r *FilesRepo) Get(ctx context.Context, id int64) (*entity.File, error) {
-	return r.GetWithConn(ctx, r.Pool, id)
 }
 
 func (r *FilesRepo) DeleteWithTemporaryFiles(ctx context.Context, conn usecase.IConnection, minCreatedAt time.Time) ([]entity.File, error) {
