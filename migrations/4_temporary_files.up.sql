@@ -4,4 +4,4 @@ CREATE TABLE temporary_files (
      user_id bigint NOT NULL REFERENCES users(id) ON DELETE CASCADE,
      created_at timestamp without time zone NOT NULL,
      CONSTRAINT unique_temporary_file UNIQUE(file_id)
-)
+);

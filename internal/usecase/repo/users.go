@@ -11,7 +11,6 @@ import (
 	"github.com/pets-shelters/backend-svc/internal/usecase/repo/entity"
 	"github.com/pets-shelters/backend-svc/pkg/postgres"
 	"github.com/pkg/errors"
-	"log"
 )
 
 const (
@@ -38,8 +37,6 @@ func (r *UsersRepo) CreateWithConn(ctx context.Context, conn usecase.IConnection
 		return 0, errors.Wrap(err, "failed to build user insert query")
 	}
 
-	log.Printf("%+v", sql)
-	log.Printf("%+v", args)
 	var id int64
 	err = conn.QueryRow(ctx, sql, args...).Scan(&id)
 	if err != nil {

@@ -6,4 +6,6 @@ type UseCases struct {
 	Shelters      IShelters
 	Files         IFiles
 	Employees     IEmployees
+	Locations     ILocations
+	Animals       IAnimals
 }

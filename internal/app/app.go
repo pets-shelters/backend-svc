@@ -5,10 +5,12 @@ import (
 	"github.com/pets-shelters/backend-svc/internal/controller/helpers"
 	"github.com/pets-shelters/backend-svc/internal/controller/rest"
 	"github.com/pets-shelters/backend-svc/internal/usecase"
+	"github.com/pets-shelters/backend-svc/internal/usecase/animals"
 	"github.com/pets-shelters/backend-svc/internal/usecase/authorization"
 	"github.com/pets-shelters/backend-svc/internal/usecase/employees"
 	"github.com/pets-shelters/backend-svc/internal/usecase/files"
 	"github.com/pets-shelters/backend-svc/internal/usecase/jwt"
+	"github.com/pets-shelters/backend-svc/internal/usecase/locations"
 	"github.com/pets-shelters/backend-svc/internal/usecase/mailjet"
 	"github.com/pets-shelters/backend-svc/internal/usecase/oauth"
 	"github.com/pets-shelters/backend-svc/internal/usecase/redis"
@@ -57,6 +59,8 @@ func Run(cfg *configs.Config) {
 		Shelters:      shelters.NewUseCase(dbRepo, cfg.S3.Endpoint),
 		Files:         files.NewUseCase(dbRepo, s3Provider, cfg.S3.PublicReadBucket),
 		Employees:     employees.NewUseCase(dbRepo, emailsProvider),
+		Locations:     locations.NewUseCase(dbRepo),
+		Animals:       animals.NewUseCase(dbRepo),
 	}
 
 	jobsScheduler, err := schedulers.NewJobsScheduler(log, dbRepo)

@@ -25,6 +25,9 @@ type (
 		GetUsersRepo() IUsersRepo
 		GetFilesRepo() IFilesRepo
 		GetTemporaryFilesRepo() ITemporaryFilesRepo
+		GetLocationsRepo() ILocationsRepo
+		GetAnimalsRepo() IAnimalsRepo
+		GetAnimalTypesEnumRepo() IAnimalTypesEnumRepo
 		Transaction(ctx context.Context, f func(pgx.Tx) error) error
 	}
 
@@ -35,7 +38,7 @@ type (
 		Select(ctx context.Context) ([]entity.Shelter, error)
 		Get(ctx context.Context, id int64) (*entity.Shelter, error)
 		Update(ctx context.Context, conn IConnection, id int64, updateParams entity.UpdateShelter) (int64, error)
-		GetNames(ctx context.Context, filterName string) ([]string, error)
+		SelectNames(ctx context.Context, filterName string) ([]string, error)
 	}
 
 	IUsersRepo interface {
@@ -52,6 +55,7 @@ type (
 		Create(ctx context.Context, file entity.File) (int64, error)
 		Get(ctx context.Context, id int64) (*entity.File, error)
 		DeleteWithTemporaryFiles(ctx context.Context, conn IConnection, minCreatedAt time.Time) ([]entity.File, error)
+		DeleteWithConn(ctx context.Context, conn IConnection, id int64) error
 	}
 
 	ITemporaryFilesRepo interface {
@@ -61,6 +65,24 @@ type (
 		Get(ctx context.Context, id int64) (*entity.TemporaryFile, error)
 		DeleteWithConn(ctx context.Context, conn IConnection, id int64) (*entity.TemporaryFile, error)
 		CountForUserId(ctx context.Context, userId int64) (int64, error)
+	}
+
+	ILocationsRepo interface {
+		CreateWithConn(ctx context.Context, conn IConnection, location entity.Location) (int64, error)
+		Create(ctx context.Context, location entity.Location) (int64, error)
+		Get(ctx context.Context, id int64) (*entity.Location, error)
+		SelectWithAnimals(ctx context.Context, shelterId int64) ([]entity.LocationsAnimals, error)
+		SelectUniqueCities(ctx context.Context) ([]string, error)
+		DeleteWithConn(ctx context.Context, conn IConnection, id int64) (*entity.Location, error)
+	}
+
+	IAnimalsRepo interface {
+		CreateWithConn(ctx context.Context, conn IConnection, animal entity.Animal) (int64, error)
+		Create(ctx context.Context, animal entity.Animal) (int64, error)
+	}
+
+	IAnimalTypesEnumRepo interface {
+		CreateWithConn(ctx context.Context, conn IConnection, newValue string) error
 	}
 
 	IJwt interface {
@@ -85,6 +107,17 @@ type (
 		Create(ctx context.Context, userId int64, req requests.CreateEmployee) error
 		Delete(ctx context.Context, userId int64, idToDelete int64) error
 		GetList(ctx context.Context, userId int64) ([]responses.Employee, error)
+	}
+
+	ILocations interface {
+		Create(ctx context.Context, userId int64, req requests.CreateLocation) error
+		GetList(ctx context.Context, shelterId int64) ([]responses.Location, error)
+		GetCities(ctx context.Context) ([]string, error)
+		Delete(ctx context.Context, userId int64, idToDelete int64) error
+	}
+
+	IAnimals interface {
+		Create(ctx context.Context, req requests.CreateAnimal, userId int64) error
 	}
 
 	IS3Provider interface {

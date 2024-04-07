@@ -3,4 +3,4 @@ CREATE TABLE files (
    bucket text NOT NULL,
    path text NOT NULL,
    CONSTRAINT unique_file UNIQUE(bucket, path)
-)
+);

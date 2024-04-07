@@ -32,6 +32,18 @@ func (r *DBRepo) GetTemporaryFilesRepo() usecase.ITemporaryFilesRepo {
 	return NewTemporaryFilesRepo(r.db)
 }
 
+func (r *DBRepo) GetLocationsRepo() usecase.ILocationsRepo {
+	return NewLocationsRepo(r.db)
+}
+
+func (r *DBRepo) GetAnimalsRepo() usecase.IAnimalsRepo {
+	return NewAnimalsRepo(r.db)
+}
+
+func (r *DBRepo) GetAnimalTypesEnumRepo() usecase.IAnimalTypesEnumRepo {
+	return NewAnimalTypesEnumRepo(r.db)
+}
+
 func (r *DBRepo) Transaction(ctx context.Context, f func(pgx.Tx) error) error {
 	err := r.db.Pool.BeginTxFunc(ctx, pgx.TxOptions{}, f)
 	if err != nil {

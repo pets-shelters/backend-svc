@@ -6,7 +6,7 @@ import (
 )
 
 func (uc *UseCase) GetNames(ctx context.Context, filterName string) ([]string, error) {
-	sheltersNames, err := uc.repo.GetSheltersRepo().GetNames(ctx, filterName)
+	sheltersNames, err := uc.repo.GetSheltersRepo().SelectNames(ctx, filterName)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get shelters' names entity")
 	}

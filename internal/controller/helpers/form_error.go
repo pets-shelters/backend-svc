@@ -11,9 +11,11 @@ const (
 	FilesOverload         = "files_overload"
 	InvalidFileType       = "invalid_filetype"
 	FileNotFound          = "file_not_found"
+	LocationNotFound      = "location_not_found"
 	Unauthorized          = "unauthorized"
 	PermissionDenied      = "permission_denied"
 	EntityNotFound        = "entity_not_found"
+	LocationHaveAnimals   = "location_have_animals"
 )
 
 func FormCustomError(code string, detail string) JsonData[JsonError] {

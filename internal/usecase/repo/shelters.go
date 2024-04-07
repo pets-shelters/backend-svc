@@ -138,7 +138,7 @@ func (r *SheltersRepo) applyUpdateParams(updateParams entity.UpdateShelter) squi
 	return builder
 }
 
-func (r *SheltersRepo) GetNames(ctx context.Context, filterName string) ([]string, error) {
+func (r *SheltersRepo) SelectNames(ctx context.Context, filterName string) ([]string, error) {
 	sql, args, err := r.Builder.
 		Select("name").
 		From(sheltersTableName).

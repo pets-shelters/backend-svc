@@ -92,3 +92,20 @@ func (r *FilesRepo) DeleteWithTemporaryFiles(ctx context.Context, conn usecase.I
 
 	return files, nil
 }
+
+func (r *FilesRepo) DeleteWithConn(ctx context.Context, conn usecase.IConnection, id int64) error {
+	sql, args, err := r.Builder.
+		Delete(filesTableName).
+		Where(squirrel.Eq{"id": id}).
+		ToSql()
+	if err != nil {
+		return errors.Wrap(err, "failed to build delete file query")
+	}
+
+	_, err = conn.Exec(ctx, sql, args...)
+	if err != nil {
+		return errors.Wrap(err, "failed to Exec delete file query")
+	}
+
+	return nil
+}
