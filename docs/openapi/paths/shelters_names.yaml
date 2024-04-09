@@ -1,0 +1,35 @@
+get:
+  tags:
+    - Shelters
+  summary: Get shelters' names list
+  description: >-
+    Get shelters' names with ids. Available for anyone.
+  operationId: getSheltersNames
+  parameters:
+    - name: 'filter[name]'
+      in: query
+      required: false
+      schema:
+        type: string
+      description: Filter by name (LIKE).
+  responses:
+    200:
+      description: Success
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  $ref: ../components/schemas/ShelterName.yaml
+    500:
+      description: Internal error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/InternalError.yaml

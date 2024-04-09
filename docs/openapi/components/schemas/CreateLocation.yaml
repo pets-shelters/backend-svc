@@ -1,0 +1,12 @@
+type: object
+description: Create location request
+required:
+  - city
+  - address
+properties:
+  city:
+    type: string
+    description: Location city.
+  address:
+    type: string
+    description: Location address.

@@ -38,7 +38,7 @@ type (
 		Select(ctx context.Context) ([]entity.Shelter, error)
 		Get(ctx context.Context, id int64) (*entity.Shelter, error)
 		Update(ctx context.Context, conn IConnection, id int64, updateParams entity.UpdateShelter) (int64, error)
-		SelectNames(ctx context.Context, filterName string) ([]string, error)
+		SelectNames(ctx context.Context, filterName string) ([]entity.SheltersNames, error)
 	}
 
 	IUsersRepo interface {
@@ -79,10 +79,12 @@ type (
 	IAnimalsRepo interface {
 		CreateWithConn(ctx context.Context, conn IConnection, animal entity.Animal) (int64, error)
 		Create(ctx context.Context, animal entity.Animal) (int64, error)
+		Select(ctx context.Context, filters entity.AnimalsFilters, pagination *entity.Pagination) ([]entity.AnimalForList, error)
+		Count(ctx context.Context, filters entity.AnimalsFilters) (int64, error)
 	}
 
 	IAnimalTypesEnumRepo interface {
-		CreateWithConn(ctx context.Context, conn IConnection, newValue string) error
+		Create(ctx context.Context, newValue string) error
 	}
 
 	IJwt interface {
@@ -100,7 +102,7 @@ type (
 		Create(ctx context.Context, req requests.CreateShelter, userId int64) error
 		GetById(ctx context.Context, shelterId int64) (*responses.Shelter, error)
 		Update(ctx context.Context, req requests.UpdateShelter, userId int64, shelterId int64) error
-		GetNames(ctx context.Context, filterName string) ([]string, error)
+		GetNames(ctx context.Context, filterName string) ([]responses.ShelterName, error)
 	}
 
 	IEmployees interface {
@@ -118,6 +120,7 @@ type (
 
 	IAnimals interface {
 		Create(ctx context.Context, req requests.CreateAnimal, userId int64) error
+		GetList(ctx context.Context, filters requests.AnimalsFilters, reqPagination *requests.Pagination) ([]responses.Animal, *responses.PaginationMetadata, error)
 	}
 
 	IS3Provider interface {

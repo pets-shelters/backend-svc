@@ -14,6 +14,11 @@ type Shelter struct {
 	CreatedAt   time.Time `db:"created_at" structs:"created_at"`
 }
 
+type SheltersNames struct {
+	ID   int64
+	Name string
+}
+
 type UpdateShelter struct {
 	Name        *string
 	Logo        *int64

@@ -1,0 +1,19 @@
+type: object
+description: Employee response
+required:
+  - id
+  - email
+  - role
+properties:
+  id:
+    type: string
+    description: Unique ID of an employee.
+  email:
+    type: string
+    description: Email of an employee to create.
+  role:
+    type: string
+    enum:
+      - manager
+      - employee
+    description: Employee's role in a shelter.

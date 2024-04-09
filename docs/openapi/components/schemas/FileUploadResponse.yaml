@@ -1,14 +1,9 @@
 type: object
 description: File upload response
 required:
-  - attributes
+  - temporary_file_id
 properties:
-  attributes:
-    type: object
-    required:
-      - temporary_file_id
-    properties:
-      temporary_file_id:
-        type: integer
-        format: int64
-        description: Id of a temporary file.
+  temporary_file_id:
+    type: integer
+    format: int64
+    description: Id of a temporary file.

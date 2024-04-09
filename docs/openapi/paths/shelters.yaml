@@ -24,39 +24,25 @@ post:
       content:
         application/vnd.api+json:
           schema:
-            $ref: ../components/schemas/BadRequestError.yaml
+            $ref: ../components/errors/BadRequestError.yaml
     401:
       description: Unauthorized
       content:
         application/vnd.api+json:
           schema:
-            $ref: ../components/schemas/UnauthorizedError.yaml
+            $ref: ../components/errors/UnauthorizedError.yaml
     403:
       description: Forbidden error
       content:
         application/vnd.api+json:
           schema:
-            type: object
-            required:
-              - code
-            properties:
-              code:
-                type: string
-                enum:
-                  - permission_denied
+            $ref: ../components/errors/PermissionDeniedError.yaml
     404:
       description: Not found error
       content:
         application/vnd.api+json:
           schema:
-            type: object
-            required:
-              - code
-            properties:
-              code:
-                type: string
-                enum:
-                  - file_not_found
+            $ref: ../components/errors/FileNotFoundError.yaml
     409:
       description: Conflict error
       content:
@@ -75,4 +61,4 @@ post:
       content:
         application/vnd.api+json:
           schema:
-            $ref: ../components/schemas/InternalError.yaml
+            $ref: ../components/errors/InternalError.yaml

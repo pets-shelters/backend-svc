@@ -1,0 +1,95 @@
+post:
+  tags:
+    - Employees
+  summary: Create employee
+  description: >-
+    Employee creating. Only for shelter's manager. Sends invitation email to a new employee.
+  operationId: postEmployee
+  parameters:
+    - $ref: ../components/parameters/accessTokenCookieParam.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            data:
+              type: object
+              $ref: ../components/schemas/CreateEmployee.yaml
+  responses:
+    201:
+      description: Success
+    400:
+      description: Bad request error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/BadRequestError.yaml
+    401:
+      description: Unauthorized
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/UnauthorizedError.yaml
+    403:
+      description: Forbidden error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/PermissionDeniedError.yaml
+    409:
+      description: Conflict error
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            required:
+              - code
+            properties:
+              code:
+                type: string
+                enum:
+                  - user_already_exists
+    500:
+      description: Internal error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/InternalError.yaml
+
+get:
+  tags:
+    - Employees
+  summary: Get employees' list
+  description: >-
+    Get employees' list. Only for current shelter employees.
+  operationId: getEmployees
+  parameters:
+    - $ref: ../components/parameters/accessTokenCookieParam.yaml
+  responses:
+    200:
+      description: Success
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  $ref: ../components/schemas/Employee.yaml
+    401:
+      description: Unauthorized
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/UnauthorizedError.yaml
+    500:
+      description: Internal error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/InternalError.yaml

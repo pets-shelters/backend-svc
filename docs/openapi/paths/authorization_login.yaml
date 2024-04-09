@@ -19,4 +19,4 @@ get:
       content:
         application/vnd.api+json:
           schema:
-            $ref: ../components/schemas/InternalError.yaml
+            $ref: ../components/errors/InternalError.yaml

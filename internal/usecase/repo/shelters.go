@@ -138,9 +138,9 @@ func (r *SheltersRepo) applyUpdateParams(updateParams entity.UpdateShelter) squi
 	return builder
 }
 
-func (r *SheltersRepo) SelectNames(ctx context.Context, filterName string) ([]string, error) {
+func (r *SheltersRepo) SelectNames(ctx context.Context, filterName string) ([]entity.SheltersNames, error) {
 	sql, args, err := r.Builder.
-		Select("name").
+		Select("id", "name").
 		From(sheltersTableName).
 		Where(squirrel.Like{"name": "%" + filterName + "%"}).
 		ToSql()
@@ -153,11 +153,11 @@ func (r *SheltersRepo) SelectNames(ctx context.Context, filterName string) ([]st
 		return nil, errors.Wrap(err, "failed to Query select shelters' names query")
 	}
 
-	sheltersNames := make([]string, 0)
+	sheltersNames := make([]entity.SheltersNames, 0)
 	defer rows.Close()
 	for rows.Next() {
-		var shelterName string
-		err = rows.Scan(&shelterName)
+		var shelterName entity.SheltersNames
+		err = rows.Scan(&shelterName.ID, &shelterName.Name)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to scan shelter' name entity")
 		}

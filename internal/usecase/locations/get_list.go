@@ -23,7 +23,6 @@ func formLocationsResponse(locationsAnimals []entity.LocationsAnimals) []respons
 			ID:            locationAnimal.ID,
 			City:          locationAnimal.City,
 			Address:       locationAnimal.Address,
-			ShelterID:     locationAnimal.ShelterID,
 			AnimalsNumber: locationAnimal.AnimalsNumber,
 		})
 	}

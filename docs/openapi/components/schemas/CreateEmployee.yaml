@@ -1,0 +1,8 @@
+type: object
+description: Create employee request
+required:
+  - email
+properties:
+  email:
+    type: string
+    description: Email of an employee to create.

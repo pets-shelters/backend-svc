@@ -1,6 +1,8 @@
 package responses
 
-import "time"
+import (
+	"github.com/pets-shelters/backend-svc/pkg/date"
+)
 
 type Shelter struct {
 	ID          int64     `json:"id"`
@@ -9,5 +11,5 @@ type Shelter struct {
 	PhoneNumber string    `json:"phone_number"`
 	Instagram   *string   `json:"instagram,omitempty"`
 	Facebook    *string   `json:"facebook,omitempty"`
-	CreatedAt   time.Time `json:"created_at"`
+	CreatedAt   date.Date `json:"created_at"`
 }

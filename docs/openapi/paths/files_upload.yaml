@@ -36,13 +36,13 @@ post:
       content:
         application/vnd.api+json:
           schema:
-            $ref: ../components/schemas/BadRequestError.yaml
+            $ref: ../components/errors/BadRequestError.yaml
     401:
       description: Unauthorized
       content:
         application/vnd.api+json:
           schema:
-            $ref: ../components/schemas/UnauthorizedError.yaml
+            $ref: ../components/errors/UnauthorizedError.yaml
     405:
       description: Method not allowed
       content:
@@ -61,4 +61,4 @@ post:
       content:
         application/vnd.api+json:
           schema:
-            $ref: ../components/schemas/InternalError.yaml
+            $ref: ../components/errors/InternalError.yaml

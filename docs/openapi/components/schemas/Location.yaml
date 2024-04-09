@@ -1,0 +1,21 @@
+type: object
+description: Location response
+required:
+  - id
+  - city
+  - address
+  - animals_number
+properties:
+  id:
+    type: string
+    description: Unique ID of a location.
+  city:
+    type: string
+    description: Location city.
+  address:
+    type: string
+    description: Location address.
+  animals_number:
+    type: integer
+    format: int64
+    description: Number of animals in current location.

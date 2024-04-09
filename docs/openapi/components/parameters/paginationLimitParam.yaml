@@ -1,7 +1,6 @@
 in: query
-name: 'page[limit]'
+name: 'limit'
 required: false
 schema:
   type: integer
-  default: 15
   description: Numbers of items per page to return.

@@ -1,0 +1,161 @@
+post:
+  tags:
+    - Animals
+  summary: Create animal
+  description: >-
+    Create animal. Only for shelter's employees.
+  operationId: postAnimal
+  parameters:
+    - $ref: ../components/parameters/accessTokenCookieParam.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            data:
+              type: object
+              $ref: ../components/schemas/CreateAnimal.yaml
+  responses:
+    201:
+      description: Success
+    400:
+      description: Bad request error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/BadRequestError.yaml
+    401:
+      description: Unauthorized
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/UnauthorizedError.yaml
+    403:
+      description: Forbidden error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/PermissionDeniedError.yaml
+    404:
+      description: Not found error
+      content:
+        application/vnd.api+json:
+          schema:
+            oneOf:
+              - $ref: ../components/errors/FileNotFoundError.yaml
+              - $ref: ../components/errors/LocationNotFoundError.yaml
+    500:
+      description: Internal error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/InternalError.yaml
+
+get:
+  tags:
+    - Animals
+  summary: Get animals' list
+  description: >-
+    Get animals' list. Available for anyone.
+  operationId: getAnimals
+  parameters:
+    - $ref: ../components/parameters/paginationPageParam.yaml
+    - $ref: ../components/parameters/paginationLimitParam.yaml
+    - name: 'filter[shelter_id]'
+      in: query
+      required: false
+      schema:
+        type: array
+        items:
+          type: integer
+      description: Filter by shelter_id.
+    - name: 'filter[location_id]'
+      in: query
+      required: false
+      schema:
+        type: array
+        items:
+          type: integer
+      description: Filter by location_id.
+    - name: 'filter[gender]'
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+          - female
+          - male
+      description: Filter by gender.
+    - name: 'filter[sterilized]'
+      in: query
+      required: false
+      schema:
+        type: boolean
+      description: Filter by sterilized.
+    - name: 'filter[birth_date_from]'
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date
+      description: Filter by birth_date from.
+    - name: 'filter[birth_date_to]'
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date
+      description: Filter by birth_date to.
+    - name: 'filter[type]'
+      in: query
+      required: false
+      schema:
+        type: array
+        items:
+          type: string
+      description: Filter by animal type.
+    - name: 'filter[city]'
+      in: query
+      required: false
+      schema:
+        type: array
+        items:
+          type: string
+      description: Filter by location city.
+    - name: 'filter[name]'
+      in: query
+      required: false
+      schema:
+        type: string
+      description: Filter by animal name (LIKE).
+  responses:
+    200:
+      description: Success
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  $ref: ../components/schemas/AnimalForList.yaml
+              pagination_metadata:
+                type: object
+                $ref: ../components/schemas/PaginationMetadata.yaml
+    400:
+      description: Bad request error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/BadRequestError.yaml
+    500:
+      description: Internal error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/InternalError.yaml

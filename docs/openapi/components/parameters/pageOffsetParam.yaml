@@ -1,7 +1,0 @@
-in: query
-name: 'page[offset]'
-required: false
-schema:
-  type: integer
-  default: 0
-description: Offset specific number of entities.

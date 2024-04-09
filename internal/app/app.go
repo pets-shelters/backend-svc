@@ -60,7 +60,7 @@ func Run(cfg *configs.Config) {
 		Files:         files.NewUseCase(dbRepo, s3Provider, cfg.S3.PublicReadBucket),
 		Employees:     employees.NewUseCase(dbRepo, emailsProvider),
 		Locations:     locations.NewUseCase(dbRepo),
-		Animals:       animals.NewUseCase(dbRepo),
+		Animals:       animals.NewUseCase(dbRepo, cfg.S3.Endpoint),
 	}
 
 	jobsScheduler, err := schedulers.NewJobsScheduler(log, dbRepo)

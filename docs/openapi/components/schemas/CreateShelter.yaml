@@ -1,29 +1,24 @@
 type: object
-description: File upload response
+description: Create shelter request
 required:
-  - attributes
+  - name
+  - logo
+  - phone_number
 properties:
-  attributes:
-    type: object
-    required:
-      - name
-      - logo
-      - phone_number
-    properties:
-      name:
-        type: string
-        description: Shelter name.
-      logo:
-        type: integer
-        format: int64
-        description: Temporary file id from /files/upload.
-      phone_number:
-        type: string
-        length: 12
-        description: Shelter phone number.
-      instagram:
-        type: string
-        description: Shelter's instagram url.
-      facebook:
-        type: string
-        description: Shelter's facebook url.
+  name:
+    type: string
+    description: Shelter name.
+  logo:
+    type: integer
+    format: int64
+    description: Temporary file id from /files/upload.
+  phone_number:
+    type: string
+    length: 12
+    description: Shelter phone number.
+  instagram:
+    type: string
+    description: Shelter's instagram url.
+  facebook:
+    type: string
+    description: Shelter's facebook url.

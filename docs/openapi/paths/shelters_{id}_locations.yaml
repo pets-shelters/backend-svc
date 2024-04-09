@@ -1,0 +1,41 @@
+get:
+  tags:
+    - Locations
+  summary: Get locations' list
+  description: >-
+    Get locations' list for shelter. Available for anyone.
+  operationId: getLocations
+  parameters:
+    - name: id
+      in: path
+      description: Id of a shelter to get locations for.
+      required: true
+      schema:
+        type: integer
+  responses:
+    200:
+      description: Success
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  $ref: ../components/schemas/Location.yaml
+    400:
+      description: Bad request error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/BadRequestError.yaml
+    500:
+      description: Internal error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/InternalError.yaml

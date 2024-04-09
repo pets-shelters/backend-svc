@@ -1,0 +1,50 @@
+delete:
+  tags:
+    - Locations
+  summary: Delete location
+  description: >-
+    Delete location by id. Only for shelter's manager.
+  operationId: deleteLocation
+  parameters:
+    - $ref: ../components/parameters/accessTokenCookieParam.yaml
+    - name: id
+      in: path
+      description: Id of a location to delete.
+      required: true
+      schema:
+        type: integer
+  responses:
+    200:
+      description: Success
+    400:
+      description: Bad request error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/BadRequestError.yaml
+    401:
+      description: Unauthorized
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/UnauthorizedError.yaml
+    403:
+      description: Forbidden error
+      content:
+        application/vnd.api+json:
+          schema:
+            oneOf:
+              - $ref: ../components/errors/PermissionDeniedError.yaml
+              - $ref: ../components/errors/LocationHasAnimalsError.yaml
+    404:
+      description: Not found error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/EntityNotFoundError.yaml
+    500:
+      description: Internal error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/InternalError.yaml

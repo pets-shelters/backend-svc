@@ -2,16 +2,16 @@ package exceptions
 
 import "github.com/pkg/errors"
 
-type LocationHaveAnimalsException struct {
+type LocationHasAnimalsException struct {
 	err error
 }
 
-func NewLocationHaveAnimalsException() LocationHaveAnimalsException {
-	return LocationHaveAnimalsException{
+func NewLocationHaveAnimalsException() LocationHasAnimalsException {
+	return LocationHasAnimalsException{
 		err: errors.New("location_have_animals_error"),
 	}
 }
-func (g LocationHaveAnimalsException) Error() string {
+func (g LocationHasAnimalsException) Error() string {
 	return g.err.Error()
 }
 

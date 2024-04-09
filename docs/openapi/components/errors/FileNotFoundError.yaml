@@ -1,0 +1,9 @@
+type: object
+required:
+  - code
+properties:
+  code:
+    type: string
+    enum:
+      - file_not_found
+    description: Custom error code.

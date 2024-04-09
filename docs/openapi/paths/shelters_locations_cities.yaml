@@ -1,0 +1,28 @@
+get:
+  tags:
+    - Locations
+  summary: Get locations' cities list
+  description: >-
+    Get locations' cities list. Available for anyone.
+  operationId: getLocationsCities
+  responses:
+    200:
+      description: Success
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: array
+                items:
+                  type: string
+                  description: City name.
+    500:
+      description: Internal error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/InternalError.yaml

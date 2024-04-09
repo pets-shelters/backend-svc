@@ -1,0 +1,44 @@
+type: object
+description: Create animal request
+required:
+  - location_id
+  - photo
+  - name
+  - birth_date
+  - type
+  - gender
+  - sterilized
+properties:
+  location_id:
+    type: integer
+    format: int64
+    description: Location's ID where animal is located.
+  photo:
+    type: integer
+    format: int64
+    description: Temporary file id from /files/upload.
+  name:
+    type: string
+    description: Animal name.
+  birth_date:
+    type: string
+    format: date
+    description: Animal birth date.
+  type:
+    type: string
+    description: Animal type.
+  gender:
+    type: string
+    enum:
+      - female
+      - male
+    description: Animal gender.
+  sterilized:
+    type: boolean
+    description: Animal sterilization status.
+  public_description:
+    type: string
+    description: Public description for potential adopters.
+  private_description:
+    type: string
+    description: Private description only for shelter's employees.

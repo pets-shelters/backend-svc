@@ -20,9 +20,7 @@ func (r *routes) getNames(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, helpers.JsonData[responses.SheltersNames]{
-		Data: responses.SheltersNames{
-			Names: sheltersNames,
-		},
+	ctx.JSON(http.StatusOK, helpers.JsonData[[]responses.ShelterName]{
+		Data: sheltersNames,
 	})
 }

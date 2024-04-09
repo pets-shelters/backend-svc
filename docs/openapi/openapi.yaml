@@ -17,3 +17,21 @@ paths:
     $ref: paths/files_upload.yaml
   /shelters:
     $ref: paths/shelters.yaml
+  /shelters/animals:
+    $ref: paths/shelters_animals.yaml
+  /shelters/employees:
+    $ref: paths/shelters_employees.yaml
+  /shelters/employees/{id}:
+    $ref: paths/shelters_employees_{id}.yaml
+  /shelters/locations:
+    $ref: paths/shelters_locations.yaml
+  /shelters/locations/cities:
+    $ref: paths/shelters_locations_cities.yaml
+  /shelters/locations/{id}:
+    $ref: paths/shelters_locations_{id}.yaml
+  /shelters/names:
+    $ref: paths/shelters_names.yaml
+  /shelters/{id}:
+    $ref: paths/shelters_{id}.yaml
+  /shelters/{id}/locations:
+    $ref: paths/shelters_{id}_locations.yaml

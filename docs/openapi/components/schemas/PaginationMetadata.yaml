@@ -1,0 +1,12 @@
+type: object
+description: Pagination metadata response
+required:
+  - current_page
+  - total_records
+properties:
+  current_page:
+    type: string
+    description: Current page number.
+  total_records:
+    type: string
+    description: Total records number.

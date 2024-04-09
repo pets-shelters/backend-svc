@@ -21,10 +21,10 @@ get:
       content:
         application/vnd.api+json:
           schema:
-            $ref: ../components/schemas/BadRequestError.yaml
+            $ref: ../components/errors/BadRequestError.yaml
     500:
       description: Internal error
       content:
         application/vnd.api+json:
           schema:
-            $ref: ../components/schemas/InternalError.yaml
+            $ref: ../components/errors/InternalError.yaml

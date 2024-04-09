@@ -1,0 +1,33 @@
+type: object
+description: Shelter response
+required:
+  - id
+  - name
+  - logo
+  - phone_number
+  - created_at
+properties:
+  id:
+    type: integer
+    format: int64
+    description: Unique shelter's ID.
+  name:
+    type: string
+    description: Shelter name.
+  logo:
+    type: string
+    description: S3 link to file.
+  phone_number:
+    type: string
+    length: 12
+    description: Shelter phone number.
+  instagram:
+    type: string
+    description: Shelter's instagram url.
+  facebook:
+    type: string
+    description: Shelter's facebook url.
+  created_at:
+    type: string
+    format: date
+    description: Shelter's creation date.

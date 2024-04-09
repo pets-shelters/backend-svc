@@ -1,0 +1,26 @@
+type: object
+description: Animal response for list
+required:
+  - id
+  - photo
+  - name
+  - birth_date
+  - type
+properties:
+  id:
+    type: integer
+    format: int64
+    description: Animal's unique ID.
+  photo:
+    type: string
+    description: S3 link to a file.
+  name:
+    type: string
+    description: Animal name.
+  birth_date:
+    type: string
+    format: date
+    description: Animal birth date.
+  type:
+    type: string
+    description: Animal type.

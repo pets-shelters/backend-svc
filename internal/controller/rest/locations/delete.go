@@ -37,8 +37,8 @@ func (r *routes) delete(ctx *gin.Context) {
 			ctx.AbortWithStatusJSON(http.StatusForbidden, helpers.FormCustomError(helpers.PermissionDenied, ""))
 			return
 		}
-		if errors.As(err, &exceptions.LocationHaveAnimalsException{}) {
-			ctx.AbortWithStatusJSON(http.StatusForbidden, helpers.FormCustomError(helpers.LocationHaveAnimals, ""))
+		if errors.As(err, &exceptions.LocationHasAnimalsException{}) {
+			ctx.AbortWithStatusJSON(http.StatusForbidden, helpers.FormCustomError(helpers.LocationHasAnimals, ""))
 			return
 		}
 		r.log.Error(err.Error(), "failed to process usecase - delete location")

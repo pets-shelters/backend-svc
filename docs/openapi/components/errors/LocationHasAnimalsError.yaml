@@ -1,0 +1,9 @@
+type: object
+required:
+  - code
+properties:
+  code:
+    type: string
+    enum:
+      - location_has_animals
+    description: Custom error code.
