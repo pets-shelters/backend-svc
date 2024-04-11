@@ -9,7 +9,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (uc *UseCase) GetList(ctx context.Context, reqFilters requests.AnimalsFilters, reqPagination *requests.Pagination) ([]responses.Animal, *responses.PaginationMetadata, error) {
+func (uc *UseCase) GetList(ctx context.Context, reqFilters requests.AnimalsFilters, reqPagination *requests.Pagination) ([]responses.AnimalForList, *responses.PaginationMetadata, error) {
 	var pagination *entity.Pagination
 	if reqPagination != nil {
 		pagination = &entity.Pagination{
@@ -23,6 +23,7 @@ func (uc *UseCase) GetList(ctx context.Context, reqFilters requests.AnimalsFilte
 		LocationID:    reqFilters.LocationID,
 		Gender:        reqFilters.Gender,
 		Sterilized:    reqFilters.Sterilized,
+		Adopted:       reqFilters.Adopted,
 		BirthDateFrom: reqFilters.BirthDateFrom,
 		BirthDateTo:   reqFilters.BirthDateTo,
 		Type:          reqFilters.Type,
@@ -49,10 +50,10 @@ func (uc *UseCase) GetList(ctx context.Context, reqFilters requests.AnimalsFilte
 	return formAnimalsResponse(animals, uc.s3Endpoint), paginationMetadata, nil
 }
 
-func formAnimalsResponse(animals []entity.AnimalForList, s3Endpoint string) []responses.Animal {
-	response := make([]responses.Animal, 0)
+func formAnimalsResponse(animals []entity.AnimalForList, s3Endpoint string) []responses.AnimalForList {
+	response := make([]responses.AnimalForList, 0)
 	for _, animal := range animals {
-		response = append(response, responses.Animal{
+		response = append(response, responses.AnimalForList{
 			ID:        animal.ID,
 			Photo:     s3Endpoint + "/" + animal.PhotoBucket + animal.PhotoPath,
 			Name:      animal.Name,

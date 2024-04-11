@@ -2,14 +2,15 @@ package repo
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"github.com/Masterminds/squirrel"
+	"github.com/jackc/pgx/v4"
 	"github.com/pets-shelters/backend-svc/internal/usecase"
 	"github.com/pets-shelters/backend-svc/internal/usecase/repo/entity"
 	"github.com/pets-shelters/backend-svc/internal/usecase/repo/helpers"
 	"github.com/pets-shelters/backend-svc/pkg/postgres"
 	"github.com/pkg/errors"
-	"log"
 )
 
 const (
@@ -64,8 +65,6 @@ func (r *AnimalsRepo) Select(ctx context.Context, filters entity.AnimalsFilters,
 		return nil, errors.Wrap(err, "failed to build select animals query")
 	}
 
-	log.Printf("%+v", sql)
-	log.Printf("%+v", args)
 	rows, err := r.Pool.Query(ctx, sql, args...)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to Query select animals query")
@@ -119,6 +118,13 @@ func (r *AnimalsRepo) applyFilters(builder squirrel.SelectBuilder, filters entit
 	if filters.City != nil {
 		builder = builder.Where(squirrel.Eq{fmt.Sprintf("%s.city", locationsTableName): filters.City})
 	}
+	if filters.Adopted != nil {
+		if *filters.Adopted {
+			builder = builder.Where(squirrel.NotEq{"adopter_id": sql.NullInt64{}})
+		} else {
+			builder = builder.Where(squirrel.Eq{"adopter_id": sql.NullInt64{}})
+		}
+	}
 
 	return builder
 }
@@ -133,8 +139,6 @@ func (r *AnimalsRepo) Count(ctx context.Context, filters entity.AnimalsFilters) 
 		return 0, errors.Wrap(err, "failed to build count animals query")
 	}
 
-	log.Printf("%+v", sql)
-	log.Printf("%+v", args)
 	var totalEntities int64
 	err = r.Pool.QueryRow(ctx, sql, args...).Scan(&totalEntities)
 	if err != nil {
@@ -142,4 +146,117 @@ func (r *AnimalsRepo) Count(ctx context.Context, filters entity.AnimalsFilters) 
 	}
 
 	return totalEntities, nil
+}
+
+func (r *AnimalsRepo) Update(ctx context.Context, conn usecase.IConnection, id int64, updateParams entity.UpdateAnimal) (int64, error) {
+	sql, args, err := r.applyUpdateParams(updateParams).
+		Where(squirrel.Eq{"id": id}).
+		Suffix("returning location_id, photo").
+		ToSql()
+	if err != nil {
+		return 0, errors.Wrap(err, "failed to build update animal query")
+	}
+
+	commandTag, err := conn.Exec(ctx, sql, args...)
+	if err != nil {
+		return 0, errors.Wrap(err, "failed to Exec update animal query")
+	}
+
+	return commandTag.RowsAffected(), nil
+}
+
+func (r *AnimalsRepo) applyUpdateParams(updateParams entity.UpdateAnimal) squirrel.UpdateBuilder {
+	builder := r.Builder.Update(animalsTableName)
+
+	if updateParams.LocationID != nil {
+		builder = builder.Set("location_id", *updateParams.LocationID)
+	}
+	if updateParams.Photo != nil {
+		builder = builder.Set("photo", *updateParams.Photo)
+	}
+	if updateParams.Sterilized != nil {
+		builder = builder.Set("sterilized", *updateParams.Sterilized)
+	}
+	if updateParams.AdopterID != nil {
+		builder = builder.Set("adopter_id", *updateParams.AdopterID)
+	}
+	if updateParams.PublicDescription != nil {
+		builder = builder.Set("public_description", *updateParams.PublicDescription)
+	}
+	if updateParams.PrivateDescription != nil {
+		builder = builder.Set("private_description", *updateParams.PrivateDescription)
+	}
+
+	return builder
+}
+
+func (r *AnimalsRepo) SelectShelterIDForUpdate(ctx context.Context, conn usecase.IConnection, animalId int64) (int64, error) {
+	sql, args, err := r.Builder.
+		Select(fmt.Sprintf("%s.id", sheltersTableName)).
+		From(animalsTableName).
+		LeftJoin(fmt.Sprintf("%s ON %s.location_id = %s.id", locationsTableName, animalsTableName, locationsTableName)).
+		LeftJoin(fmt.Sprintf("%s ON %s.shelter_id = %s.id", sheltersTableName, locationsTableName, sheltersTableName)).
+		Where(squirrel.Eq{fmt.Sprintf("%s.id", animalsTableName): animalId}).
+		Suffix(fmt.Sprintf("for update of %s", animalsTableName)).
+		ToSql()
+	if err != nil {
+		return 0, errors.Wrap(err, "failed to build select animal's shelter_id for update query")
+	}
+
+	var shelterId int64
+	err = conn.QueryRow(ctx, sql, args...).Scan(&shelterId)
+	if err != nil {
+		if errors.As(err, &pgx.ErrNoRows) {
+			return 0, nil
+		}
+		return 0, errors.Wrap(err, "failed to QueryRow select animal's shelter_id for update query")
+	}
+
+	return shelterId, nil
+}
+
+func (r *AnimalsRepo) Get(ctx context.Context, id int64) (*entity.Animal, error) {
+	sql, args, err := r.Builder.
+		Select("*").
+		From(animalsTableName).
+		Where(squirrel.Eq{"id": id}).
+		ToSql()
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to build get animal query")
+	}
+
+	var animal entity.Animal
+	err = r.Pool.QueryRow(ctx, sql, args...).Scan(&animal.ID, &animal.LocationID, &animal.Photo, &animal.Name,
+		&animal.BirthDate, &animal.Type, &animal.Gender, &animal.Sterilized, &animal.AdopterID, &animal.PublicDescription, &animal.PrivateDescription)
+	if err != nil {
+		if errors.As(err, &pgx.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, errors.Wrap(err, "failed to QueryRow get animal query")
+	}
+
+	return &animal, nil
+}
+
+// DeleteWithConn returns location_id
+func (r *AnimalsRepo) DeleteWithConn(ctx context.Context, conn usecase.IConnection, id int64) (locationId int64, err error) {
+	sql, args, err := r.Builder.
+		Delete(animalsTableName).
+		Where(squirrel.Eq{"id": id}).
+		Suffix("returning location_id").
+		ToSql()
+	if err != nil {
+		return 0, errors.Wrap(err, "failed to build delete animal query")
+	}
+
+	err = conn.QueryRow(ctx, sql, args...).Scan(&locationId)
+	if err != nil {
+		if errors.As(err, &pgx.ErrNoRows) {
+			return 0, nil
+		}
+
+		return 0, errors.Wrap(err, "failed to QueryRow delete animal query")
+	}
+
+	return locationId, nil
 }

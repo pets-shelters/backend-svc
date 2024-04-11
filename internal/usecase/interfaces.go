@@ -28,6 +28,7 @@ type (
 		GetLocationsRepo() ILocationsRepo
 		GetAnimalsRepo() IAnimalsRepo
 		GetAnimalTypesEnumRepo() IAnimalTypesEnumRepo
+		GetAdoptersRepo() IAdoptersRepo
 		Transaction(ctx context.Context, f func(pgx.Tx) error) error
 	}
 
@@ -70,6 +71,7 @@ type (
 	ILocationsRepo interface {
 		CreateWithConn(ctx context.Context, conn IConnection, location entity.Location) (int64, error)
 		Create(ctx context.Context, location entity.Location) (int64, error)
+		GetWithConn(ctx context.Context, conn IConnection, id int64) (*entity.Location, error)
 		Get(ctx context.Context, id int64) (*entity.Location, error)
 		SelectWithAnimals(ctx context.Context, shelterId int64) ([]entity.LocationsAnimals, error)
 		SelectUniqueCities(ctx context.Context) ([]string, error)
@@ -81,10 +83,22 @@ type (
 		Create(ctx context.Context, animal entity.Animal) (int64, error)
 		Select(ctx context.Context, filters entity.AnimalsFilters, pagination *entity.Pagination) ([]entity.AnimalForList, error)
 		Count(ctx context.Context, filters entity.AnimalsFilters) (int64, error)
+		Update(ctx context.Context, conn IConnection, id int64, updateParams entity.UpdateAnimal) (int64, error)
+		SelectShelterIDForUpdate(ctx context.Context, conn IConnection, animalId int64) (int64, error)
+		Get(ctx context.Context, id int64) (*entity.Animal, error)
+		DeleteWithConn(ctx context.Context, conn IConnection, id int64) (locationId int64, err error)
 	}
 
 	IAnimalTypesEnumRepo interface {
 		Create(ctx context.Context, newValue string) error
+		Select(ctx context.Context) ([]string, error)
+	}
+
+	IAdoptersRepo interface {
+		CreateWithConn(ctx context.Context, conn IConnection, adopter entity.Adopter) (int64, error)
+		Create(ctx context.Context, adopter entity.Adopter) (int64, error)
+		Get(ctx context.Context, id int64) (*entity.Adopter, error)
+		Select(ctx context.Context, filterPhoneNumber string) ([]entity.Adopter, error)
 	}
 
 	IJwt interface {
@@ -120,7 +134,17 @@ type (
 
 	IAnimals interface {
 		Create(ctx context.Context, req requests.CreateAnimal, userId int64) error
-		GetList(ctx context.Context, filters requests.AnimalsFilters, reqPagination *requests.Pagination) ([]responses.Animal, *responses.PaginationMetadata, error)
+		GetList(ctx context.Context, filters requests.AnimalsFilters, reqPagination *requests.Pagination) ([]responses.AnimalForList, *responses.PaginationMetadata, error)
+		GetTypes(ctx context.Context) (*responses.AnimalTypes, error)
+		Update(ctx context.Context, req requests.UpdateAnimal, userId int64, animalId int64) error
+		GetById(ctx context.Context, animalId int64, userId *int64) (*responses.Animal, error)
+		Delete(ctx context.Context, userId int64, animalId int64) error
+	}
+
+	IAdopters interface {
+		Create(ctx context.Context, userId int64, req requests.CreateAdopter) (*responses.AdopterCreated, error)
+		GetById(ctx context.Context, userId int64, adopterId int64) (*responses.Adopter, error)
+		GetList(ctx context.Context, userId int64, filterPhoneNumber string) ([]responses.Adopter, error)
 	}
 
 	IS3Provider interface {

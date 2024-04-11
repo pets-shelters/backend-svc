@@ -2,6 +2,7 @@ package employees
 
 import (
 	"context"
+	"github.com/pets-shelters/backend-svc/internal/exceptions"
 	"github.com/pets-shelters/backend-svc/internal/structs/responses"
 	"github.com/pets-shelters/backend-svc/internal/usecase/repo/entity"
 	"github.com/pkg/errors"
@@ -11,6 +12,9 @@ func (uc *UseCase) GetList(ctx context.Context, userId int64) ([]responses.Emplo
 	user, err := uc.repo.GetUsersRepo().Get(ctx, userId)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get user entity")
+	}
+	if user == nil {
+		return nil, exceptions.NewPermissionDeniedException()
 	}
 
 	employees, err := uc.repo.GetUsersRepo().Select(ctx, entity.UsersFilters{

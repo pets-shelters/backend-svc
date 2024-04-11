@@ -15,6 +15,9 @@ func (uc *UseCase) Update(ctx context.Context, req requests.UpdateShelter, userI
 	if err != nil {
 		return errors.Wrap(err, "failed to get user entity")
 	}
+	if user == nil {
+		return exceptions.NewPermissionDeniedException()
+	}
 	if user.ShelterID.Int64 != shelterId {
 		return exceptions.NewPermissionDeniedException()
 	}

@@ -1,0 +1,9 @@
+type: object
+description: Adopter created response
+required:
+  - adopter_id
+properties:
+  adopter_id:
+    type: integer
+    format: int64
+    description: Id of created adopter.

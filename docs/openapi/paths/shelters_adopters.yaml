@@ -1,0 +1,110 @@
+post:
+  tags:
+    - Adopters
+  summary: Create adopter
+  description: >-
+    Create adopter. Only for shelter's employees.
+  operationId: postAdopter
+  parameters:
+    - $ref: ../components/parameters/accessTokenCookieParam.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            data:
+              type: object
+              $ref: ../components/schemas/CreateAdopter.yaml
+  responses:
+    201:
+      description: Success
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: object
+                $ref: ../components/schemas/AdopterCreated.yaml
+    400:
+      description: Bad request error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/BadRequestError.yaml
+    401:
+      description: Unauthorized
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/UnauthorizedError.yaml
+    403:
+      description: Forbidden error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/PermissionDeniedError.yaml
+    409:
+      description: Conflict error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/AdopterAlreadyExistsError.yaml
+    500:
+      description: Internal error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/InternalError.yaml
+
+get:
+  tags:
+    - Adopters
+  summary: Get adopters' list
+  description: >-
+    Get adopters' list. Available for shelters' employees.
+  operationId: getAdopters
+  parameters:
+    - $ref: ../components/parameters/accessTokenCookieParam.yaml
+    - name: 'filter[phone_number]'
+      in: query
+      required: false
+      schema:
+        type: string
+      description: Filter by adopter's phone_number (LIKE).
+  responses:
+    200:
+      description: Success
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  $ref: ../components/schemas/Adopter.yaml
+    400:
+      description: Bad request error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/BadRequestError.yaml
+    401:
+      description: Unauthorized
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/UnauthorizedError.yaml
+    500:
+      description: Internal error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/InternalError.yaml

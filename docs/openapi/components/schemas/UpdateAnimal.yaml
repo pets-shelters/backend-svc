@@ -1,0 +1,24 @@
+type: object
+description: Update animal request
+properties:
+  location_id:
+    type: integer
+    format: int64
+    description: Location's unique ID.
+  photo:
+    type: integer
+    format: int64
+    description: Temporary file id from /files/upload.
+  sterilized:
+    type: boolean
+    description: Is animal sterilized.
+  adopter_id:
+    type: integer
+    format: int64
+    description: Id of animal's adopter.
+  public_description:
+    type: string
+    description: Public description for potential adopters.
+  private_description:
+    type: string
+    description: Private description only for shelter's employees.

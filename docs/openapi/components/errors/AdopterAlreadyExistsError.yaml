@@ -1,0 +1,9 @@
+type: object
+required:
+  - code
+properties:
+  code:
+    type: string
+    enum:
+      - adopter_already_exists
+    description: Custom error code.

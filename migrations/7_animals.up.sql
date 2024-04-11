@@ -23,6 +23,7 @@ CREATE TABLE animals (
    type animal_type NOT NULL,
    gender animal_gender NOT NULL,
    sterilized boolean NOT NULL,
-   private_description text,
-   public_description text
+   adopter_id bigint REFERENCES adopters(id),
+   public_description text,
+   private_description text
 );

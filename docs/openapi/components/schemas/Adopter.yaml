@@ -1,0 +1,18 @@
+type: object
+description: Adopter response
+required:
+  - id
+  - name
+  - phone_number
+properties:
+  id:
+    type: integer
+    format: int64
+    description: Adopter's unique ID.
+  name:
+    type: string
+    description: Adopter's name.
+  phone_number:
+    type: string
+    length: 12
+    description: Adopter's phone number.

@@ -7,7 +7,6 @@ import (
 	"github.com/pets-shelters/backend-svc/configs"
 	"github.com/pets-shelters/backend-svc/internal/usecase"
 	"github.com/pkg/errors"
-	"log"
 	"time"
 )
 
@@ -37,7 +36,6 @@ func (js *JobsScheduler) cleanTemporaryFiles() func(ctx context.Context, s3Provi
 		js.repo.Transaction(ctx, func(tx pgx.Tx) error {
 			files, err := js.repo.GetFilesRepo().DeleteWithTemporaryFiles(ctx, tx, minCreatedAt)
 			if err != nil {
-				log.Print(err)
 				return errors.Wrap(err, "failed to delete files with temporary_files")
 			}
 

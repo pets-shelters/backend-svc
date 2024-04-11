@@ -42,7 +42,7 @@ func (r *routes) getList(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, helpers.JsonData[[]responses.Animal]{
+	ctx.JSON(http.StatusOK, helpers.JsonData[[]responses.AnimalForList]{
 		Data:               animals,
 		PaginationMetadata: paginationMetadata,
 	})

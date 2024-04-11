@@ -44,6 +44,10 @@ func (r *DBRepo) GetAnimalTypesEnumRepo() usecase.IAnimalTypesEnumRepo {
 	return NewAnimalTypesEnumRepo(r.db)
 }
 
+func (r *DBRepo) GetAdoptersRepo() usecase.IAdoptersRepo {
+	return NewAdoptersRepo(r.db)
+}
+
 func (r *DBRepo) Transaction(ctx context.Context, f func(pgx.Tx) error) error {
 	err := r.db.Pool.BeginTxFunc(ctx, pgx.TxOptions{}, f)
 	if err != nil {

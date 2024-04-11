@@ -1,0 +1,13 @@
+type: object
+description: Create adopter request
+required:
+  - name
+  - phone_number
+properties:
+  name:
+    type: string
+    description: Adopter's name.
+  phone_number:
+    type: string
+    length: 12
+    description: Adopter's phone number.

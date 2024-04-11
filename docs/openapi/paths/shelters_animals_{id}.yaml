@@ -1,0 +1,161 @@
+get:
+  tags:
+    - Animals
+  summary: Get animal by id
+  description: >-
+    Get animal by id for anyone.
+  operationId: getAnimalById
+  parameters:
+    - name: access_token
+      in: cookie
+      description: Token in cookie granted to user after successful login via Google.
+      required: false
+      schema:
+        type: string
+    - name: id
+      in: path
+      description: Id of an animal to get.
+      required: true
+      schema:
+        type: integer
+  responses:
+    200:
+      description: Success
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: object
+                $ref: ../components/schemas/Animal.yaml
+    400:
+      description: Bad request
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/BadRequestError.yaml
+    404:
+      description: Not found
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/EntityNotFoundError.yaml
+    500:
+      description: Internal error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/InternalError.yaml
+
+put:
+  tags:
+    - Animals
+  summary: Update animal
+  description: >-
+    Animal updating. Only for shelter's employees.
+  operationId: putAnimal
+  parameters:
+    - $ref: ../components/parameters/accessTokenCookieParam.yaml
+    - name: id
+      in: path
+      description: Id of an animal to update.
+      required: true
+      schema:
+        type: integer
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            data:
+              type: object
+              $ref: ../components/schemas/UpdateAnimal.yaml
+  responses:
+    200:
+      description: Success
+    400:
+      description: Bad request error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/BadRequestError.yaml
+    401:
+      description: Unauthorized
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/UnauthorizedError.yaml
+    403:
+      description: Forbidden error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/PermissionDeniedError.yaml
+    404:
+      description: Not found error
+      content:
+        application/vnd.api+json:
+          schema:
+            oneOf:
+              - $ref: ../components/errors/FileNotFoundError.yaml
+              - $ref: ../components/errors/LocationNotFoundError.yaml
+              - $ref: ../components/errors/EntityNotFoundError.yaml
+    500:
+      description: Internal error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/InternalError.yaml
+
+delete:
+  tags:
+    - Animals
+  summary: Delete animal
+  description: >-
+    Delete animal by id. Only for shelter's employees.
+  operationId: deleteAnimal
+  parameters:
+    - $ref: ../components/parameters/accessTokenCookieParam.yaml
+    - name: id
+      in: path
+      description: Id of an animal to delete.
+      required: true
+      schema:
+        type: integer
+  responses:
+    200:
+      description: Success
+    400:
+      description: Bad request error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/BadRequestError.yaml
+    401:
+      description: Unauthorized
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/UnauthorizedError.yaml
+    403:
+      description: Forbidden error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/PermissionDeniedError.yaml
+    404:
+      description: Not found error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/EntityNotFoundError.yaml
+    500:
+      description: Internal error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/InternalError.yaml

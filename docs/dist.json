@@ -349,6 +349,268 @@
         }
       }
     },
+    "/shelters/adopters": {
+      "post": {
+        "tags": [
+          "Adopters"
+        ],
+        "summary": "Create adopter",
+        "description": "Create adopter. Only for shelter's employees.",
+        "operationId": "postAdopter",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessTokenCookieParam"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/CreateAdopter"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/AdopterCreated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PermissionDeniedError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdopterAlreadyExistsError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Adopters"
+        ],
+        "summary": "Get adopters' list",
+        "description": "Get adopters' list. Available for shelters' employees.",
+        "operationId": "getAdopters",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessTokenCookieParam"
+          },
+          {
+            "name": "filter[phone_number]",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by adopter's phone_number (LIKE)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "$ref": "#/components/schemas/Adopter"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shelters/adopters/{id}": {
+      "get": {
+        "tags": [
+          "Adopters"
+        ],
+        "summary": "Get adopter by id",
+        "description": "Get adopter by id for shelters' employees.",
+        "operationId": "getAdopterById",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessTokenCookieParam"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of an adopter to get.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/Adopter"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityNotFoundError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/shelters/animals": {
       "post": {
         "tags": [
@@ -587,6 +849,307 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shelters/animals/types": {
+      "get": {
+        "tags": [
+          "Animals"
+        ],
+        "summary": "Get animals' types list",
+        "description": "Get animals' types list. Available for anyone.",
+        "operationId": "getAnimalsTypes",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/AnimalTypes"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shelters/animals/{id}": {
+      "get": {
+        "tags": [
+          "Animals"
+        ],
+        "summary": "Get animal by id",
+        "description": "Get animal by id for anyone.",
+        "operationId": "getAnimalById",
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "description": "Token in cookie granted to user after successful login via Google.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of an animal to get.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/Animal"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityNotFoundError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Animals"
+        ],
+        "summary": "Update animal",
+        "description": "Animal updating. Only for shelter's employees.",
+        "operationId": "putAnimal",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessTokenCookieParam"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of an animal to update.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/UpdateAnimal"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad request error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PermissionDeniedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/FileNotFoundError"
+                    },
+                    {
+                      "$ref": "#/components/schemas/LocationNotFoundError"
+                    },
+                    {
+                      "$ref": "#/components/schemas/EntityNotFoundError"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Animals"
+        ],
+        "summary": "Delete animal",
+        "description": "Delete animal by id. Only for shelter's employees.",
+        "operationId": "deleteAnimal",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessTokenCookieParam"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of an animal to delete.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad request error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PermissionDeniedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityNotFoundError"
                 }
               }
             }
@@ -1461,6 +2024,94 @@
           }
         }
       },
+      "Adopter": {
+        "type": "object",
+        "description": "Adopter response",
+        "required": [
+          "id",
+          "name",
+          "phone_number"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Adopter's unique ID."
+          },
+          "name": {
+            "type": "string",
+            "description": "Adopter's name."
+          },
+          "phone_number": {
+            "type": "string",
+            "length": 12,
+            "description": "Adopter's phone number."
+          }
+        }
+      },
+      "CreateAdopter": {
+        "type": "object",
+        "description": "Create adopter request",
+        "required": [
+          "name",
+          "phone_number"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Adopter's name."
+          },
+          "phone_number": {
+            "type": "string",
+            "length": 12,
+            "description": "Adopter's phone number."
+          }
+        }
+      },
+      "AdopterCreated": {
+        "type": "object",
+        "description": "Adopter created response",
+        "required": [
+          "adopter_id"
+        ],
+        "properties": {
+          "adopter_id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Id of created adopter."
+          }
+        }
+      },
+      "AdopterAlreadyExistsError": {
+        "type": "object",
+        "required": [
+          "code"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "adopter_already_exists"
+            ],
+            "description": "Custom error code."
+          }
+        }
+      },
+      "EntityNotFoundError": {
+        "type": "object",
+        "required": [
+          "code"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "entity_not_found"
+            ],
+            "description": "Custom error code."
+          }
+        }
+      },
       "AnimalForList": {
         "type": "object",
         "description": "Animal response for list",
@@ -1587,6 +2238,122 @@
           }
         }
       },
+      "AnimalTypes": {
+        "type": "object",
+        "description": "Animal types response",
+        "required": [
+          "animal_types"
+        ],
+        "properties": {
+          "animal_types": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Animal": {
+        "type": "object",
+        "description": "Animal response",
+        "required": [
+          "id",
+          "location_id",
+          "photo",
+          "name",
+          "birth_date",
+          "type",
+          "gender",
+          "sterilized"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Animal's unique ID."
+          },
+          "location_id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Location's unique ID."
+          },
+          "photo": {
+            "type": "string",
+            "description": "S3 link to a file."
+          },
+          "name": {
+            "type": "string",
+            "description": "Animal name."
+          },
+          "birth_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Animal birth date."
+          },
+          "type": {
+            "type": "string",
+            "description": "Animal type."
+          },
+          "gender": {
+            "type": "string",
+            "enum": [
+              "female",
+              "male"
+            ],
+            "description": "Animal gender."
+          },
+          "sterilized": {
+            "type": "boolean",
+            "description": "Is animal sterilized."
+          },
+          "adopter_id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Id of animal's adopter if exists. Available only for shelter employees."
+          },
+          "public_description": {
+            "type": "string",
+            "description": "Public description for potential adopters."
+          },
+          "private_description": {
+            "type": "string",
+            "description": "Private description only for shelter's employees."
+          }
+        }
+      },
+      "UpdateAnimal": {
+        "type": "object",
+        "description": "Update animal request",
+        "properties": {
+          "location_id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Location's unique ID."
+          },
+          "photo": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Temporary file id from /files/upload."
+          },
+          "sterilized": {
+            "type": "boolean",
+            "description": "Is animal sterilized."
+          },
+          "adopter_id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Id of animal's adopter."
+          },
+          "public_description": {
+            "type": "string",
+            "description": "Public description for potential adopters."
+          },
+          "private_description": {
+            "type": "string",
+            "description": "Private description only for shelter's employees."
+          }
+        }
+      },
       "Employee": {
         "type": "object",
         "description": "Employee response",
@@ -1624,21 +2391,6 @@
           "email": {
             "type": "string",
             "description": "Email of an employee to create."
-          }
-        }
-      },
-      "EntityNotFoundError": {
-        "type": "object",
-        "required": [
-          "code"
-        ],
-        "properties": {
-          "code": {
-            "type": "string",
-            "enum": [
-              "entity_not_found"
-            ],
-            "description": "Custom error code."
           }
         }
       },

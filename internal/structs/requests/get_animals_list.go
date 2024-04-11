@@ -8,6 +8,7 @@ type AnimalsFilters struct {
 	ShelterID     []int64    `form:"filter[shelter_id]"`
 	LocationID    []int64    `form:"filter[location_id]"`
 	Gender        *string    `form:"filter[gender]" validate:"omitempty,oneof=female male"`
+	Adopted       *bool      `form:"filter[adopted]"`
 	Sterilized    *bool      `form:"filter[sterilized]"`
 	BirthDateFrom *date.Date `form:"filter[birth_date_from]"`
 	BirthDateTo   *date.Date `form:"filter[birth_date_to]"`

@@ -5,6 +5,7 @@ import (
 	"github.com/pets-shelters/backend-svc/internal/controller/helpers"
 	"github.com/pets-shelters/backend-svc/internal/controller/rest"
 	"github.com/pets-shelters/backend-svc/internal/usecase"
+	"github.com/pets-shelters/backend-svc/internal/usecase/adopters"
 	"github.com/pets-shelters/backend-svc/internal/usecase/animals"
 	"github.com/pets-shelters/backend-svc/internal/usecase/authorization"
 	"github.com/pets-shelters/backend-svc/internal/usecase/employees"
@@ -61,6 +62,7 @@ func Run(cfg *configs.Config) {
 		Employees:     employees.NewUseCase(dbRepo, emailsProvider),
 		Locations:     locations.NewUseCase(dbRepo),
 		Animals:       animals.NewUseCase(dbRepo, cfg.S3.Endpoint),
+		Adopters:      adopters.NewUseCase(dbRepo),
 	}
 
 	jobsScheduler, err := schedulers.NewJobsScheduler(log, dbRepo)

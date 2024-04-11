@@ -7,12 +7,16 @@ import (
 	"github.com/pets-shelters/backend-svc/internal/structs/requests"
 	"github.com/pets-shelters/backend-svc/internal/usecase/repo/entity"
 	"github.com/pkg/errors"
+	"time"
 )
 
 func (uc *UseCase) Create(ctx context.Context, req requests.CreateAnimal, userId int64) error {
 	user, err := uc.repo.GetUsersRepo().Get(ctx, userId)
 	if err != nil {
 		return errors.Wrap(err, "failed to get user entity")
+	}
+	if user == nil {
+		return exceptions.NewPermissionDeniedException()
 	}
 
 	location, err := uc.repo.GetLocationsRepo().Get(ctx, req.LocationID)
@@ -51,7 +55,7 @@ func (uc *UseCase) Create(ctx context.Context, req requests.CreateAnimal, userId
 			Gender:             req.Gender,
 			Sterilized:         req.Sterilized,
 			Type:               req.Type,
-			BirthDate:          req.BirthDate,
+			BirthDate:          time.Time(req.BirthDate),
 			PrivateDescription: req.PrivateDescription,
 			PublicDescription:  req.PublicDescription,
 		})

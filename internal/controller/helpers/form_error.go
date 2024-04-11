@@ -16,6 +16,7 @@ const (
 	PermissionDenied      = "permission_denied"
 	EntityNotFound        = "entity_not_found"
 	LocationHasAnimals    = "location_has_animals"
+	AdopterAlreadyExists  = "adopter_already_exists"
 )
 
 func FormCustomError(code string, detail string) JsonData[JsonError] {

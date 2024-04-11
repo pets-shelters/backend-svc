@@ -1,0 +1,26 @@
+get:
+  tags:
+    - Animals
+  summary: Get animals' types list
+  description: >-
+    Get animals' types list. Available for anyone.
+  operationId: getAnimalsTypes
+  responses:
+    200:
+      description: Success
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: object
+                $ref: ../components/schemas/AnimalTypes.yaml
+    500:
+      description: Internal error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/InternalError.yaml

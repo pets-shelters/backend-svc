@@ -1,0 +1,52 @@
+get:
+  tags:
+    - Adopters
+  summary: Get adopter by id
+  description: >-
+    Get adopter by id for shelters' employees.
+  operationId: getAdopterById
+  parameters:
+    - $ref: ../components/parameters/accessTokenCookieParam.yaml
+    - name: id
+      in: path
+      description: Id of an adopter to get.
+      required: true
+      schema:
+        type: integer
+  responses:
+    200:
+      description: Success
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: object
+                $ref: ../components/schemas/Adopter.yaml
+    400:
+      description: Bad request
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/BadRequestError.yaml
+    401:
+      description: Unauthorized
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/UnauthorizedError.yaml
+    404:
+      description: Not found
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/EntityNotFoundError.yaml
+    500:
+      description: Internal error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/InternalError.yaml

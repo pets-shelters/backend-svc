@@ -8,4 +8,5 @@ type UseCases struct {
 	Employees     IEmployees
 	Locations     ILocations
 	Animals       IAnimals
+	Adopters      IAdopters
 }

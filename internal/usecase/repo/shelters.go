@@ -111,7 +111,7 @@ func (r *SheltersRepo) Update(ctx context.Context, conn usecase.IConnection, id 
 
 	commandTag, err := conn.Exec(ctx, sql, args...)
 	if err != nil {
-		return 0, errors.Wrap(err, "failed to Query select employees query")
+		return 0, errors.Wrap(err, "failed to Exec update shelter query")
 	}
 
 	return commandTag.RowsAffected(), nil

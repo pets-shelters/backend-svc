@@ -82,7 +82,7 @@ func (r *LocationsRepo) SelectWithAnimals(ctx context.Context, shelterId int64) 
 	return locationsAnimals, nil
 }
 
-func (r *LocationsRepo) Get(ctx context.Context, id int64) (*entity.Location, error) {
+func (r *LocationsRepo) GetWithConn(ctx context.Context, conn usecase.IConnection, id int64) (*entity.Location, error) {
 	sql, args, err := r.Builder.
 		Select("*").
 		From(locationsTableName).
@@ -93,7 +93,7 @@ func (r *LocationsRepo) Get(ctx context.Context, id int64) (*entity.Location, er
 	}
 
 	var location entity.Location
-	err = r.Pool.QueryRow(ctx, sql, args...).Scan(&location.ID, &location.City, &location.Address, &location.ShelterID)
+	err = conn.QueryRow(ctx, sql, args...).Scan(&location.ID, &location.City, &location.Address, &location.ShelterID)
 	if err != nil {
 		if errors.As(err, &pgx.ErrNoRows) {
 			return nil, nil
@@ -102,6 +102,10 @@ func (r *LocationsRepo) Get(ctx context.Context, id int64) (*entity.Location, er
 	}
 
 	return &location, nil
+}
+
+func (r *LocationsRepo) Get(ctx context.Context, id int64) (*entity.Location, error) {
+	return r.GetWithConn(ctx, r.Pool, id)
 }
 
 func (r *LocationsRepo) SelectUniqueCities(ctx context.Context) ([]string, error) {

@@ -1,0 +1,9 @@
+type: object
+description: Animal types response
+required:
+  - animal_types
+properties:
+  animal_types:
+    type: array
+    items:
+      type: string

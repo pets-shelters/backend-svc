@@ -14,6 +14,9 @@ func (uc *UseCase) Create(ctx context.Context, userId int64, req requests.Create
 	if err != nil {
 		return errors.Wrap(err, "failed to get user entity")
 	}
+	if user == nil {
+		return exceptions.NewPermissionDeniedException()
+	}
 	if user.Role != structs.ManagerUserRole {
 		return exceptions.NewPermissionDeniedException()
 	}

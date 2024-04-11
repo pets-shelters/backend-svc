@@ -3,6 +3,7 @@ package rest
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/pets-shelters/backend-svc/internal/controller/helpers"
+	"github.com/pets-shelters/backend-svc/internal/controller/rest/adopters"
 	"github.com/pets-shelters/backend-svc/internal/controller/rest/animals"
 	"github.com/pets-shelters/backend-svc/internal/controller/rest/authorization"
 	"github.com/pets-shelters/backend-svc/internal/controller/rest/employees"
@@ -44,6 +45,10 @@ func NewRouter(handler *gin.Engine, log logger.Interface, useCases usecase.UseCa
 		animalsSubgroup := sheltersGroup.Group("/animals")
 		{
 			animals.NewRoutes(animalsSubgroup, useCases.Animals, useCases.Jwt, log)
+		}
+		adoptersSubgroup := sheltersGroup.Group("/adopters")
+		{
+			adopters.NewRoutes(adoptersSubgroup, useCases.Adopters, useCases.Jwt, log)
 		}
 	}
 	filesGroup := handler.Group("/files")
