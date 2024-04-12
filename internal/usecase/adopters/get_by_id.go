@@ -7,15 +7,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (uc *UseCase) GetById(ctx context.Context, userId int64, adopterId int64) (*responses.Adopter, error) {
-	user, err := uc.repo.GetUsersRepo().Get(ctx, userId)
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to get user entity")
-	}
-	if user == nil {
-		return nil, exceptions.NewPermissionDeniedException()
-	}
-
+func (uc *UseCase) GetById(ctx context.Context, adopterId int64) (*responses.Adopter, error) {
 	adopter, err := uc.repo.GetAdoptersRepo().Get(ctx, adopterId)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get adopter entity")

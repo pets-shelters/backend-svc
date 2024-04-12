@@ -18,24 +18,13 @@ func (r *routes) getById(ctx *gin.Context) {
 		return
 	}
 
-	userId, ok := ctx.Get(helpers.JwtIdCtx)
-	if !ok {
-		ctx.AbortWithStatusJSON(http.StatusUnauthorized, helpers.FormCustomError(helpers.Unauthorized, ""))
-		return
-	}
-
 	adopter, err := r.useCase.GetById(
 		ctx.Request.Context(),
-		userId.(int64),
 		int64(adopterId),
 	)
 	if err != nil {
 		if errors.As(err, &exceptions.NotFoundException{}) {
 			ctx.AbortWithStatusJSON(http.StatusNotFound, helpers.FormCustomError(helpers.EntityNotFound, ""))
-			return
-		}
-		if errors.As(err, &exceptions.PermissionDeniedException{}) {
-			ctx.AbortWithStatusJSON(http.StatusForbidden, helpers.FormCustomError(helpers.PermissionDenied, ""))
 			return
 		}
 		r.log.Error(err.Error(), "failed to process usecase - get adopter")

@@ -2,21 +2,12 @@ package adopters
 
 import (
 	"context"
-	"github.com/pets-shelters/backend-svc/internal/exceptions"
 	"github.com/pets-shelters/backend-svc/internal/structs/responses"
 	"github.com/pets-shelters/backend-svc/internal/usecase/repo/entity"
 	"github.com/pkg/errors"
 )
 
-func (uc *UseCase) GetList(ctx context.Context, userId int64, filterPhoneNumber string) ([]responses.Adopter, error) {
-	user, err := uc.repo.GetUsersRepo().Get(ctx, userId)
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to get user entity")
-	}
-	if user == nil {
-		return nil, exceptions.NewPermissionDeniedException()
-	}
-
+func (uc *UseCase) GetList(ctx context.Context, filterPhoneNumber string) ([]responses.Adopter, error) {
 	adopters, err := uc.repo.GetAdoptersRepo().Select(ctx, filterPhoneNumber)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to select adopters entities")

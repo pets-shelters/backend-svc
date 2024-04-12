@@ -24,22 +24,11 @@ func (r *routes) create(ctx *gin.Context) {
 		return
 	}
 
-	userId, ok := ctx.Get(helpers.JwtIdCtx)
-	if !ok {
-		ctx.AbortWithStatusJSON(http.StatusUnauthorized, helpers.FormCustomError(helpers.Unauthorized, ""))
-		return
-	}
-
 	response, err := r.useCase.Create(
 		ctx.Request.Context(),
-		userId.(int64),
 		request.Data,
 	)
 	if err != nil {
-		if errors.As(err, &exceptions.PermissionDeniedException{}) {
-			ctx.AbortWithStatusJSON(http.StatusForbidden, helpers.FormCustomError(helpers.PermissionDenied, ""))
-			return
-		}
 		if errors.As(err, &exceptions.AdopterExistsException{}) {
 			ctx.AbortWithStatusJSON(http.StatusConflict, helpers.FormCustomError(helpers.AdopterAlreadyExists, ""))
 			return

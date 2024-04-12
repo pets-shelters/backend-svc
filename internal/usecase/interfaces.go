@@ -142,9 +142,9 @@ type (
 	}
 
 	IAdopters interface {
-		Create(ctx context.Context, userId int64, req requests.CreateAdopter) (*responses.AdopterCreated, error)
-		GetById(ctx context.Context, userId int64, adopterId int64) (*responses.Adopter, error)
-		GetList(ctx context.Context, userId int64, filterPhoneNumber string) ([]responses.Adopter, error)
+		Create(ctx context.Context, req requests.CreateAdopter) (*responses.AdopterCreated, error)
+		GetById(ctx context.Context, adopterId int64) (*responses.Adopter, error)
+		GetList(ctx context.Context, filterPhoneNumber string) ([]responses.Adopter, error)
 	}
 
 	IS3Provider interface {

@@ -41,12 +41,6 @@ post:
         application/vnd.api+json:
           schema:
             $ref: ../components/errors/UnauthorizedError.yaml
-    403:
-      description: Forbidden error
-      content:
-        application/vnd.api+json:
-          schema:
-            $ref: ../components/errors/PermissionDeniedError.yaml
     409:
       description: Conflict error
       content:
