@@ -13,6 +13,8 @@ paths:
     $ref: paths/authorization_callback.yaml
   /authorization/refresh:
     $ref: paths/authorization_refresh.yaml
+  /authorization/user-info:
+    $ref: paths/authorization_user-info.yaml
   /files/upload:
     $ref: paths/files_upload.yaml
   /shelters:

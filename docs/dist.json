@@ -141,6 +141,62 @@
         }
       }
     },
+    "/authorization/user-info": {
+      "get": {
+        "tags": [
+          "Authorization"
+        ],
+        "summary": "Get user info",
+        "description": "Get user info by access_token.",
+        "operationId": "getUserInfo",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessTokenCookieParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/UserInfo"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/files/upload": {
       "post": {
         "tags": [
@@ -1934,6 +1990,25 @@
               "unauthorized"
             ],
             "description": "Custom error code."
+          }
+        }
+      },
+      "UserInfo": {
+        "type": "object",
+        "description": "User info response",
+        "required": [
+          "id",
+          "registered"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Unique user's ID."
+          },
+          "registered": {
+            "type": "boolean",
+            "description": "IF user already registered."
           }
         }
       },

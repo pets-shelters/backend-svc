@@ -3,6 +3,7 @@ package authorization
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/pets-shelters/backend-svc/internal/controller/helpers"
+	"log"
 	"net/http"
 )
 
@@ -20,7 +21,9 @@ func (r *routes) callback(ctx *gin.Context) {
 		return
 	}
 
+	log.Printf(r.webClientUrl)
+	log.Printf(r.oauthWebRedirect)
 	ctx.SetCookie(helpers.AccessTokenCookieName, tokensPair.AccessToken, r.accessTokenLifetime, "/", r.domain, false, true)
 	ctx.SetCookie(helpers.RefreshTokenCookieName, tokensPair.RefreshToken, r.refreshTokenLifetime, "/", r.domain, false, true)
-	//TODO add redirect to front
+	ctx.Redirect(http.StatusPermanentRedirect, r.webClientUrl+r.oauthWebRedirect)
 }

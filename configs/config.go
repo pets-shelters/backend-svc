@@ -39,6 +39,7 @@ type (
 		ClientID      string        `yaml:"client_id" validate:"required"`
 		ClientSecret  string        `yaml:"client_secret" validate:"required"`
 		StateLifetime time.Duration `yaml:"state_lifetime" validate:"required"`
+		WebRedirect   string        `yaml:"web_redirect" validate:"required"`
 	}
 
 	Jwt struct {

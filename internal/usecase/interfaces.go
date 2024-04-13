@@ -128,6 +128,7 @@ type (
 	IAuthorization interface {
 		Login() (*structs.LoginResult, error)
 		Callback(ctx context.Context, cookie string, googleState string, googleCode string) (*structs.TokensPair, error)
+		GetUserInfo(ctx context.Context, userId int64) (*responses.UserInfo, error)
 	}
 
 	IShelters interface {

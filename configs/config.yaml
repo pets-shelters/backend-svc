@@ -11,6 +11,7 @@ oauth:
   client_id: ""
   client_secret: ""
   state_lifetime: 300s
+  web_redirect: ""
 
 jwt:
   access_secret: "accesssecret"

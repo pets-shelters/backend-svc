@@ -1,0 +1,34 @@
+get:
+  tags:
+    - Authorization
+  summary: Get user info
+  description: >-
+    Get user info by access_token.
+  operationId: getUserInfo
+  parameters:
+    - $ref: ../components/parameters/accessTokenCookieParam.yaml
+  responses:
+    200:
+      description: Success
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: object
+                $ref: ../components/schemas/UserInfo.yaml
+    401:
+      description: Unauthorized
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/UnauthorizedError.yaml
+    500:
+      description: Internal error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/InternalError.yaml

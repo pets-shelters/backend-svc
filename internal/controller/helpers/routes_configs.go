@@ -7,6 +7,8 @@ type RouterConfigs struct {
 	LoginCookieLifetime  int
 	AccessTokenLifetime  int
 	RefreshTokenLifetime int
+	WebClientUrl         string
+	OAuthWebRedirect     string
 	Domain               string
 	TemporaryFilesCfg    configs.TemporaryFiles
 }

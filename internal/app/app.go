@@ -85,6 +85,8 @@ func Run(cfg *configs.Config) {
 		RefreshTokenLifetime: int(cfg.Jwt.RefreshLifetime.Seconds()),
 		Domain:               cfg.Infrastructure.Domain,
 		TemporaryFilesCfg:    cfg.TemporaryFiles,
+		WebClientUrl:         cfg.Infrastructure.WebClientUrl,
+		OAuthWebRedirect:     cfg.OAuth.WebRedirect,
 	}
 	rest.NewRouter(handler, log, useCases, routerConfigs)
 	httpServer := httpserver.New(handler, cfg.HTTP.Addr)

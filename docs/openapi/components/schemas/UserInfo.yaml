@@ -1,0 +1,13 @@
+type: object
+description: User info response
+required:
+  - id
+  - registered
+properties:
+  id:
+    type: integer
+    format: int64
+    description: Unique user's ID.
+  registered:
+    type: boolean
+    description: IF user already registered.
