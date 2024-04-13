@@ -29,6 +29,9 @@ type (
 		GetAnimalsRepo() IAnimalsRepo
 		GetAnimalTypesEnumRepo() IAnimalTypesEnumRepo
 		GetAdoptersRepo() IAdoptersRepo
+		GetTasksRepo() ITasksRepo
+		GetTasksAnimalsRepo() ITasksAnimalsRepo
+		GetTasksExecutionsRepo() ITasksExecutionsRepo
 		Transaction(ctx context.Context, f func(pgx.Tx) error) error
 	}
 
@@ -84,7 +87,7 @@ type (
 		Select(ctx context.Context, filters entity.AnimalsFilters, pagination *entity.Pagination) ([]entity.AnimalForList, error)
 		Count(ctx context.Context, filters entity.AnimalsFilters) (int64, error)
 		Update(ctx context.Context, conn IConnection, id int64, updateParams entity.UpdateAnimal) (int64, error)
-		SelectShelterIDForUpdate(ctx context.Context, conn IConnection, animalId int64) (int64, error)
+		SelectShelterID(ctx context.Context, animalId int64) (int64, error)
 		Get(ctx context.Context, id int64) (*entity.Animal, error)
 		DeleteWithConn(ctx context.Context, conn IConnection, id int64) (locationId int64, err error)
 	}
@@ -99,6 +102,21 @@ type (
 		Create(ctx context.Context, adopter entity.Adopter) (int64, error)
 		Get(ctx context.Context, id int64) (*entity.Adopter, error)
 		Select(ctx context.Context, filterPhoneNumber string) ([]entity.Adopter, error)
+	}
+
+	ITasksRepo interface {
+		CreateWithConn(ctx context.Context, conn IConnection, task entity.Task) (int64, error)
+		Create(ctx context.Context, task entity.Task) (int64, error)
+	}
+
+	ITasksAnimalsRepo interface {
+		CreateWithConn(ctx context.Context, conn IConnection, taskAnimal entity.TaskAnimal) (int64, error)
+		Create(ctx context.Context, taskAnimal entity.TaskAnimal) (int64, error)
+	}
+
+	ITasksExecutionsRepo interface {
+		CreateWithConn(ctx context.Context, conn IConnection, taskExecution entity.TaskExecution) (int64, error)
+		Create(ctx context.Context, taskExecution entity.TaskExecution) (int64, error)
 	}
 
 	IJwt interface {
@@ -145,6 +163,10 @@ type (
 		Create(ctx context.Context, req requests.CreateAdopter) (*responses.AdopterCreated, error)
 		GetById(ctx context.Context, adopterId int64) (*responses.Adopter, error)
 		GetList(ctx context.Context, filterPhoneNumber string) ([]responses.Adopter, error)
+	}
+
+	ITasks interface {
+		Create(ctx context.Context, req requests.CreateTask, userId int64) error
 	}
 
 	IS3Provider interface {

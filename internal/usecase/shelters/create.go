@@ -6,6 +6,7 @@ import (
 	"github.com/pets-shelters/backend-svc/internal/exceptions"
 	"github.com/pets-shelters/backend-svc/internal/structs/requests"
 	"github.com/pets-shelters/backend-svc/internal/usecase/repo/entity"
+	"github.com/pets-shelters/backend-svc/pkg/date"
 	"github.com/pkg/errors"
 	"time"
 )
@@ -29,7 +30,7 @@ func (uc *UseCase) Create(ctx context.Context, req requests.CreateShelter, userI
 			PhoneNumber: req.PhoneNumber,
 			Instagram:   req.Instagram,
 			Facebook:    req.Facebook,
-			CreatedAt:   time.Now().UTC(),
+			CreatedAt:   date.Date(time.Now().UTC()),
 		})
 		if err != nil {
 			return errors.Wrap(err, "failed to create shelter entity")

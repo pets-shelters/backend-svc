@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/pets-shelters/backend-svc/internal/exceptions"
 	"github.com/pets-shelters/backend-svc/internal/structs/responses"
-	"github.com/pets-shelters/backend-svc/pkg/date"
 	"github.com/pkg/errors"
 )
 
@@ -27,7 +26,7 @@ func (uc *UseCase) GetById(ctx context.Context, animalId int64, userId *int64) (
 		LocationID:        animal.LocationID,
 		Photo:             uc.s3Endpoint + "/" + file.Bucket + file.Path,
 		Name:              animal.Name,
-		BirthDate:         date.Date(animal.BirthDate),
+		BirthDate:         animal.BirthDate,
 		Type:              animal.Type,
 		Gender:            animal.Gender,
 		Sterilized:        animal.Sterilized,

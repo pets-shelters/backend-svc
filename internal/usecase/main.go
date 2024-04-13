@@ -9,4 +9,5 @@ type UseCases struct {
 	Locations     ILocations
 	Animals       IAnimals
 	Adopters      IAdopters
+	Tasks         ITasks
 }

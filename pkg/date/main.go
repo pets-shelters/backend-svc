@@ -1,8 +1,11 @@
 package date
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
-const TimeFormat = "2006-01-02"
+const DateFormat = "2006-01-02"
 
 type Date time.Time
 
@@ -12,19 +15,33 @@ func (d *Date) UnmarshalJSON(data []byte) (err error) {
 		return
 	}
 
-	now, err := time.Parse(`"`+TimeFormat+`"`, string(data))
+	now, err := time.Parse(`"`+DateFormat+`"`, string(data))
 	*d = Date(now)
 	return
 }
 
 func (d Date) MarshalJSON() ([]byte, error) {
-	b := make([]byte, 0, len(TimeFormat)+2)
+	b := make([]byte, 0, len(DateFormat)+2)
 	b = append(b, '"')
-	b = time.Time(d).AppendFormat(b, TimeFormat)
+	b = time.Time(d).AppendFormat(b, DateFormat)
 	b = append(b, '"')
 	return b, nil
 }
 
+func (d *Date) Scan(value interface{}) error {
+	if value == nil {
+		*d = Date(time.Time{})
+		return nil
+	}
+
+	date, ok := value.(time.Time)
+	if !ok {
+		return fmt.Errorf("failed to scan Date: %v", value)
+	}
+	*d = Date(date)
+	return nil
+}
+
 func (d Date) String() string {
-	return time.Time(d).Format(TimeFormat)
+	return time.Time(d).Format(DateFormat)
 }

@@ -9,5 +9,6 @@ properties:
     description: Adopter's name.
   phone_number:
     type: string
-    length: 12
+    minLength: 12
+    maxLength: 12
     description: Adopter's phone number.

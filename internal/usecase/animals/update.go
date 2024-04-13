@@ -29,6 +29,17 @@ func (uc *UseCase) Update(ctx context.Context, req requests.UpdateAnimal, userId
 		}
 	}
 
+	shelterId, err := uc.repo.GetAnimalsRepo().SelectShelterID(ctx, animalId)
+	if err != nil {
+		return errors.Wrap(err, "failed to select animal's shelter_id")
+	}
+	if user.ShelterID.Int64 != shelterId {
+		return exceptions.NewPermissionDeniedException()
+	}
+	if newLocation != nil && shelterId != newLocation.ShelterID {
+		return exceptions.NewPermissionDeniedException()
+	}
+
 	err = uc.repo.Transaction(ctx, func(tx pgx.Tx) error {
 		if req.Photo != nil {
 			tempFile, err := uc.repo.GetTemporaryFilesRepo().DeleteWithConn(ctx, tx, *req.Photo)
@@ -41,17 +52,6 @@ func (uc *UseCase) Update(ctx context.Context, req requests.UpdateAnimal, userId
 			if tempFile.UserID != userId {
 				return exceptions.NewPermissionDeniedException()
 			}
-		}
-
-		shelterId, err := uc.repo.GetAnimalsRepo().SelectShelterIDForUpdate(ctx, tx, animalId)
-		if err != nil {
-			return errors.Wrap(err, "failed to select animal's shelter_id for update")
-		}
-		if user.ShelterID.Int64 != shelterId {
-			return exceptions.NewPermissionDeniedException()
-		}
-		if newLocation != nil && shelterId != newLocation.ShelterID {
-			return exceptions.NewPermissionDeniedException()
 		}
 
 		rowsAffected, err := uc.repo.GetAnimalsRepo().Update(ctx, tx, animalId, entity.UpdateAnimal{

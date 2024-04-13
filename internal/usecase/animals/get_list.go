@@ -5,7 +5,6 @@ import (
 	"github.com/pets-shelters/backend-svc/internal/structs/requests"
 	"github.com/pets-shelters/backend-svc/internal/structs/responses"
 	"github.com/pets-shelters/backend-svc/internal/usecase/repo/entity"
-	"github.com/pets-shelters/backend-svc/pkg/date"
 	"github.com/pkg/errors"
 )
 
@@ -57,7 +56,7 @@ func formAnimalsResponse(animals []entity.AnimalForList, s3Endpoint string) []re
 			ID:        animal.ID,
 			Photo:     s3Endpoint + "/" + animal.PhotoBucket + animal.PhotoPath,
 			Name:      animal.Name,
-			BirthDate: date.Date(animal.BirthDate),
+			BirthDate: animal.BirthDate,
 			Type:      animal.Type,
 		})
 	}

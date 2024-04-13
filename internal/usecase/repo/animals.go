@@ -190,26 +190,25 @@ func (r *AnimalsRepo) applyUpdateParams(updateParams entity.UpdateAnimal) squirr
 	return builder
 }
 
-func (r *AnimalsRepo) SelectShelterIDForUpdate(ctx context.Context, conn usecase.IConnection, animalId int64) (int64, error) {
+func (r *AnimalsRepo) SelectShelterID(ctx context.Context, animalId int64) (int64, error) {
 	sql, args, err := r.Builder.
 		Select(fmt.Sprintf("%s.id", sheltersTableName)).
 		From(animalsTableName).
 		LeftJoin(fmt.Sprintf("%s ON %s.location_id = %s.id", locationsTableName, animalsTableName, locationsTableName)).
 		LeftJoin(fmt.Sprintf("%s ON %s.shelter_id = %s.id", sheltersTableName, locationsTableName, sheltersTableName)).
 		Where(squirrel.Eq{fmt.Sprintf("%s.id", animalsTableName): animalId}).
-		Suffix(fmt.Sprintf("for update of %s", animalsTableName)).
 		ToSql()
 	if err != nil {
-		return 0, errors.Wrap(err, "failed to build select animal's shelter_id for update query")
+		return 0, errors.Wrap(err, "failed to build select animal's shelter_id query")
 	}
 
 	var shelterId int64
-	err = conn.QueryRow(ctx, sql, args...).Scan(&shelterId)
+	err = r.Pool.QueryRow(ctx, sql, args...).Scan(&shelterId)
 	if err != nil {
 		if errors.As(err, &pgx.ErrNoRows) {
 			return 0, nil
 		}
-		return 0, errors.Wrap(err, "failed to QueryRow select animal's shelter_id for update query")
+		return 0, errors.Wrap(err, "failed to QueryRow select animal's shelter_id query")
 	}
 
 	return shelterId, nil

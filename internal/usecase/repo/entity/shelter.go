@@ -1,7 +1,7 @@
 package entity
 
 import (
-	"time"
+	"github.com/pets-shelters/backend-svc/pkg/date"
 )
 
 type Shelter struct {
@@ -11,7 +11,7 @@ type Shelter struct {
 	PhoneNumber string    `db:"phone_number" structs:"phone_number"`
 	Instagram   *string   `db:"instagram" structs:"instagram"`
 	Facebook    *string   `db:"facebook" structs:"facebook"`
-	CreatedAt   time.Time `db:"created_at" structs:"created_at"`
+	CreatedAt   date.Date `db:"created_at" structs:"created_at"`
 }
 
 type SheltersNames struct {

@@ -7,7 +7,6 @@ import (
 	"github.com/pets-shelters/backend-svc/internal/structs/requests"
 	"github.com/pets-shelters/backend-svc/internal/usecase/repo/entity"
 	"github.com/pkg/errors"
-	"time"
 )
 
 func (uc *UseCase) Create(ctx context.Context, req requests.CreateAnimal, userId int64) error {
@@ -55,7 +54,7 @@ func (uc *UseCase) Create(ctx context.Context, req requests.CreateAnimal, userId
 			Gender:             req.Gender,
 			Sterilized:         req.Sterilized,
 			Type:               req.Type,
-			BirthDate:          time.Time(req.BirthDate),
+			BirthDate:          req.BirthDate,
 			PrivateDescription: req.PrivateDescription,
 			PublicDescription:  req.PublicDescription,
 		})
