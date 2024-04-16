@@ -1,0 +1,31 @@
+type: object
+description: Task for animal response
+required:
+  - id
+  - description
+  - start_date
+  - end_date
+  - executions
+properties:
+  id:
+    type: integer
+    format: int64
+    description: Task unique ID.
+  description:
+    type: string
+    description: Task description.
+  start_date:
+    type: string
+    format: date
+    description: Task start_date.
+  end_date:
+    type: string
+    format: date
+    description: Task end_date.
+  time:
+    type: string
+    description: Task time (ex. "11:25").
+  executions_number:
+    type: integer
+    format: int64
+    description: Number of executions made for the task.

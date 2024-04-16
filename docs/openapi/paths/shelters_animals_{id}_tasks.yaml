@@ -1,0 +1,60 @@
+get:
+  tags:
+    - Tasks
+  summary: Get tasks' list for animal
+  description: >-
+    Get tasks' list for animal. Only for shelter's employees.
+  operationId: getTasksForAnimal
+  parameters:
+    - $ref: ../components/parameters/accessTokenCookieParam.yaml
+    - name: id
+      in: path
+      description: Id of an animal to get tasks for.
+      required: true
+      schema:
+        type: integer
+  responses:
+    200:
+      description: Success
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  $ref: ../components/schemas/TaskForAnimal.yaml
+    400:
+      description: Bad request error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/BadRequestError.yaml
+    401:
+      description: Unauthorized
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/UnauthorizedError.yaml
+    403:
+      description: Forbidden error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/PermissionDeniedError.yaml
+    404:
+      description: Not found error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/EntityNotFoundError.yaml
+    500:
+      description: Internal error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/InternalError.yaml

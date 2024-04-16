@@ -11,5 +11,5 @@ type TaskForAnimal struct {
 	StartDate        date.Date           `json:"start_date"`
 	EndDate          date.Date           `json:"end_date"`
 	Time             customTime.NullTime `json:"time,omitempty"`
-	ExecutionsNumber int64               `json:"executions_number,omitempty"`
+	ExecutionsNumber int64               `json:"executions_number"`
 }

@@ -1,0 +1,9 @@
+type: object
+description: Create execution request
+required:
+  - date
+properties:
+  date:
+    type: string
+    format: date
+    description: Execution for task of date.

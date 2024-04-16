@@ -1,0 +1,101 @@
+post:
+  tags:
+    - Tasks
+  summary: Create task
+  description: >-
+    Create task. Only for shelter's employees.
+  operationId: postTask
+  parameters:
+    - $ref: ../components/parameters/accessTokenCookieParam.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            data:
+              type: object
+              $ref: ../components/schemas/CreateTask.yaml
+  responses:
+    201:
+      description: Success
+    400:
+      description: Bad request error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/BadRequestError.yaml
+    401:
+      description: Unauthorized
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/UnauthorizedError.yaml
+    403:
+      description: Forbidden error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/PermissionDeniedError.yaml
+    404:
+      description: Not found error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/EntityNotFoundError.yaml
+    500:
+      description: Internal error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/InternalError.yaml
+
+get:
+  tags:
+    - Tasks
+  summary: Get tasks' list with executions
+  description: >-
+    Get tasks' list with executions. Only for shelter's employees.
+  operationId: getTasksWithExecutions
+  parameters:
+    - $ref: ../components/parameters/accessTokenCookieParam.yaml
+    - name: 'filter[date]'
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date
+      description: Filter by task date.
+  responses:
+    200:
+      description: Success
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  $ref: ../components/schemas/TaskWithExecutions.yaml
+    400:
+      description: Bad request error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/BadRequestError.yaml
+    401:
+      description: Unauthorized
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/UnauthorizedError.yaml
+    500:
+      description: Internal error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/InternalError.yaml

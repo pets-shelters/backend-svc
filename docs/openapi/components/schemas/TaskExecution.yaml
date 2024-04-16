@@ -1,0 +1,18 @@
+type: object
+description: Task execution response
+required:
+  - date
+  - done_at
+properties:
+  user_id:
+    type: integer
+    format: int64
+    description: ID of a user who executed a task. Can be empty if employee was deleted.
+  date:
+    type: string
+    format: date
+    description: Execution for task of date.
+  done_at:
+    type: string
+    format: datetime
+    description: Execution timestamp.

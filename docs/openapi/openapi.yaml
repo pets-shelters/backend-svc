@@ -29,6 +29,8 @@ paths:
     $ref: paths/shelters_animals_types.yaml
   /shelters/animals/{id}:
     $ref: paths/shelters_animals_{id}.yaml
+  /shelters/animals/{id}/tasks:
+    $ref: paths/shelters_animals_{id}_tasks.yaml
   /shelters/employees:
     $ref: paths/shelters_employees.yaml
   /shelters/employees/{id}:
@@ -41,6 +43,12 @@ paths:
     $ref: paths/shelters_locations_{id}.yaml
   /shelters/names:
     $ref: paths/shelters_names.yaml
+  /shelters/tasks:
+    $ref: paths/shelters_tasks.yaml
+  /shelters/tasks/{id}:
+    $ref: paths/shelters_tasks_{id}.yaml
+  /shelters/tasks/{id}/done:
+    $ref: paths/shelters_tasks_{id}_done.yaml
   /shelters/{id}:
     $ref: paths/shelters_{id}.yaml
   /shelters/{id}/locations:

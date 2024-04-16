@@ -1213,6 +1213,104 @@
         }
       }
     },
+    "/shelters/animals/{id}/tasks": {
+      "get": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Get tasks' list for animal",
+        "description": "Get tasks' list for animal. Only for shelter's employees.",
+        "operationId": "getTasksForAnimal",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessTokenCookieParam"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of an animal to get tasks for.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "$ref": "#/components/schemas/TaskForAnimal"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PermissionDeniedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityNotFoundError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/shelters/employees": {
       "post": {
         "tags": [
@@ -1688,6 +1786,341 @@
                       }
                     }
                   }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shelters/tasks": {
+      "post": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Create task",
+        "description": "Create task. Only for shelter's employees.",
+        "operationId": "postTask",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessTokenCookieParam"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/CreateTask"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad request error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PermissionDeniedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityNotFoundError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Get tasks' list with executions",
+        "description": "Get tasks' list with executions. Only for shelter's employees.",
+        "operationId": "getTasksWithExecutions",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessTokenCookieParam"
+          },
+          {
+            "name": "filter[date]",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Filter by task date."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "$ref": "#/components/schemas/TaskWithExecutions"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shelters/tasks/{id}": {
+      "delete": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Delete task",
+        "description": "Delete task by id. Only for shelter's employees.",
+        "operationId": "deleteTask",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessTokenCookieParam"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of a task to delete.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad request error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PermissionDeniedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityNotFoundError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shelters/tasks/{id}/done": {
+      "put": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Set task done",
+        "description": "Set task done (create execution). Only for shelter's employees.",
+        "operationId": "putTaskDone",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessTokenCookieParam"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of a task to create execution for.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/SetTaskDone"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad request error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PermissionDeniedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityNotFoundError"
                 }
               }
             }
@@ -2422,6 +2855,47 @@
           }
         }
       },
+      "TaskForAnimal": {
+        "type": "object",
+        "description": "Task for animal response",
+        "required": [
+          "id",
+          "description",
+          "start_date",
+          "end_date",
+          "executions"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Task unique ID."
+          },
+          "description": {
+            "type": "string",
+            "description": "Task description."
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Task start_date."
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Task end_date."
+          },
+          "time": {
+            "type": "string",
+            "description": "Task time (ex. \"11:25\")."
+          },
+          "executions_number": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Number of executions made for the task."
+          }
+        }
+      },
       "Employee": {
         "type": "object",
         "description": "Employee response",
@@ -2511,6 +2985,123 @@
           "name": {
             "type": "string",
             "description": "Shelter name."
+          }
+        }
+      },
+      "TaskExecution": {
+        "type": "object",
+        "description": "Task execution response",
+        "required": [
+          "date",
+          "done_at"
+        ],
+        "properties": {
+          "user_id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "ID of a user who executed a task. Can be empty if employee was deleted."
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Execution for task of date."
+          },
+          "done_at": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Execution timestamp."
+          }
+        }
+      },
+      "TaskWithExecutions": {
+        "type": "object",
+        "description": "Task with executions response",
+        "required": [
+          "id",
+          "description",
+          "start_date",
+          "end_date",
+          "executions"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Task unique ID."
+          },
+          "description": {
+            "type": "string",
+            "description": "Task description."
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Task start_date."
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Task end_date."
+          },
+          "time": {
+            "type": "string",
+            "description": "Task time (ex. \"11:25\")."
+          },
+          "executions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "$ref": "#/components/schemas/TaskExecution"
+            }
+          }
+        }
+      },
+      "CreateTask": {
+        "type": "object",
+        "description": "Create task request",
+        "required": [
+          "animal_id",
+          "description",
+          "start_date",
+          "end_date"
+        ],
+        "properties": {
+          "animal_id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Animal's ID to create task for."
+          },
+          "description": {
+            "type": "string",
+            "description": "Task description."
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Task start_date."
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Task end_date."
+          },
+          "time": {
+            "type": "string",
+            "description": "Task time (ex. \"11:25\")."
+          }
+        }
+      },
+      "SetTaskDone": {
+        "type": "object",
+        "description": "Create execution request",
+        "required": [
+          "date"
+        ],
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Execution for task of date."
           }
         }
       },

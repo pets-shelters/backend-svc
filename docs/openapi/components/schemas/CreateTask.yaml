@@ -1,0 +1,26 @@
+type: object
+description: Create task request
+required:
+  - animal_id
+  - description
+  - start_date
+  - end_date
+properties:
+  animal_id:
+    type: integer
+    format: int64
+    description: Animal's ID to create task for.
+  description:
+    type: string
+    description: Task description.
+  start_date:
+    type: string
+    format: date
+    description: Task start_date.
+  end_date:
+    type: string
+    format: date
+    description: Task end_date.
+  time:
+    type: string
+    description: Task time (ex. "11:25").
