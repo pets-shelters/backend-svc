@@ -37,10 +37,16 @@ mailjet:
   sender_name: ""
   invitation_template_id: ""
   invitation_url: ""
+  tasks_template_id: ""
+  tasks_url: ""
 
 temporary_files:
   scheduler_period: 1h
   lifetime: 1h
+
+tasks_scheduler:
+  hour: 9
+  location: "Europe/Kyiv"
 
 infrastructure:
   service_url: "http://localhost:80/api"

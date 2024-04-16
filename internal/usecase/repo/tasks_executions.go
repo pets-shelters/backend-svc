@@ -24,7 +24,7 @@ func (r *TasksExecutionsRepo) CreateWithConn(ctx context.Context, conn usecase.I
 	sql, args, err := r.Builder.
 		Insert(tasksExecutionsTableName).
 		Columns("task_id", "user_id", "date", "done_at").
-		Values(taskExecution.TaskID, taskExecution.UserID, taskExecution.Date, taskExecution.DoneAt).
+		Values(taskExecution.TaskID, taskExecution.UserID.Int64, taskExecution.Date, taskExecution.DoneAt).
 		Suffix("returning id").
 		ToSql()
 	if err != nil {

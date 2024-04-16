@@ -21,6 +21,7 @@ type (
 		S3             `yaml:"s3" validate:"required"`
 		Mailjet        `yaml:"mailjet" validate:"required"`
 		TemporaryFiles `yaml:"temporary_files" validate:"required"`
+		TasksScheduler `yaml:"tasks_scheduler" validate:"required"`
 	}
 
 	HTTP struct {
@@ -73,13 +74,20 @@ type (
 		PrivateKey           string `yaml:"private_key" validate:"required"`
 		SenderEmail          string `yaml:"sender_email" validate:"required"`
 		SenderName           string `yaml:"sender_name" validate:"required"`
-		InvitationTemplateId string `yaml:"invitation_template_id" validate:"required"`
+		InvitationTemplateId int    `yaml:"invitation_template_id" validate:"required"`
 		InvitationUrl        string `yaml:"invitation_url" validate:"required"`
+		TasksTemplateId      int    `yaml:"tasks_template_id" validate:"required"`
+		TasksUrl             string `yaml:"tasks_url" validate:"required"`
 	}
 
 	TemporaryFiles struct {
 		SchedulerPeriod time.Duration `yaml:"scheduler_period" validate:"required"`
 		Lifetime        time.Duration `yaml:"lifetime" validate:"required"`
+	}
+
+	TasksScheduler struct {
+		Hour     int64  `yaml:"hour" validate:"required"`
+		Location string `yaml:"location" validate:"required"`
 	}
 )
 

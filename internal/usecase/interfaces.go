@@ -8,6 +8,7 @@ import (
 	"github.com/pets-shelters/backend-svc/internal/structs/requests"
 	"github.com/pets-shelters/backend-svc/internal/structs/responses"
 	"github.com/pets-shelters/backend-svc/internal/usecase/repo/entity"
+	"github.com/pets-shelters/backend-svc/pkg/date"
 	"io"
 	"time"
 )
@@ -107,6 +108,12 @@ type (
 	ITasksRepo interface {
 		CreateWithConn(ctx context.Context, conn IConnection, task entity.Task) (int64, error)
 		Create(ctx context.Context, task entity.Task) (int64, error)
+		Get(ctx context.Context, id int64) (*entity.Task, error)
+		SelectShelterID(ctx context.Context, taskId int64) (int64, error)
+		Delete(ctx context.Context, id int64) (int64, error)
+		SelectWithExecutions(ctx context.Context, filters entity.TasksFilters) ([]entity.TaskWithExecutions, error)
+		SelectForAnimal(ctx context.Context, animalId int64) ([]entity.TaskForAnimal, error)
+		SelectForEmails(ctx context.Context, date date.Date) ([]entity.EmployeeTasks, error)
 	}
 
 	ITasksAnimalsRepo interface {
@@ -168,6 +175,10 @@ type (
 
 	ITasks interface {
 		Create(ctx context.Context, req requests.CreateTask, userId int64) error
+		SetExecution(ctx context.Context, req requests.SetTaskDone, taskId int64, userId int64) error
+		Delete(ctx context.Context, userId int64, taskId int64) error
+		GetListWithExecutions(ctx context.Context, userId int64, req requests.TasksWithExecutionsFilters) ([]responses.TaskWithExecutions, error)
+		GetListForAnimal(ctx context.Context, userId int64, animalId int64) ([]responses.TaskForAnimal, error)
 	}
 
 	IS3Provider interface {
@@ -177,6 +188,7 @@ type (
 
 	IEmailsProvider interface {
 		SendInvitationEmail(shelterName string, toEmail string) error
+		SendTasksEmail(toEmail string, date date.Date, tasks []structs.TaskForEmail) error
 	}
 
 	IFiles interface {

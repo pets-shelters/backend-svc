@@ -7,7 +7,6 @@ import (
 	"github.com/pets-shelters/backend-svc/internal/structs/requests"
 	"github.com/pets-shelters/backend-svc/internal/structs/responses"
 	"github.com/pets-shelters/backend-svc/pkg/bind"
-	"log"
 	"net/http"
 )
 
@@ -23,8 +22,6 @@ func (r *routes) getList(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, helpers.FormBadRequestError(err.Error()))
 		return
 	}
-	log.Printf("%+v", queryParams.Pagination)
-	log.Printf("%+v", validator.New().Struct(queryParams.Pagination))
 	err = validator.New().Struct(queryParams)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, helpers.FormBadRequestError(err.Error()))

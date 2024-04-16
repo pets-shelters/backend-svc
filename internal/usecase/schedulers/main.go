@@ -4,6 +4,7 @@ import (
 	"github.com/go-co-op/gocron/v2"
 	"github.com/pets-shelters/backend-svc/internal/usecase"
 	"github.com/pkg/errors"
+	"time"
 )
 
 type JobsScheduler struct {
@@ -11,10 +12,13 @@ type JobsScheduler struct {
 	repo      usecase.IDBRepo
 }
 
-func NewJobsScheduler(logger gocron.Logger, repo usecase.IDBRepo) (*JobsScheduler, error) {
+func NewJobsScheduler(logger gocron.Logger, repo usecase.IDBRepo, location *time.Location) (*JobsScheduler, error) {
 	runner, err := gocron.NewScheduler(
 		gocron.WithLogger(
 			logger,
+		),
+		gocron.WithLocation(
+			location,
 		),
 	)
 	if err != nil {

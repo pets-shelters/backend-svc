@@ -27,6 +27,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -67,13 +68,21 @@ func Run(cfg *configs.Config) {
 		Tasks:         tasks.NewUseCase(dbRepo),
 	}
 
-	jobsScheduler, err := schedulers.NewJobsScheduler(log, dbRepo)
+	schedulerLocation, err := time.LoadLocation(cfg.TasksScheduler.Location)
+	if err != nil {
+		log.Fatal(errors.Wrap(err, "failed to load scheduler location").Error())
+	}
+	jobsScheduler, err := schedulers.NewJobsScheduler(log, dbRepo, schedulerLocation)
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "failed to init jobs scheduler").Error())
 	}
 	err = jobsScheduler.WithCleanTemporaryFilesJob(s3Provider, cfg.TemporaryFiles)
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "failed to add clean_temporary_files job").Error())
+	}
+	err = jobsScheduler.WithSendTasksEmailsJob(emailsProvider, cfg.TasksScheduler.Hour)
+	if err != nil {
+		log.Fatal(errors.Wrap(err, "failed to add send_tasks_emails job").Error())
 	}
 	jobsScheduler.Start()
 	defer jobsScheduler.Shutdown()

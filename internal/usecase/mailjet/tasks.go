@@ -2,10 +2,12 @@ package mailjet
 
 import (
 	"github.com/mailjet/mailjet-apiv3-go/v4"
+	"github.com/pets-shelters/backend-svc/internal/structs"
+	"github.com/pets-shelters/backend-svc/pkg/date"
 	"github.com/pkg/errors"
 )
 
-func (m *Mailjet) SendInvitationEmail(shelterName string, toEmail string) error {
+func (m *Mailjet) SendTasksEmail(toEmail string, date date.Date, tasks []structs.TaskForEmail) error {
 	messagesInfo := []mailjet.InfoMessagesV31{
 		{
 			From: &mailjet.RecipientV31{
@@ -17,11 +19,12 @@ func (m *Mailjet) SendInvitationEmail(shelterName string, toEmail string) error 
 					Email: toEmail,
 				},
 			},
-			TemplateID:       m.cfg.InvitationTemplateId,
+			TemplateID:       m.cfg.TasksTemplateId,
 			TemplateLanguage: true,
 			Variables: map[string]interface{}{
-				"shelter_name": shelterName,
-				"login_url":    m.cfg.InvitationUrl,
+				"date":  date.String(),
+				"url":   m.cfg.TasksUrl,
+				"items": tasks,
 			},
 		},
 	}

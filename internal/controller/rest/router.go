@@ -46,6 +46,10 @@ func NewRouter(handler *gin.Engine, log logger.Interface, useCases usecase.UseCa
 		animalsSubgroup := sheltersGroup.Group("/animals")
 		{
 			animals.NewRoutes(animalsSubgroup, useCases.Animals, useCases.Jwt, log)
+			tasksWithAnimalIdSubgroup := animalsSubgroup.Group("/:id/tasks")
+			{
+				tasks.NewRoutesWithAnimalId(tasksWithAnimalIdSubgroup, useCases.Tasks, useCases.Jwt, log)
+			}
 		}
 		adoptersSubgroup := sheltersGroup.Group("/adopters")
 		{
