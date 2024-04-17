@@ -12,6 +12,12 @@ properties:
   sterilized:
     type: boolean
     description: Is animal sterilized.
+  for_adoption:
+    type: boolean
+    description: Is animal available for adoption.
+  for_walking:
+    type: boolean
+    description: Is animal available for walking.
   adopter_id:
     type: integer
     format: int64

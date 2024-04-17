@@ -58,6 +58,8 @@ func (uc *UseCase) Update(ctx context.Context, req requests.UpdateAnimal, userId
 			LocationID:         req.LocationID,
 			Photo:              req.Photo,
 			Sterilized:         req.Sterilized,
+			ForAdoption:        req.ForAdoption,
+			ForWalking:         req.ForWalking,
 			AdopterID:          req.AdopterID,
 			PublicDescription:  req.PublicDescription,
 			PrivateDescription: req.PrivateDescription,

@@ -22,6 +22,8 @@ func (uc *UseCase) GetList(ctx context.Context, reqFilters requests.AnimalsFilte
 		LocationID:    reqFilters.LocationID,
 		Gender:        reqFilters.Gender,
 		Sterilized:    reqFilters.Sterilized,
+		ForAdoption:   reqFilters.ForAdoption,
+		ForWalking:    reqFilters.ForWalking,
 		Adopted:       reqFilters.Adopted,
 		BirthDateFrom: reqFilters.BirthDateFrom,
 		BirthDateTo:   reqFilters.BirthDateTo,

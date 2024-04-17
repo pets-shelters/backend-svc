@@ -809,6 +809,24 @@
             "description": "Filter by sterilized."
           },
           {
+            "name": "filter[for_adoption]",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Filter if animal available for adoption."
+          },
+          {
+            "name": "filter[for_walking]",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Filter if animal available for walking."
+          },
+          {
             "name": "filter[birth_date_from]",
             "in": "query",
             "required": false,
@@ -2676,7 +2694,9 @@
           "birth_date",
           "type",
           "gender",
-          "sterilized"
+          "sterilized",
+          "for_adoption",
+          "for_walking"
         ],
         "properties": {
           "location_id": {
@@ -2713,6 +2733,14 @@
           "sterilized": {
             "type": "boolean",
             "description": "Animal sterilization status."
+          },
+          "for_adoption": {
+            "type": "boolean",
+            "description": "Is animal available for adoption."
+          },
+          "for_walking": {
+            "type": "boolean",
+            "description": "Is animal available for walking."
           },
           "public_description": {
             "type": "string",
@@ -2765,7 +2793,9 @@
           "birth_date",
           "type",
           "gender",
-          "sterilized"
+          "sterilized",
+          "for_adoption",
+          "for_walking"
         ],
         "properties": {
           "id": {
@@ -2807,6 +2837,14 @@
             "type": "boolean",
             "description": "Is animal sterilized."
           },
+          "for_adoption": {
+            "type": "boolean",
+            "description": "Is animal available for adoption."
+          },
+          "for_walking": {
+            "type": "boolean",
+            "description": "Is animal available for walking."
+          },
           "adopter_id": {
             "type": "integer",
             "format": "int64",
@@ -2839,6 +2877,14 @@
           "sterilized": {
             "type": "boolean",
             "description": "Is animal sterilized."
+          },
+          "for_adoption": {
+            "type": "boolean",
+            "description": "Is animal available for adoption."
+          },
+          "for_walking": {
+            "type": "boolean",
+            "description": "Is animal available for walking."
           },
           "adopter_id": {
             "type": "integer",

@@ -21,6 +21,8 @@ type Animal struct {
 	Type               string    `json:"type"`
 	Gender             string    `json:"gender"`
 	Sterilized         bool      `json:"sterilized"`
+	ForAdoption        bool      `json:"for_adoption"`
+	ForWalking         bool      `json:"for_walking"`
 	AdopterID          *int64    `json:"adopter_id,omitempty"`
 	PublicDescription  *string   `json:"public_description,omitempty"`
 	PrivateDescription *string   `json:"private_description,omitempty"`

@@ -93,6 +93,18 @@ get:
       schema:
         type: boolean
       description: Filter by sterilized.
+    - name: 'filter[for_adoption]'
+      in: query
+      required: false
+      schema:
+        type: boolean
+      description: Filter if animal available for adoption.
+    - name: 'filter[for_walking]'
+      in: query
+      required: false
+      schema:
+        type: boolean
+      description: Filter if animal available for walking.
     - name: 'filter[birth_date_from]'
       in: query
       required: false

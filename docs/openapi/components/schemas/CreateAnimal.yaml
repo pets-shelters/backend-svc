@@ -8,6 +8,8 @@ required:
   - type
   - gender
   - sterilized
+  - for_adoption
+  - for_walking
 properties:
   location_id:
     type: integer
@@ -36,6 +38,12 @@ properties:
   sterilized:
     type: boolean
     description: Animal sterilization status.
+  for_adoption:
+    type: boolean
+    description: Is animal available for adoption.
+  for_walking:
+    type: boolean
+    description: Is animal available for walking.
   public_description:
     type: string
     description: Public description for potential adopters.

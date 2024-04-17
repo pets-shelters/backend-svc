@@ -53,6 +53,8 @@ func (uc *UseCase) Create(ctx context.Context, req requests.CreateAnimal, userId
 			Photo:              req.Photo,
 			Gender:             req.Gender,
 			Sterilized:         req.Sterilized,
+			ForAdoption:        req.ForAdoption,
+			ForWalking:         req.ForWalking,
 			Type:               req.Type,
 			BirthDate:          req.BirthDate,
 			PrivateDescription: req.PrivateDescription,

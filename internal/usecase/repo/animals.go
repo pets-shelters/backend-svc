@@ -29,9 +29,9 @@ func (r *AnimalsRepo) CreateWithConn(ctx context.Context, conn usecase.IConnecti
 	sql, args, err := r.Builder.
 		Insert(animalsTableName).
 		Columns("location_id", "photo", "name", "birth_date", "type", "gender", "sterilized",
-			"private_description", "public_description").
+			"for_adoption", "for_walking", "private_description", "public_description").
 		Values(animal.LocationID, animal.Photo, animal.Name, animal.BirthDate, animal.Type, animal.Gender, animal.Sterilized,
-			animal.PrivateDescription, animal.PublicDescription).
+			animal.ForAdoption, animal.ForWalking, animal.PrivateDescription, animal.PublicDescription).
 		Suffix("returning id").
 		ToSql()
 	if err != nil {
@@ -102,6 +102,12 @@ func (r *AnimalsRepo) applyFilters(builder squirrel.SelectBuilder, filters entit
 	}
 	if filters.Sterilized != nil {
 		builder = builder.Where(squirrel.Eq{"sterilized": *filters.Sterilized})
+	}
+	if filters.ForAdoption != nil {
+		builder = builder.Where(squirrel.Eq{"for_adoption": *filters.ForAdoption})
+	}
+	if filters.ForWalking != nil {
+		builder = builder.Where(squirrel.Eq{"for_walking": *filters.ForWalking})
 	}
 	if filters.BirthDateFrom != nil {
 		builder = builder.Where(squirrel.GtOrEq{"birth_date": *filters.BirthDateFrom})
@@ -177,6 +183,12 @@ func (r *AnimalsRepo) applyUpdateParams(updateParams entity.UpdateAnimal) squirr
 	if updateParams.Sterilized != nil {
 		builder = builder.Set("sterilized", *updateParams.Sterilized)
 	}
+	if updateParams.ForAdoption != nil {
+		builder = builder.Set("for_adoption", *updateParams.ForAdoption)
+	}
+	if updateParams.ForWalking != nil {
+		builder = builder.Set("for_walking", *updateParams.ForWalking)
+	}
 	if updateParams.AdopterID != nil {
 		builder = builder.Set("adopter_id", *updateParams.AdopterID)
 	}
@@ -226,7 +238,8 @@ func (r *AnimalsRepo) Get(ctx context.Context, id int64) (*entity.Animal, error)
 
 	var animal entity.Animal
 	err = r.Pool.QueryRow(ctx, sql, args...).Scan(&animal.ID, &animal.LocationID, &animal.Photo, &animal.Name,
-		&animal.BirthDate, &animal.Type, &animal.Gender, &animal.Sterilized, &animal.AdopterID, &animal.PublicDescription, &animal.PrivateDescription)
+		&animal.BirthDate, &animal.Type, &animal.Gender, &animal.Sterilized, &animal.ForAdoption, &animal.ForWalking,
+		&animal.AdopterID, &animal.PublicDescription, &animal.PrivateDescription)
 	if err != nil {
 		if errors.As(err, &pgx.ErrNoRows) {
 			return nil, nil

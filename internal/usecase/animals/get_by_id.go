@@ -30,6 +30,8 @@ func (uc *UseCase) GetById(ctx context.Context, animalId int64, userId *int64) (
 		Type:              animal.Type,
 		Gender:            animal.Gender,
 		Sterilized:        animal.Sterilized,
+		ForAdoption:       animal.ForAdoption,
+		ForWalking:        animal.ForWalking,
 		PublicDescription: animal.PublicDescription,
 	}
 	if userId != nil {
