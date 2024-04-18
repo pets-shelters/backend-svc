@@ -11,6 +11,7 @@ import (
 	"github.com/pets-shelters/backend-svc/internal/controller/rest/locations"
 	"github.com/pets-shelters/backend-svc/internal/controller/rest/shelters"
 	"github.com/pets-shelters/backend-svc/internal/controller/rest/tasks"
+	"github.com/pets-shelters/backend-svc/internal/controller/rest/walkings"
 	"github.com/pets-shelters/backend-svc/internal/usecase"
 	"github.com/pets-shelters/backend-svc/pkg/logger"
 )
@@ -50,6 +51,10 @@ func NewRouter(handler *gin.Engine, log logger.Interface, useCases usecase.UseCa
 			{
 				tasks.NewRoutesWithAnimalId(tasksWithAnimalIdSubgroup, useCases.Tasks, useCases.Jwt, log)
 			}
+			walksWithAnimalIdSubgroup := animalsSubgroup.Group("/:id/walks")
+			{
+				walkings.NewRoutesWithAnimalId(walksWithAnimalIdSubgroup, useCases.Walkings, useCases.Jwt, log)
+			}
 		}
 		adoptersSubgroup := sheltersGroup.Group("/adopters")
 		{
@@ -58,6 +63,10 @@ func NewRouter(handler *gin.Engine, log logger.Interface, useCases usecase.UseCa
 		tasksSubgroup := sheltersGroup.Group("/tasks")
 		{
 			tasks.NewRoutes(tasksSubgroup, useCases.Tasks, useCases.Jwt, log)
+		}
+		walksSubgroup := sheltersGroup.Group("/walks")
+		{
+			walkings.NewRoutes(walksSubgroup, useCases.Walkings, useCases.Jwt, log)
 		}
 	}
 	filesGroup := handler.Group("/files")

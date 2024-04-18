@@ -19,8 +19,8 @@ properties:
     description: S3 link to file.
   phone_number:
     type: string
-    minLength: 12
-    maxLength: 12
+    minLength: 13
+    maxLength: 13
     description: Shelter phone number.
   instagram:
     type: string

@@ -6,10 +6,10 @@ import (
 	"github.com/pets-shelters/backend-svc/internal/usecase/repo/entity"
 )
 
-func ApplyPagination(builder squirrel.SelectBuilder, tableName string, pagination entity.Pagination) squirrel.SelectBuilder {
+func ApplyPagination(builder squirrel.SelectBuilder, orderByField string, tableName string, pagination entity.Pagination) squirrel.SelectBuilder {
 	offset := (pagination.Page - 1) * pagination.Limit
 	return builder.
-		OrderBy(fmt.Sprintf("%s.id", tableName)).
+		OrderBy(fmt.Sprintf("%s.%s", tableName, orderByField)).
 		Offset(offset).
 		Limit(pagination.Limit)
 }

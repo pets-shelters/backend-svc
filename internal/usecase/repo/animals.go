@@ -58,7 +58,7 @@ func (r *AnimalsRepo) Select(ctx context.Context, filters entity.AnimalsFilters,
 		From(animalsTableName)
 	builder = r.applyFilters(builder, filters)
 	if pagination != nil {
-		builder = helpers.ApplyPagination(builder, animalsTableName, *pagination)
+		builder = helpers.ApplyPagination(builder, "id", animalsTableName, *pagination)
 	}
 	sql, args, err := builder.ToSql()
 	if err != nil {
@@ -202,7 +202,7 @@ func (r *AnimalsRepo) applyUpdateParams(updateParams entity.UpdateAnimal) squirr
 	return builder
 }
 
-func (r *AnimalsRepo) SelectShelterID(ctx context.Context, animalId int64) (int64, error) {
+func (r *AnimalsRepo) SelectShelterIDWithConn(ctx context.Context, conn usecase.IConnection, animalId int64) (int64, error) {
 	sql, args, err := r.Builder.
 		Select(fmt.Sprintf("%s.id", sheltersTableName)).
 		From(animalsTableName).
@@ -215,7 +215,7 @@ func (r *AnimalsRepo) SelectShelterID(ctx context.Context, animalId int64) (int6
 	}
 
 	var shelterId int64
-	err = r.Pool.QueryRow(ctx, sql, args...).Scan(&shelterId)
+	err = conn.QueryRow(ctx, sql, args...).Scan(&shelterId)
 	if err != nil {
 		if errors.As(err, &pgx.ErrNoRows) {
 			return 0, nil
@@ -224,6 +224,10 @@ func (r *AnimalsRepo) SelectShelterID(ctx context.Context, animalId int64) (int6
 	}
 
 	return shelterId, nil
+}
+
+func (r *AnimalsRepo) SelectShelterID(ctx context.Context, animalId int64) (int64, error) {
+	return r.SelectShelterIDWithConn(ctx, r.Pool, animalId)
 }
 
 func (r *AnimalsRepo) Get(ctx context.Context, id int64) (*entity.Animal, error) {

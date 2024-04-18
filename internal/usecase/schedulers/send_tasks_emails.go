@@ -33,7 +33,7 @@ func (js *JobsScheduler) WithSendTasksEmailsJob(emailsProvider usecase.IEmailsPr
 
 func (js *JobsScheduler) sendTasksEmails() func(ctx context.Context, emailsProvider usecase.IEmailsProvider) error {
 	return func(ctx context.Context, emailsProvider usecase.IEmailsProvider) error {
-		date := date.Date(time.Now())
+		date := date.Date(time.Now().In(js.location))
 		employeesTasks, err := js.repo.GetTasksRepo().SelectForEmails(ctx, date)
 		if err != nil {
 			return errors.Wrap(err, "failed to select files for emails")
@@ -49,6 +49,10 @@ func (js *JobsScheduler) sendTasksEmails() func(ctx context.Context, emailsProvi
 					Time:        taskForEmail.Time.String(),
 				}
 				tasksForEmail = append(tasksForEmail, structsTaskForEmail)
+			}
+
+			if len(tasksForEmail) == 0 {
+				continue
 			}
 
 			err = emailsProvider.SendTasksEmail(employeeTasks.EmployeeEmail, date, tasksForEmail)

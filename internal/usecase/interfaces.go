@@ -33,6 +33,7 @@ type (
 		GetTasksRepo() ITasksRepo
 		GetTasksAnimalsRepo() ITasksAnimalsRepo
 		GetTasksExecutionsRepo() ITasksExecutionsRepo
+		GetWalkingsRepo() IWalkingsRepo
 		Transaction(ctx context.Context, f func(pgx.Tx) error) error
 	}
 
@@ -88,6 +89,7 @@ type (
 		Select(ctx context.Context, filters entity.AnimalsFilters, pagination *entity.Pagination) ([]entity.AnimalForList, error)
 		Count(ctx context.Context, filters entity.AnimalsFilters) (int64, error)
 		Update(ctx context.Context, conn IConnection, id int64, updateParams entity.UpdateAnimal) (int64, error)
+		SelectShelterIDWithConn(ctx context.Context, conn IConnection, animalId int64) (int64, error)
 		SelectShelterID(ctx context.Context, animalId int64) (int64, error)
 		Get(ctx context.Context, id int64) (*entity.Animal, error)
 		DeleteWithConn(ctx context.Context, conn IConnection, id int64) (locationId int64, err error)
@@ -124,6 +126,16 @@ type (
 	ITasksExecutionsRepo interface {
 		CreateWithConn(ctx context.Context, conn IConnection, taskExecution entity.TaskExecution) (int64, error)
 		Create(ctx context.Context, taskExecution entity.TaskExecution) (int64, error)
+	}
+
+	IWalkingsRepo interface {
+		CreateWithConn(ctx context.Context, conn IConnection, walking entity.Walking) (int64, error)
+		Create(ctx context.Context, walking entity.Walking) (int64, error)
+		Select(ctx context.Context, filters entity.WalkingsFilters, pagination *entity.Pagination) ([]entity.Walking, error)
+		DeleteWithConn(ctx context.Context, conn IConnection, id int64) (*entity.Walking, error)
+		Update(ctx context.Context, conn IConnection, id int64, updateParams entity.UpdateWalking) (animalId int64, err error)
+		Count(ctx context.Context, filters entity.WalkingsFilters) (int64, error)
+		SelectForReminders(ctx context.Context, date date.Date) ([]entity.WalkingReminder, error)
 	}
 
 	IJwt interface {
@@ -181,6 +193,14 @@ type (
 		GetListForAnimal(ctx context.Context, userId int64, animalId int64) ([]responses.TaskForAnimal, error)
 	}
 
+	IWalkings interface {
+		CreatePending(ctx context.Context, req requests.CreatePendingWalking, animalId int64) error
+		CreateApproved(ctx context.Context, req requests.CreateApprovedWalking, animalId int64, userId int64) error
+		Approve(ctx context.Context, req requests.ApproveWalking, userId int64, walkingId int64) error
+		Delete(ctx context.Context, userId int64, walkingId int64) error
+		GetList(ctx context.Context, reqFilters requests.WalkingsFilters, reqPagination *requests.Pagination, userId int64) ([]responses.Walking, *responses.PaginationMetadata, error)
+	}
+
 	IS3Provider interface {
 		UploadFile(ctx context.Context, body io.Reader, bucket string, key string, contentType string) error
 		DeleteFile(ctx context.Context, bucket string, key string) error
@@ -189,6 +209,10 @@ type (
 	IEmailsProvider interface {
 		SendInvitationEmail(shelterName string, toEmail string) error
 		SendTasksEmail(toEmail string, date date.Date, tasks []structs.TaskForEmail) error
+	}
+
+	ISmsProvider interface {
+		SendWalkReminder(walkings []entity.WalkingReminder) error
 	}
 
 	IFiles interface {

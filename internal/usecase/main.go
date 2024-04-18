@@ -10,4 +10,5 @@ type UseCases struct {
 	Animals       IAnimals
 	Adopters      IAdopters
 	Tasks         ITasks
+	Walkings      IWalkings
 }

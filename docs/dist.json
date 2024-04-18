@@ -2497,8 +2497,8 @@
           },
           "phone_number": {
             "type": "string",
-            "minLength": 12,
-            "maxLength": 12,
+            "minLength": 13,
+            "maxLength": 13,
             "description": "Shelter phone number."
           },
           "instagram": {
@@ -2561,8 +2561,8 @@
           },
           "phone_number": {
             "type": "string",
-            "minLength": 12,
-            "maxLength": 12,
+            "minLength": 13,
+            "maxLength": 13,
             "description": "Adopter's phone number."
           }
         }

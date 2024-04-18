@@ -11,9 +11,9 @@ type CreateAnimal struct {
 	BirthDate          date.Date `json:"birth_date" validate:"required"`
 	Type               string    `json:"type" validate:"required"`
 	Gender             string    `json:"gender" validate:"required,oneof=female male"`
-	Sterilized         bool      `json:"sterilized" validate:"required"`
-	ForAdoption        bool      `json:"for_adoption" validate:"required"`
-	ForWalking         bool      `json:"for_walking" validate:"required"`
+	Sterilized         bool      `json:"sterilized"`
+	ForAdoption        bool      `json:"for_adoption"`
+	ForWalking         bool      `json:"for_walking"`
 	PrivateDescription *string   `json:"private_description" validate:"omitempty"`
 	PublicDescription  *string   `json:"public_description" validate:"omitempty"`
 }

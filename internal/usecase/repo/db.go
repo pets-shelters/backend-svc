@@ -60,6 +60,10 @@ func (r *DBRepo) GetTasksExecutionsRepo() usecase.ITasksExecutionsRepo {
 	return NewTasksExecutionsRepo(r.db)
 }
 
+func (r *DBRepo) GetWalkingsRepo() usecase.IWalkingsRepo {
+	return NewWalkingsRepo(r.db)
+}
+
 func (r *DBRepo) Transaction(ctx context.Context, f func(pgx.Tx) error) error {
 	err := r.db.Pool.BeginTxFunc(ctx, pgx.TxOptions{}, f)
 	if err != nil {

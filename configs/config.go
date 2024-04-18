@@ -20,8 +20,9 @@ type (
 		Redis          `yaml:"redis" validate:"required"`
 		S3             `yaml:"s3" validate:"required"`
 		Mailjet        `yaml:"mailjet" validate:"required"`
+		Twilio         `yaml:"twilio" validate:"required"`
 		TemporaryFiles `yaml:"temporary_files" validate:"required"`
-		TasksScheduler `yaml:"tasks_scheduler" validate:"required"`
+		SchedulerHours `yaml:"scheduler_hours" validate:"required"`
 	}
 
 	HTTP struct {
@@ -80,14 +81,22 @@ type (
 		TasksUrl             string `yaml:"tasks_url" validate:"required"`
 	}
 
+	Twilio struct {
+		Enabled      bool   `yaml:"enabled"`
+		AccountSid   string `yaml:"account_sid" validate:"required"`
+		AuthToken    string `yaml:"auth_token" validate:"required"`
+		SenderNumber string `yaml:"sender_number" validate:"required"`
+	}
+
 	TemporaryFiles struct {
 		SchedulerPeriod time.Duration `yaml:"scheduler_period" validate:"required"`
 		Lifetime        time.Duration `yaml:"lifetime" validate:"required"`
 	}
 
-	TasksScheduler struct {
-		Hour     int64  `yaml:"hour" validate:"required"`
-		Location string `yaml:"location" validate:"required"`
+	SchedulerHours struct {
+		TasksHour    int64  `yaml:"tasks_hour" validate:"required"`
+		WalkingsHour int64  `yaml:"walkings_hour" validate:"required"`
+		Location     string `yaml:"location" validate:"required"`
 	}
 )
 

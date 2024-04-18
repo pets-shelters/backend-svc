@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	JsonTimeFormat = "15:04"
+	TimeFormat = "15:04"
 )
 
 type NullTime struct {
@@ -33,7 +33,7 @@ func (nt *NullTime) Scan(value interface{}) error {
 		return fmt.Errorf("failed to scan NullTime: %v", value)
 	}
 
-	parsedTime, err := time.Parse(JsonTimeFormat, stringTime[0:5])
+	parsedTime, err := time.Parse(TimeFormat, stringTime[0:5])
 	if err != nil {
 		return fmt.Errorf("failed to parse time: %w", err)
 	}
@@ -49,7 +49,7 @@ func (nt *NullTime) UnmarshalJSON(data []byte) (err error) {
 		return
 	}
 
-	time, err := time.Parse(`"`+JsonTimeFormat+`"`, string(data))
+	time, err := time.Parse(`"`+TimeFormat+`"`, string(data))
 	nt.Time, nt.Valid = time, true
 	return
 }
@@ -61,9 +61,9 @@ func (nt NullTime) MarshalJSON() ([]byte, error) {
 		return []byte(`""`), nil
 	}
 
-	b := make([]byte, 0, len(JsonTimeFormat)+2)
+	b := make([]byte, 0, len(TimeFormat)+2)
 	b = append(b, '"')
-	b = nt.Time.AppendFormat(b, JsonTimeFormat)
+	b = nt.Time.AppendFormat(b, TimeFormat)
 	b = append(b, '"')
 	return b, nil
 }
@@ -72,5 +72,5 @@ func (nt NullTime) String() string {
 	if !nt.Valid {
 		return ""
 	}
-	return nt.Time.Format(JsonTimeFormat)
+	return nt.Time.Format(TimeFormat)
 }

@@ -10,6 +10,7 @@ import (
 type JobsScheduler struct {
 	scheduler gocron.Scheduler
 	repo      usecase.IDBRepo
+	location  *time.Location
 }
 
 func NewJobsScheduler(logger gocron.Logger, repo usecase.IDBRepo, location *time.Location) (*JobsScheduler, error) {
@@ -28,6 +29,7 @@ func NewJobsScheduler(logger gocron.Logger, repo usecase.IDBRepo, location *time
 	return &JobsScheduler{
 		scheduler: runner,
 		repo:      repo,
+		location:  location,
 	}, nil
 }
 

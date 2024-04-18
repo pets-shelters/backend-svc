@@ -20,6 +20,8 @@ import (
 	"github.com/pets-shelters/backend-svc/internal/usecase/schedulers"
 	"github.com/pets-shelters/backend-svc/internal/usecase/shelters"
 	"github.com/pets-shelters/backend-svc/internal/usecase/tasks"
+	"github.com/pets-shelters/backend-svc/internal/usecase/twilio"
+	"github.com/pets-shelters/backend-svc/internal/usecase/walkings"
 	"github.com/pets-shelters/backend-svc/pkg/httpserver"
 	"github.com/pets-shelters/backend-svc/pkg/logger"
 	"github.com/pets-shelters/backend-svc/pkg/postgres"
@@ -66,9 +68,10 @@ func Run(cfg *configs.Config) {
 		Animals:       animals.NewUseCase(dbRepo, cfg.S3.Endpoint),
 		Adopters:      adopters.NewUseCase(dbRepo),
 		Tasks:         tasks.NewUseCase(dbRepo),
+		Walkings:      walkings.NewUseCase(dbRepo),
 	}
 
-	schedulerLocation, err := time.LoadLocation(cfg.TasksScheduler.Location)
+	schedulerLocation, err := time.LoadLocation(cfg.SchedulerHours.Location)
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "failed to load scheduler location").Error())
 	}
@@ -80,9 +83,16 @@ func Run(cfg *configs.Config) {
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "failed to add clean_temporary_files job").Error())
 	}
-	err = jobsScheduler.WithSendTasksEmailsJob(emailsProvider, cfg.TasksScheduler.Hour)
+	err = jobsScheduler.WithSendTasksEmailsJob(emailsProvider, cfg.SchedulerHours.TasksHour)
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "failed to add send_tasks_emails job").Error())
+	}
+	if cfg.Twilio.Enabled {
+		smsProvider := twilio.NewTwilio(cfg.Twilio)
+		err = jobsScheduler.WithSendWalkRemindersJob(smsProvider, cfg.SchedulerHours.WalkingsHour)
+		if err != nil {
+			log.Fatal(errors.Wrap(err, "failed to add send_walks_reminders job").Error())
+		}
 	}
 	jobsScheduler.Start()
 	defer jobsScheduler.Shutdown()
