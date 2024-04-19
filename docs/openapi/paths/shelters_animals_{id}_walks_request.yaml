@@ -1,0 +1,57 @@
+post:
+  tags:
+    - Walks
+  summary: Create walk request
+  description: >-
+    Walk request creating. Available for anyone.
+  operationId: postWalkRequest
+  parameters:
+    - name: id
+      in: path
+      description: Id of an animal to create walk for.
+      required: true
+      schema:
+        type: integer
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            data:
+              type: object
+              $ref: ../components/schemas/CreateWalkRequest.yaml
+  responses:
+    201:
+      description: Success
+    400:
+      description: Bad request error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/BadRequestError.yaml
+    403:
+      description: Forbidden error
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            required:
+              - code
+            properties:
+              code:
+                type: string
+                enum:
+                  - animal_unavailable_for_walking
+    404:
+      description: Not found
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/EntityNotFoundError.yaml
+    500:
+      description: Internal error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/InternalError.yaml

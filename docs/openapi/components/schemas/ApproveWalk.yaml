@@ -1,0 +1,12 @@
+type: object
+description: Approve walk request
+required:
+  - time
+properties:
+  date:
+    type: string
+    format: date
+    description: Walk date.
+  time:
+    type: string
+    description: Walk time (ex. "11:25").

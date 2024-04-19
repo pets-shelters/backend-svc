@@ -971,6 +971,289 @@
         }
       }
     },
+    "/shelters/animals/walks": {
+      "get": {
+        "tags": [
+          "Walks"
+        ],
+        "summary": "Get walks' list",
+        "description": "Get walks' list. Only for shelter's employees.",
+        "operationId": "getWalks",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessTokenCookieParam"
+          },
+          {
+            "$ref": "#/components/parameters/paginationPageParam"
+          },
+          {
+            "$ref": "#/components/parameters/paginationLimitParam"
+          },
+          {
+            "name": "filter[status]",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "approved"
+              ]
+            },
+            "description": "Filter by status."
+          },
+          {
+            "name": "filter[animal_id]",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "Filter by animal_id."
+          },
+          {
+            "name": "filter[date]",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Filter by date."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "$ref": "#/components/schemas/Walk"
+                      }
+                    },
+                    "pagination_metadata": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/PaginationMetadata"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shelters/animals/walks/{id}": {
+      "put": {
+        "tags": [
+          "Walks"
+        ],
+        "summary": "Approve walk",
+        "description": "Approve walk request. Only for shelter's employees.",
+        "operationId": "putWalk",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessTokenCookieParam"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of a walk to approve.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/ApproveWalk"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad request error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PermissionDeniedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityNotFoundError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Walks"
+        ],
+        "summary": "Delete walk",
+        "description": "Delete walk by id. Only for shelter's employees.",
+        "operationId": "deleteWalk",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessTokenCookieParam"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of a walk to delete.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad request error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PermissionDeniedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityNotFoundError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/shelters/animals/{id}": {
       "get": {
         "tags": [
@@ -1308,6 +1591,192 @@
           },
           "404": {
             "description": "Not found error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityNotFoundError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shelters/animals/{id}/walks": {
+      "post": {
+        "tags": [
+          "Walks"
+        ],
+        "summary": "Create walk",
+        "description": "Walk creating. Only for shelter's employees.",
+        "operationId": "postWalk",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessTokenCookieParam"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of an animal to create walk for.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/CreateWalk"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad request error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PermissionDeniedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityNotFoundError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shelters/animals/{id}/walks/request": {
+      "post": {
+        "tags": [
+          "Walks"
+        ],
+        "summary": "Create walk request",
+        "description": "Walk request creating. Available for anyone.",
+        "operationId": "postWalkRequest",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of an animal to create walk for.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/CreateWalkRequest"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad request error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "animal_unavailable_for_walking"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -2561,8 +3030,8 @@
           },
           "phone_number": {
             "type": "string",
-            "minLength": 13,
-            "maxLength": 13,
+            "minLength": 12,
+            "maxLength": 12,
             "description": "Adopter's phone number."
           }
         }
@@ -2782,6 +3251,76 @@
           }
         }
       },
+      "Walk": {
+        "type": "object",
+        "description": "Walk response",
+        "required": [
+          "id",
+          "status",
+          "animal_id",
+          "name",
+          "phone_number",
+          "date",
+          "time"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Unique walk id."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "approved"
+            ],
+            "description": "Walk status."
+          },
+          "animal_id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Animal id to walk."
+          },
+          "name": {
+            "type": "string",
+            "description": "Walker's name."
+          },
+          "phone_number": {
+            "type": "string",
+            "minLength": 13,
+            "maxLength": 13,
+            "description": "Walker's phone number."
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Walk date."
+          },
+          "time": {
+            "type": "string",
+            "description": "Walk time (ex. \"11:25\")."
+          }
+        }
+      },
+      "ApproveWalk": {
+        "type": "object",
+        "description": "Approve walk request",
+        "required": [
+          "time"
+        ],
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Walk date."
+          },
+          "time": {
+            "type": "string",
+            "description": "Walk time (ex. \"11:25\")."
+          }
+        }
+      },
       "Animal": {
         "type": "object",
         "description": "Animal response",
@@ -2939,6 +3478,63 @@
             "type": "integer",
             "format": "int64",
             "description": "Number of executions made for the task."
+          }
+        }
+      },
+      "CreateWalk": {
+        "type": "object",
+        "description": "Create walk request",
+        "required": [
+          "name",
+          "phone_number",
+          "date",
+          "time"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Walker's name."
+          },
+          "phone_number": {
+            "type": "string",
+            "minLength": 13,
+            "maxLength": 13,
+            "description": "Walker's phone number."
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Walk date."
+          },
+          "time": {
+            "type": "string",
+            "description": "Walk time (ex. \"11:25\")."
+          }
+        }
+      },
+      "CreateWalkRequest": {
+        "type": "object",
+        "description": "Create walk_request request",
+        "required": [
+          "name",
+          "phone_number",
+          "date"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Walker's name."
+          },
+          "phone_number": {
+            "type": "string",
+            "minLength": 13,
+            "maxLength": 13,
+            "description": "Walker's phone number."
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Walk date."
           }
         }
       },
@@ -3177,8 +3773,8 @@
           },
           "phone_number": {
             "type": "string",
-            "minLength": 12,
-            "maxLength": 12,
+            "minLength": 13,
+            "maxLength": 13,
             "description": "Shelter phone number."
           },
           "instagram": {
@@ -3211,8 +3807,8 @@
           },
           "phone_number": {
             "type": "string",
-            "minLength": 12,
-            "maxLength": 12,
+            "minLength": 13,
+            "maxLength": 13,
             "description": "Shelter phone number."
           },
           "instagram": {

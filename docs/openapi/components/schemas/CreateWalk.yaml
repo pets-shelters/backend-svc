@@ -1,0 +1,23 @@
+type: object
+description: Create walk request
+required:
+  - name
+  - phone_number
+  - date
+  - time
+properties:
+  name:
+    type: string
+    description: Walker's name.
+  phone_number:
+    type: string
+    minLength: 13
+    maxLength: 13
+    description: Walker's phone number.
+  date:
+    type: string
+    format: date
+    description: Walk date.
+  time:
+    type: string
+    description: Walk time (ex. "11:25").

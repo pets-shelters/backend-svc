@@ -1,0 +1,70 @@
+get:
+  tags:
+    - Walks
+  summary: Get walks' list
+  description: >-
+    Get walks' list. Only for shelter's employees.
+  operationId: getWalks
+  parameters:
+    - $ref: ../components/parameters/accessTokenCookieParam.yaml
+    - $ref: ../components/parameters/paginationPageParam.yaml
+    - $ref: ../components/parameters/paginationLimitParam.yaml
+    - name: 'filter[status]'
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+          - pending
+          - approved
+      description: Filter by status.
+    - name: 'filter[animal_id]'
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int64
+      description: Filter by animal_id.
+    - name: 'filter[date]'
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date
+      description: Filter by date.
+  responses:
+    200:
+      description: Success
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  $ref: ../components/schemas/Walk.yaml
+              pagination_metadata:
+                type: object
+                $ref: ../components/schemas/PaginationMetadata.yaml
+    400:
+      description: Bad request error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/BadRequestError.yaml
+    401:
+      description: Unauthorized
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/UnauthorizedError.yaml
+    500:
+      description: Internal error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/InternalError.yaml

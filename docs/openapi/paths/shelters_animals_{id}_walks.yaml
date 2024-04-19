@@ -1,0 +1,57 @@
+post:
+  tags:
+    - Walks
+  summary: Create walk
+  description: >-
+    Walk creating. Only for shelter's employees.
+  operationId: postWalk
+  parameters:
+    - $ref: ../components/parameters/accessTokenCookieParam.yaml
+    - name: id
+      in: path
+      description: Id of an animal to create walk for.
+      required: true
+      schema:
+        type: integer
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            data:
+              type: object
+              $ref: ../components/schemas/CreateWalk.yaml
+  responses:
+    201:
+      description: Success
+    400:
+      description: Bad request error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/BadRequestError.yaml
+    401:
+      description: Unauthorized
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/UnauthorizedError.yaml
+    403:
+      description: Forbidden error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/PermissionDeniedError.yaml
+    404:
+      description: Not found
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/EntityNotFoundError.yaml
+    500:
+      description: Internal error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/InternalError.yaml
