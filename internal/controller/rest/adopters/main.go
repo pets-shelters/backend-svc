@@ -19,7 +19,7 @@ func NewRoutes(handler *gin.RouterGroup, adoptersUseCase usecase.IAdopters,
 		log,
 	}
 
-	handler.POST("/", middlewares.ValidateAccessJwt(jwtUseCase), r.create)
+	handler.POST("", middlewares.ValidateAccessJwt(jwtUseCase), r.create)
 	handler.GET("/:id", middlewares.ValidateAccessJwt(jwtUseCase), r.getById)
-	handler.GET("/", middlewares.ValidateAccessJwt(jwtUseCase), r.getList)
+	handler.GET("", middlewares.ValidateAccessJwt(jwtUseCase), r.getList)
 }

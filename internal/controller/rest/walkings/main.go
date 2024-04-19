@@ -21,7 +21,7 @@ func NewRoutes(handler *gin.RouterGroup, walkingsUseCase usecase.IWalkings,
 
 	handler.PUT("/:id", middlewares.ValidateAccessJwt(jwtUseCase), r.approve)
 	handler.DELETE("/:id", middlewares.ValidateAccessJwt(jwtUseCase), r.delete)
-	handler.GET("/", middlewares.ValidateAccessJwt(jwtUseCase), r.getList)
+	handler.GET("", middlewares.ValidateAccessJwt(jwtUseCase), r.getList)
 }
 
 func NewRoutesWithAnimalId(handler *gin.RouterGroup, walkingsUseCase usecase.IWalkings,
@@ -32,5 +32,5 @@ func NewRoutesWithAnimalId(handler *gin.RouterGroup, walkingsUseCase usecase.IWa
 	}
 
 	handler.POST("/request", r.createPending)
-	handler.POST("/", middlewares.ValidateAccessJwt(jwtUseCase), r.createApproved)
+	handler.POST("", middlewares.ValidateAccessJwt(jwtUseCase), r.createApproved)
 }

@@ -19,7 +19,7 @@ func NewRoutes(handler *gin.RouterGroup, usersUseCase usecase.IEmployees,
 		log,
 	}
 
-	handler.POST("/", middlewares.ValidateAccessJwt(jwtUseCase), r.create)
+	handler.POST("", middlewares.ValidateAccessJwt(jwtUseCase), r.create)
 	handler.DELETE("/:id", middlewares.ValidateAccessJwt(jwtUseCase), r.delete)
-	handler.GET("/", middlewares.ValidateAccessJwt(jwtUseCase), r.getList)
+	handler.GET("", middlewares.ValidateAccessJwt(jwtUseCase), r.getList)
 }

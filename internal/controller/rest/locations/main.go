@@ -19,7 +19,7 @@ func NewRoutes(handler *gin.RouterGroup, locationsUseCase usecase.ILocations,
 		log,
 	}
 
-	handler.POST("/", middlewares.ValidateAccessJwt(jwtUseCase), r.create)
+	handler.POST("", middlewares.ValidateAccessJwt(jwtUseCase), r.create)
 	handler.DELETE("/:id", middlewares.ValidateAccessJwt(jwtUseCase), r.delete)
 	handler.GET("/cities", r.getCities)
 }
@@ -31,5 +31,5 @@ func NewRoutesWithId(handler *gin.RouterGroup, locationsUseCase usecase.ILocatio
 		log,
 	}
 
-	handler.GET("/", r.getList)
+	handler.GET("", r.getList)
 }
