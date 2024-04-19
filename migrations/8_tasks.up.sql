@@ -3,7 +3,7 @@ CREATE TABLE tasks (
   description text NOT NULL,
   start_date date NOT NULL,
   end_date date NOT NULL,
-  time time without time zone,
+  time time,
   CONSTRAINT end_date_later CHECK (end_date >= start_date)
 );
 
