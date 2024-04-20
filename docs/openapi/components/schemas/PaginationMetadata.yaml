@@ -5,8 +5,10 @@ required:
   - total_records
 properties:
   current_page:
-    type: string
+    type: integer
+    format: int64
     description: Current page number.
   total_records:
-    type: string
+    type: integer
+    format: int64
     description: Total records number.
