@@ -16,10 +16,10 @@ type Provider struct {
 
 func NewProvider(cfg configs.S3) (*Provider, error) {
 	customResolver := aws.EndpointResolverWithOptionsFunc(func(service, region string, options ...interface{}) (aws.Endpoint, error) {
-		if cfg.Endpoint != "" {
+		if cfg.WriteEndpoint != "" {
 			return aws.Endpoint{
 				PartitionID:   "aws",
-				URL:           cfg.Endpoint,
+				URL:           cfg.WriteEndpoint,
 				SigningRegion: cfg.Region,
 			}, nil
 		}

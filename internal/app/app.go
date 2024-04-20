@@ -61,11 +61,11 @@ func Run(cfg *configs.Config) {
 	useCases := usecase.UseCases{
 		Authorization: authorization.NewUseCase(dbRepo, *oauth, *cache, jwt),
 		Jwt:           jwt,
-		Shelters:      shelters.NewUseCase(dbRepo, cfg.S3.Endpoint),
+		Shelters:      shelters.NewUseCase(dbRepo, cfg.S3.ReadEndpoint),
 		Files:         files.NewUseCase(dbRepo, s3Provider, cfg.S3.PublicReadBucket),
 		Employees:     employees.NewUseCase(dbRepo, emailsProvider),
 		Locations:     locations.NewUseCase(dbRepo),
-		Animals:       animals.NewUseCase(dbRepo, cfg.S3.Endpoint),
+		Animals:       animals.NewUseCase(dbRepo, cfg.S3.ReadEndpoint),
 		Adopters:      adopters.NewUseCase(dbRepo),
 		Tasks:         tasks.NewUseCase(dbRepo),
 		Walkings:      walkings.NewUseCase(dbRepo),

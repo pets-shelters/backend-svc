@@ -66,7 +66,8 @@ type (
 		Region           string `yaml:"region" validate:"required"`
 		AccessKey        string `yaml:"access_key" validate:"required"`
 		SecretKey        string `yaml:"secret_key" validate:"required"`
-		Endpoint         string `yaml:"endpoint" validate:"required"`
+		WriteEndpoint    string `yaml:"write_endpoint" validate:"required"`
+		ReadEndpoint     string `yaml:"read_endpoint" validate:"required"`
 		PublicReadBucket string `yaml:"public_read_bucket" validate:"required"`
 	}
 

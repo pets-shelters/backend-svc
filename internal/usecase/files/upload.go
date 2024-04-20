@@ -9,6 +9,7 @@ import (
 	"github.com/pets-shelters/backend-svc/internal/usecase/repo/entity"
 	"github.com/pets-shelters/backend-svc/internal/usecase/s3"
 	"github.com/pkg/errors"
+	"log"
 	"time"
 )
 
@@ -47,6 +48,8 @@ func (uc *UseCase) Upload(ctx context.Context, userId int64, fileContent []byte,
 			return errors.Wrap(err, "failed to create temporary_file entity")
 		}
 
+		log.Printf("file content bytes %+v", fileContent)
+		log.Printf("file content string %+v", fileContent)
 		fileBytesReader := bytes.NewReader(fileContent)
 		err = uc.s3Provider.UploadFile(ctx, fileBytesReader, uc.publicBucketName, filePath, fileType)
 		if err != nil {

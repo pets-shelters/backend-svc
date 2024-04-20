@@ -6,12 +6,12 @@ import (
 	"github.com/pets-shelters/backend-svc/internal/exceptions"
 	"github.com/pets-shelters/backend-svc/internal/structs/responses"
 	"github.com/pkg/errors"
+	"io"
 	"net/http"
 )
 
 func (r *routes) upload(ctx *gin.Context) {
-	var fileContent []byte
-	err := ctx.Bind(&fileContent)
+	fileContent, err := io.ReadAll(ctx.Request.Body)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, helpers.FormBadRequestError(err.Error()))
 		return

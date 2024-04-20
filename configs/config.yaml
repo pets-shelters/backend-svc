@@ -27,7 +27,8 @@ s3:
   region: "us-east-1"
   access_key: ""
   secret_key: ""
-  endpoint: ""
+  write_endpoint: ""
+  read_endpoint: ""
   public_read_bucket: ""
 
 mailjet:
