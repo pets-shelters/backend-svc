@@ -19,6 +19,16 @@ post:
   responses:
     201:
       description: Success
+      content:
+        application/vnd.api+json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: object
+                $ref: ../components/schemas/CreatedID.yaml
     400:
       description: Bad request error
       content:

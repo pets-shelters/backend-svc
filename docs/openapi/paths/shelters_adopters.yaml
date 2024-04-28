@@ -28,7 +28,7 @@ post:
             properties:
               data:
                 type: object
-                $ref: ../components/schemas/AdopterCreated.yaml
+                $ref: ../components/schemas/CreatedID.yaml
     400:
       description: Bad request error
       content:

@@ -1,0 +1,9 @@
+type: object
+description: Created response
+required:
+  - id
+properties:
+  adopter_id:
+    type: integer
+    format: int64
+    description: Id of created entity.

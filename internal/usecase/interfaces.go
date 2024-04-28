@@ -151,27 +151,27 @@ type (
 	}
 
 	IShelters interface {
-		Create(ctx context.Context, req requests.CreateShelter, userId int64) error
+		Create(ctx context.Context, req requests.CreateShelter, userId int64) (int64, error)
 		GetById(ctx context.Context, shelterId int64) (*responses.Shelter, error)
 		Update(ctx context.Context, req requests.UpdateShelter, userId int64, shelterId int64) error
 		GetNames(ctx context.Context, filterName string) ([]responses.ShelterName, error)
 	}
 
 	IEmployees interface {
-		Create(ctx context.Context, userId int64, req requests.CreateEmployee) error
+		Create(ctx context.Context, userId int64, req requests.CreateEmployee) (int64, error)
 		Delete(ctx context.Context, userId int64, idToDelete int64) error
 		GetList(ctx context.Context, userId int64) ([]responses.Employee, error)
 	}
 
 	ILocations interface {
-		Create(ctx context.Context, userId int64, req requests.CreateLocation) error
+		Create(ctx context.Context, userId int64, req requests.CreateLocation) (int64, error)
 		GetList(ctx context.Context, shelterId int64) ([]responses.Location, error)
 		GetCities(ctx context.Context) ([]string, error)
 		Delete(ctx context.Context, userId int64, idToDelete int64) error
 	}
 
 	IAnimals interface {
-		Create(ctx context.Context, req requests.CreateAnimal, userId int64) error
+		Create(ctx context.Context, req requests.CreateAnimal, userId int64) (int64, error)
 		GetList(ctx context.Context, filters requests.AnimalsFilters, reqPagination *requests.Pagination) ([]responses.AnimalForList, *responses.PaginationMetadata, error)
 		GetTypes(ctx context.Context) (*responses.AnimalTypes, error)
 		Update(ctx context.Context, req requests.UpdateAnimal, userId int64, animalId int64) error
@@ -180,13 +180,13 @@ type (
 	}
 
 	IAdopters interface {
-		Create(ctx context.Context, req requests.CreateAdopter) (*responses.AdopterCreated, error)
+		Create(ctx context.Context, req requests.CreateAdopter) (int64, error)
 		GetById(ctx context.Context, adopterId int64) (*responses.Adopter, error)
 		GetList(ctx context.Context, filterPhoneNumber string) ([]responses.Adopter, error)
 	}
 
 	ITasks interface {
-		Create(ctx context.Context, req requests.CreateTask, userId int64) error
+		Create(ctx context.Context, req requests.CreateTask, userId int64) (int64, error)
 		SetExecution(ctx context.Context, req requests.SetTaskDone, taskId int64, userId int64) error
 		Delete(ctx context.Context, userId int64, taskId int64) error
 		GetListWithExecutions(ctx context.Context, userId int64, req requests.TasksWithExecutionsFilters) ([]responses.TaskWithExecutions, error)

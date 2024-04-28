@@ -9,32 +9,33 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (uc *UseCase) Create(ctx context.Context, req requests.CreateAnimal, userId int64) error {
+func (uc *UseCase) Create(ctx context.Context, req requests.CreateAnimal, userId int64) (int64, error) {
 	user, err := uc.repo.GetUsersRepo().Get(ctx, userId)
 	if err != nil {
-		return errors.Wrap(err, "failed to get user entity")
+		return 0, errors.Wrap(err, "failed to get user entity")
 	}
 	if user == nil {
-		return exceptions.NewPermissionDeniedException()
+		return 0, exceptions.NewPermissionDeniedException()
 	}
 
 	location, err := uc.repo.GetLocationsRepo().Get(ctx, req.LocationID)
 	if err != nil {
-		return errors.Wrap(err, "failed to get location entity")
+		return 0, errors.Wrap(err, "failed to get location entity")
 	}
 	if location == nil {
-		return exceptions.NewLocationNotFoundException()
+		return 0, exceptions.NewLocationNotFoundException()
 	}
 
 	if user.ShelterID.Int64 != location.ShelterID {
-		return exceptions.NewPermissionDeniedException()
+		return 0, exceptions.NewPermissionDeniedException()
 	}
 
 	err = uc.repo.GetAnimalTypesEnumRepo().Create(ctx, req.Type)
 	if err != nil {
-		return errors.Wrap(err, "failed to create animal_type value")
+		return 0, errors.Wrap(err, "failed to create animal_type value")
 	}
 
+	var id int64
 	err = uc.repo.Transaction(ctx, func(tx pgx.Tx) error {
 		tempFile, err := uc.repo.GetTemporaryFilesRepo().DeleteWithConn(ctx, tx, req.Photo)
 		if err != nil {
@@ -47,7 +48,7 @@ func (uc *UseCase) Create(ctx context.Context, req requests.CreateAnimal, userId
 			return exceptions.NewPermissionDeniedException()
 		}
 
-		_, err = uc.repo.GetAnimalsRepo().CreateWithConn(ctx, tx, entity.Animal{
+		id, err = uc.repo.GetAnimalsRepo().CreateWithConn(ctx, tx, entity.Animal{
 			Name:               req.Name,
 			LocationID:         req.LocationID,
 			Photo:              req.Photo,
@@ -67,8 +68,8 @@ func (uc *UseCase) Create(ctx context.Context, req requests.CreateAnimal, userId
 		return nil
 	})
 	if err != nil {
-		return errors.Wrap(err, "failed to process transaction")
+		return 0, errors.Wrap(err, "failed to process transaction")
 	}
 
-	return nil
+	return id, nil
 }

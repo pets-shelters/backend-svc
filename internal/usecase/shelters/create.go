@@ -11,7 +11,8 @@ import (
 	"time"
 )
 
-func (uc *UseCase) Create(ctx context.Context, req requests.CreateShelter, userId int64) error {
+func (uc *UseCase) Create(ctx context.Context, req requests.CreateShelter, userId int64) (int64, error) {
+	var id int64
 	err := uc.repo.Transaction(ctx, func(tx pgx.Tx) error {
 		tempFile, err := uc.repo.GetTemporaryFilesRepo().DeleteWithConn(ctx, tx, req.Logo)
 		if err != nil {
@@ -24,7 +25,7 @@ func (uc *UseCase) Create(ctx context.Context, req requests.CreateShelter, userI
 			return exceptions.NewPermissionDeniedException()
 		}
 
-		id, err := uc.repo.GetSheltersRepo().CreateWithConn(ctx, tx, entity.Shelter{
+		id, err = uc.repo.GetSheltersRepo().CreateWithConn(ctx, tx, entity.Shelter{
 			Name:        req.Name,
 			Logo:        tempFile.FileID,
 			PhoneNumber: req.PhoneNumber,
@@ -47,8 +48,8 @@ func (uc *UseCase) Create(ctx context.Context, req requests.CreateShelter, userI
 		return nil
 	})
 	if err != nil {
-		return errors.Wrap(err, "failed to process transaction")
+		return 0, errors.Wrap(err, "failed to process transaction")
 	}
 
-	return nil
+	return id, nil
 }

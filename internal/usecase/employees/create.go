@@ -10,25 +10,26 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (uc *UseCase) Create(ctx context.Context, userId int64, req requests.CreateEmployee) error {
+func (uc *UseCase) Create(ctx context.Context, userId int64, req requests.CreateEmployee) (int64, error) {
 	user, err := uc.repo.GetUsersRepo().Get(ctx, userId)
 	if err != nil {
-		return errors.Wrap(err, "failed to get user entity")
+		return 0, errors.Wrap(err, "failed to get user entity")
 	}
 	if user == nil {
-		return exceptions.NewPermissionDeniedException()
+		return 0, exceptions.NewPermissionDeniedException()
 	}
 	if user.Role != structs.ManagerUserRole {
-		return exceptions.NewPermissionDeniedException()
+		return 0, exceptions.NewPermissionDeniedException()
 	}
 
 	shelter, err := uc.repo.GetSheltersRepo().Get(ctx, user.ShelterID.Int64)
 	if err != nil {
-		return errors.Wrap(err, "failed to get shelter entity")
+		return 0, errors.Wrap(err, "failed to get shelter entity")
 	}
 
+	var id int64
 	err = uc.repo.Transaction(ctx, func(tx pgx.Tx) error {
-		_, err = uc.repo.GetUsersRepo().CreateWithConn(ctx, tx, entity.User{
+		id, err = uc.repo.GetUsersRepo().CreateWithConn(ctx, tx, entity.User{
 			Email:     req.Email,
 			Role:      structs.EmployeeUserRole,
 			ShelterID: user.ShelterID,
@@ -45,8 +46,8 @@ func (uc *UseCase) Create(ctx context.Context, userId int64, req requests.Create
 		return nil
 	})
 	if err != nil {
-		return errors.Wrap(err, "failed to process transaction")
+		return 0, errors.Wrap(err, "failed to process transaction")
 	}
 
-	return nil
+	return id, nil
 }

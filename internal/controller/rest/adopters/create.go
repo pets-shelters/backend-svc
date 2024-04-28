@@ -24,7 +24,7 @@ func (r *routes) create(ctx *gin.Context) {
 		return
 	}
 
-	response, err := r.useCase.Create(
+	id, err := r.useCase.Create(
 		ctx.Request.Context(),
 		request.Data,
 	)
@@ -38,7 +38,9 @@ func (r *routes) create(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, helpers.JsonData[responses.AdopterCreated]{
-		Data: *response,
+	ctx.JSON(http.StatusCreated, helpers.JsonData[responses.CreatedID]{
+		Data: responses.CreatedID{
+			ID: id,
+		},
 	})
 }

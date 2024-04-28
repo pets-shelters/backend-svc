@@ -9,26 +9,26 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (uc *UseCase) Create(ctx context.Context, userId int64, req requests.CreateLocation) error {
+func (uc *UseCase) Create(ctx context.Context, userId int64, req requests.CreateLocation) (int64, error) {
 	user, err := uc.repo.GetUsersRepo().Get(ctx, userId)
 	if err != nil {
-		return errors.Wrap(err, "failed to get user entity")
+		return 0, errors.Wrap(err, "failed to get user entity")
 	}
 	if user == nil {
-		return exceptions.NewPermissionDeniedException()
+		return 0, exceptions.NewPermissionDeniedException()
 	}
 	if user.Role != structs.ManagerUserRole {
-		return exceptions.NewPermissionDeniedException()
+		return 0, exceptions.NewPermissionDeniedException()
 	}
 
-	_, err = uc.repo.GetLocationsRepo().Create(ctx, entity.Location{
+	id, err := uc.repo.GetLocationsRepo().Create(ctx, entity.Location{
 		City:      req.City,
 		Address:   req.Address,
 		ShelterID: user.ShelterID.Int64,
 	})
 	if err != nil {
-		return errors.Wrap(err, "failed to create location entity")
+		return 0, errors.Wrap(err, "failed to create location entity")
 	}
 
-	return nil
+	return id, nil
 }

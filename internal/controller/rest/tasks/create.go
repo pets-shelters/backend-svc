@@ -6,6 +6,7 @@ import (
 	"github.com/pets-shelters/backend-svc/internal/controller/helpers"
 	"github.com/pets-shelters/backend-svc/internal/exceptions"
 	"github.com/pets-shelters/backend-svc/internal/structs/requests"
+	"github.com/pets-shelters/backend-svc/internal/structs/responses"
 	"github.com/pkg/errors"
 	"net/http"
 	"time"
@@ -34,7 +35,7 @@ func (r *routes) create(ctx *gin.Context) {
 		return
 	}
 
-	err = r.useCase.Create(
+	id, err := r.useCase.Create(
 		ctx.Request.Context(),
 		request.Data,
 		userId.(int64),
@@ -53,5 +54,9 @@ func (r *routes) create(ctx *gin.Context) {
 		return
 	}
 
-	ctx.Status(http.StatusCreated)
+	ctx.JSON(http.StatusCreated, helpers.JsonData[responses.CreatedID]{
+		Data: responses.CreatedID{
+			ID: id,
+		},
+	})
 }

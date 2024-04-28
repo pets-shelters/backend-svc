@@ -329,7 +329,23 @@
         },
         "responses": {
           "201": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/CreatedID"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad request error",
@@ -446,7 +462,7 @@
                   "properties": {
                     "data": {
                       "type": "object",
-                      "$ref": "#/components/schemas/AdopterCreated"
+                      "$ref": "#/components/schemas/CreatedID"
                     }
                   }
                 }
@@ -687,7 +703,23 @@
         },
         "responses": {
           "201": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/CreatedID"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad request error",
@@ -1828,7 +1860,23 @@
         },
         "responses": {
           "201": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/CreatedID"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad request error",
@@ -2060,7 +2108,23 @@
         },
         "responses": {
           "201": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/CreatedID"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad request error",
@@ -2320,7 +2384,23 @@
         },
         "responses": {
           "201": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/CreatedID"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad request error",
@@ -2980,6 +3060,20 @@
           }
         }
       },
+      "CreatedID": {
+        "type": "object",
+        "description": "Created response",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "adopter_id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Id of created entity."
+          }
+        }
+      },
       "PermissionDeniedError": {
         "type": "object",
         "required": [
@@ -3053,20 +3147,6 @@
             "minLength": 12,
             "maxLength": 12,
             "description": "Adopter's phone number."
-          }
-        }
-      },
-      "AdopterCreated": {
-        "type": "object",
-        "description": "Adopter created response",
-        "required": [
-          "adopter_id"
-        ],
-        "properties": {
-          "adopter_id": {
-            "type": "integer",
-            "format": "int64",
-            "description": "Id of created adopter."
           }
         }
       },
