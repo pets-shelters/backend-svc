@@ -210,9 +210,9 @@
             "$ref": "#/components/parameters/accessTokenCookieParam"
           },
           {
-            "name": "Content-Type",
+            "name": "X-File-Type",
             "in": "header",
-            "description": "File content type.",
+            "description": "File type.",
             "required": true,
             "schema": {
               "type": "string",
@@ -225,6 +225,17 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/octet-stream": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": "Success",

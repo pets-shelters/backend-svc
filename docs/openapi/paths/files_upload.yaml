@@ -7,9 +7,9 @@ post:
   operationId: postFile
   parameters:
     - $ref: ../components/parameters/accessTokenCookieParam.yaml
-    - name: Content-Type
+    - name: X-File-Type
       in: header
-      description: File content type.
+      description: File type.
       required: true
       schema:
         type: string
@@ -18,6 +18,13 @@ post:
           - image/png
           - image/svg+xml
           - image/webp
+  requestBody:
+    required: true
+    content:
+      application/octet-stream:
+        schema:
+          type: string
+          format: binary
   responses:
     201:
       description: Success

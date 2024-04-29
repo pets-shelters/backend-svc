@@ -23,7 +23,7 @@ func (r *routes) upload(ctx *gin.Context) {
 		return
 	}
 
-	fileType := ctx.ContentType()
+	fileType := ctx.GetHeader("X-File-Type")
 	tempFileId, err := r.filesUseCase.Upload(
 		ctx.Request.Context(),
 		userId.(int64),
