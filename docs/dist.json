@@ -843,6 +843,15 @@
             "description": "Filter by gender."
           },
           {
+            "name": "filter[adopted]",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Filter by adopted."
+          },
+          {
             "name": "filter[sterilized]",
             "in": "query",
             "required": false,
