@@ -20,6 +20,7 @@ type TasksFilters struct {
 
 type TaskWithExecutions struct {
 	Task
+	AnimalID   int64
 	Executions []TaskExecutionForList
 }
 

@@ -117,7 +117,8 @@ func (r *TasksRepo) Delete(ctx context.Context, id int64) (int64, error) {
 func (r *TasksRepo) SelectWithExecutions(ctx context.Context, filters entity.TasksFilters) ([]entity.TaskWithExecutions, error) {
 	builder := r.Builder.
 		Select(fmt.Sprintf("%s.*", tasksTableName),
-			fmt.Sprintf("%s.user_id, %s.date, %s.done_at", tasksExecutionsTableName, tasksExecutionsTableName, tasksExecutionsTableName)).
+			fmt.Sprintf("%s.user_id, %s.date, %s.done_at", tasksExecutionsTableName, tasksExecutionsTableName, tasksExecutionsTableName),
+			fmt.Sprintf("%s.animal_id", tasksAnimalsTableName)).
 		From(tasksTableName)
 	builder = r.applyFilters(builder, filters)
 	sql, args, err := builder.ToSql()
@@ -135,8 +136,9 @@ func (r *TasksRepo) SelectWithExecutions(ctx context.Context, filters entity.Tas
 	defer rows.Close()
 	for rows.Next() {
 		var task entity.Task
+		var animalId int64
 		var execution entity.TaskExecutionForListNull
-		err = rows.Scan(&task.ID, &task.Description, &task.StartDate, &task.EndDate, &task.Time, &execution.UserID, &execution.Date, &execution.DoneAt)
+		err = rows.Scan(&task.ID, &task.Description, &task.StartDate, &task.EndDate, &task.Time, &execution.UserID, &execution.Date, &execution.DoneAt, &animalId)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to scan task with executions entity")
 		}
@@ -145,6 +147,7 @@ func (r *TasksRepo) SelectWithExecutions(ctx context.Context, filters entity.Tas
 		if !ok {
 			taskWithExecution = entity.TaskWithExecutions{
 				Task:       task,
+				AnimalID:   animalId,
 				Executions: []entity.TaskExecutionForList{},
 			}
 			keys = append(keys, task.ID)

@@ -42,6 +42,7 @@ func formTasksWithExecutionsResponse(tasksWithExecutions []entity.TaskWithExecut
 		responseTask := responses.TaskWithExecutions{
 			ID:          taskWithExecution.ID,
 			Description: taskWithExecution.Description,
+			AnimalID:    taskWithExecution.AnimalID,
 			StartDate:   taskWithExecution.StartDate,
 			EndDate:     taskWithExecution.EndDate,
 			Time:        taskWithExecution.Time,

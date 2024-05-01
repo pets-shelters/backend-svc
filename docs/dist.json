@@ -3087,7 +3087,7 @@
           "id"
         ],
         "properties": {
-          "adopter_id": {
+          "id": {
             "type": "integer",
             "format": "int64",
             "description": "Id of created entity."
@@ -3650,7 +3650,8 @@
         ],
         "properties": {
           "id": {
-            "type": "string",
+            "type": "integer",
+            "format": "int64",
             "description": "Unique ID of an employee."
           },
           "email": {
@@ -3763,6 +3764,7 @@
         "required": [
           "id",
           "description",
+          "animal_id",
           "start_date",
           "end_date",
           "executions"
@@ -3776,6 +3778,11 @@
           "description": {
             "type": "string",
             "description": "Task description."
+          },
+          "animal_id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Animal unique ID."
           },
           "start_date": {
             "type": "string",
@@ -3934,7 +3941,8 @@
         ],
         "properties": {
           "id": {
-            "type": "string",
+            "type": "integer",
+            "format": "int64",
             "description": "Unique ID of a location."
           },
           "city": {

@@ -3,7 +3,7 @@ description: Created response
 required:
   - id
 properties:
-  adopter_id:
+  id:
     type: integer
     format: int64
     description: Id of created entity.

@@ -6,7 +6,8 @@ required:
   - role
 properties:
   id:
-    type: string
+    type: integer
+    format: int64
     description: Unique ID of an employee.
   email:
     type: string

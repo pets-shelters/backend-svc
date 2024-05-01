@@ -3,6 +3,7 @@ description: Task with executions response
 required:
   - id
   - description
+  - animal_id
   - start_date
   - end_date
   - executions
@@ -14,6 +15,10 @@ properties:
   description:
     type: string
     description: Task description.
+  animal_id:
+    type: integer
+    format: int64
+    description: Animal unique ID.
   start_date:
     type: string
     format: date

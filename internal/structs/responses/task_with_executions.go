@@ -9,6 +9,7 @@ import (
 type TaskWithExecutions struct {
 	ID          int64               `json:"id"`
 	Description string              `json:"description"`
+	AnimalID    int64               `json:"animal_id"`
 	StartDate   date.Date           `json:"start_date"`
 	EndDate     date.Date           `json:"end_date"`
 	Time        customTime.NullTime `json:"time,omitempty"`
