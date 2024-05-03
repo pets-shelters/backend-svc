@@ -69,6 +69,14 @@ get:
   operationId: getTasksWithExecutions
   parameters:
     - $ref: ../components/parameters/accessTokenCookieParam.yaml
+    - name: 'filter[animal_id]'
+      in: query
+      required: false
+      schema:
+        type: array
+        items:
+          type: integer
+      description: Filter by animal_id.
     - name: 'filter[date]'
       in: query
       required: false

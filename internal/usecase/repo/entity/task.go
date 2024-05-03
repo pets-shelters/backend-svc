@@ -15,6 +15,7 @@ type Task struct {
 
 type TasksFilters struct {
 	Date      *date.Date
+	AnimalID  []int64
 	ShelterID *int64
 }
 

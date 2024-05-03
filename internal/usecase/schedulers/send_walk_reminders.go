@@ -33,8 +33,11 @@ func (js *JobsScheduler) WithSendWalkRemindersJob(smsProvider usecase.ISmsProvid
 
 func (js *JobsScheduler) sendWalksReminders() func(ctx context.Context, smsProvider usecase.ISmsProvider) error {
 	return func(ctx context.Context, smsProvider usecase.ISmsProvider) error {
+		log.Printf("walk reminder")
 		date := date.Date(time.Now().In(js.location).Add(time.Hour * 24))
 		walkings, err := js.repo.GetWalkingsRepo().SelectForReminders(ctx, date)
+		log.Printf("walk reminder err %s", err)
+		log.Printf("walk reminder walkings %s", walkings)
 		if err != nil {
 			return errors.Wrap(err, "failed to select walkings for reminders")
 		}

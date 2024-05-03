@@ -31,7 +31,7 @@ func (uc *UseCase) Create(ctx context.Context, req requests.CreateTask, userId i
 
 	var id int64
 	err = uc.repo.Transaction(ctx, func(tx pgx.Tx) error {
-		id, err := uc.repo.GetTasksRepo().CreateWithConn(ctx, tx, entity.Task{
+		id, err = uc.repo.GetTasksRepo().CreateWithConn(ctx, tx, entity.Task{
 			Description: req.Description,
 			StartDate:   req.StartDate,
 			EndDate:     req.EndDate,

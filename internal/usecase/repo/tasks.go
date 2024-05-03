@@ -187,6 +187,9 @@ func (r *TasksRepo) applyFilters(builder squirrel.SelectBuilder, filters entity.
 		builder = builder.Where(squirrel.GtOrEq{"end_date": *filters.Date})
 		builder = builder.OrderBy("time")
 	}
+	if filters.AnimalID != nil {
+		builder = builder.Where(squirrel.Eq{fmt.Sprintf("%s.id", animalsTableName): filters.AnimalID})
+	}
 
 	return builder
 }

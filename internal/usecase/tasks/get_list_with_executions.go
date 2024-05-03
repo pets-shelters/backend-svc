@@ -17,6 +17,7 @@ func (uc *UseCase) GetListWithExecutions(ctx context.Context, userId int64, req 
 	tasksWithExecutions, err := uc.repo.GetTasksRepo().SelectWithExecutions(ctx, entity.TasksFilters{
 		ShelterID: &user.ShelterID.Int64,
 		Date:      req.Date,
+		AnimalID:  req.AnimalID,
 	})
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to select tasks entities")
