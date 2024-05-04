@@ -27,10 +27,10 @@ paths:
     $ref: paths/shelters_animals.yaml
   /shelters/animals/types:
     $ref: paths/shelters_animals_types.yaml
-  /shelters/animals/walks:
-    $ref: paths/shelters_animals_walks.yaml
-  /shelters/animals/walks/{id}:
-    $ref: paths/shelters_animals_walks_{id}.yaml
+  /shelters/walks:
+    $ref: paths/shelters_walks.yaml
+  /shelters/walks/{id}:
+    $ref: paths/shelters_walks_{id}.yaml
   /shelters/animals/{id}:
     $ref: paths/shelters_animals_{id}.yaml
   /shelters/animals/{id}/tasks:

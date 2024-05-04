@@ -1023,7 +1023,7 @@
         }
       }
     },
-    "/shelters/animals/walks": {
+    "/shelters/walks": {
       "get": {
         "tags": [
           "Walks"
@@ -1135,7 +1135,7 @@
         }
       }
     },
-    "/shelters/animals/walks/{id}": {
+    "/shelters/walks/{id}": {
       "put": {
         "tags": [
           "Walks"
