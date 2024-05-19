@@ -9,6 +9,22 @@ properties:
     type: integer
     format: int64
     description: Temporary file id from /files/upload.
+  name:
+    type: string
+    description: Animal name.
+  birth_date:
+    type: string
+    format: date
+    description: Animal birth date.
+  type:
+    type: string
+    description: Animal type.
+  gender:
+    type: string
+    enum:
+      - female
+      - male
+    description: Animal gender.
   sterilized:
     type: boolean
     description: Is animal sterilized.

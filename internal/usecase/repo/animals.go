@@ -180,6 +180,18 @@ func (r *AnimalsRepo) applyUpdateParams(updateParams entity.UpdateAnimal) squirr
 	if updateParams.Photo != nil {
 		builder = builder.Set("photo", *updateParams.Photo)
 	}
+	if updateParams.Name != nil {
+		builder = builder.Set("name", *updateParams.Name)
+	}
+	if updateParams.BirthDate != nil {
+		builder = builder.Set("birth_date", *updateParams.BirthDate)
+	}
+	if updateParams.Gender != nil {
+		builder = builder.Set("gender", *updateParams.Gender)
+	}
+	if updateParams.Type != nil {
+		builder = builder.Set("type", *updateParams.Type)
+	}
 	if updateParams.Sterilized != nil {
 		builder = builder.Set("sterilized", *updateParams.Sterilized)
 	}

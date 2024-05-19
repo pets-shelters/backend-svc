@@ -48,6 +48,10 @@ type AnimalsFilters struct {
 type UpdateAnimal struct {
 	LocationID         *int64
 	Photo              *int64
+	Name               *string
+	BirthDate          *date.Date
+	Type               *string
+	Gender             *string
 	Sterilized         *bool
 	ForAdoption        *bool
 	ForWalking         *bool

@@ -41,6 +41,13 @@ func (uc *UseCase) Update(ctx context.Context, req requests.UpdateAnimal, userId
 	}
 
 	err = uc.repo.Transaction(ctx, func(tx pgx.Tx) error {
+		if req.Type != nil {
+			err = uc.repo.GetAnimalTypesEnumRepo().Create(ctx, *req.Type)
+			if err != nil {
+				return errors.Wrap(err, "failed to create animal_type value")
+			}
+		}
+
 		if req.Photo != nil {
 			tempFile, err := uc.repo.GetTemporaryFilesRepo().DeleteWithConn(ctx, tx, *req.Photo)
 			if err != nil {
@@ -57,6 +64,10 @@ func (uc *UseCase) Update(ctx context.Context, req requests.UpdateAnimal, userId
 		rowsAffected, err := uc.repo.GetAnimalsRepo().Update(ctx, tx, animalId, entity.UpdateAnimal{
 			LocationID:         req.LocationID,
 			Photo:              req.Photo,
+			Name:               req.Name,
+			Type:               req.Type,
+			Gender:             req.Gender,
+			BirthDate:          req.BirthDate,
 			Sterilized:         req.Sterilized,
 			ForAdoption:        req.ForAdoption,
 			ForWalking:         req.ForWalking,
