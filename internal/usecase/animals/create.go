@@ -48,7 +48,7 @@ func (uc *UseCase) Create(ctx context.Context, req requests.CreateAnimal, userId
 			return exceptions.NewPermissionDeniedException()
 		}
 
-		id, err = uc.repo.GetAnimalsRepo().CreateWithConn(ctx, tx, entity.Animal{
+		id, err = uc.repo.GetAnimalsRepo().CreateWithConn(ctx, tx, entity.CreateAnimal{
 			Name:               req.Name,
 			LocationID:         req.LocationID,
 			Photo:              req.Photo,

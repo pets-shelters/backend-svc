@@ -84,8 +84,8 @@ type (
 	}
 
 	IAnimalsRepo interface {
-		CreateWithConn(ctx context.Context, conn IConnection, animal entity.Animal) (int64, error)
-		Create(ctx context.Context, animal entity.Animal) (int64, error)
+		CreateWithConn(ctx context.Context, conn IConnection, animal entity.CreateAnimal) (int64, error)
+		Create(ctx context.Context, animal entity.CreateAnimal) (int64, error)
 		Select(ctx context.Context, filters entity.AnimalsFilters, pagination *entity.Pagination) ([]entity.AnimalForList, error)
 		Count(ctx context.Context, filters entity.AnimalsFilters) (int64, error)
 		Update(ctx context.Context, conn IConnection, id int64, updateParams entity.UpdateAnimal) (int64, error)

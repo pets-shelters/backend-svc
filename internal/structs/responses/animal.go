@@ -14,6 +14,7 @@ type AnimalForList struct {
 
 type Animal struct {
 	ID                 int64     `json:"id"`
+	ShelterID          int64     `json:"shelter_id"`
 	LocationID         int64     `json:"location_id"`
 	Photo              string    `json:"photo"`
 	Name               string    `json:"name"`

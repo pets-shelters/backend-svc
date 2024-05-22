@@ -23,6 +23,7 @@ func (uc *UseCase) GetById(ctx context.Context, animalId int64, userId *int64) (
 
 	response := responses.Animal{
 		ID:                animal.ID,
+		ShelterID:         animal.ShelterID,
 		LocationID:        animal.LocationID,
 		Photo:             uc.s3Endpoint + "/" + file.Bucket + file.Path,
 		Name:              animal.Name,

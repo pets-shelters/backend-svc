@@ -25,7 +25,7 @@ func NewAnimalsRepo(pg *postgres.Postgres) *AnimalsRepo {
 	return &AnimalsRepo{pg}
 }
 
-func (r *AnimalsRepo) CreateWithConn(ctx context.Context, conn usecase.IConnection, animal entity.Animal) (int64, error) {
+func (r *AnimalsRepo) CreateWithConn(ctx context.Context, conn usecase.IConnection, animal entity.CreateAnimal) (int64, error) {
 	sql, args, err := r.Builder.
 		Insert(animalsTableName).
 		Columns("location_id", "photo", "name", "birth_date", "type", "gender", "sterilized",
@@ -47,7 +47,7 @@ func (r *AnimalsRepo) CreateWithConn(ctx context.Context, conn usecase.IConnecti
 	return id, nil
 }
 
-func (r *AnimalsRepo) Create(ctx context.Context, animal entity.Animal) (int64, error) {
+func (r *AnimalsRepo) Create(ctx context.Context, animal entity.CreateAnimal) (int64, error) {
 	return r.CreateWithConn(ctx, r.Pool, animal)
 }
 
@@ -244,8 +244,9 @@ func (r *AnimalsRepo) SelectShelterID(ctx context.Context, animalId int64) (int6
 
 func (r *AnimalsRepo) Get(ctx context.Context, id int64) (*entity.Animal, error) {
 	sql, args, err := r.Builder.
-		Select("*").
+		Select(fmt.Sprintf("%s.*, %s.shelter_id", animalsTableName, locationsTableName)).
 		From(animalsTableName).
+		LeftJoin(fmt.Sprintf("%s ON %s.location_id = %s.id", locationsTableName, animalsTableName, locationsTableName)).
 		Where(squirrel.Eq{"id": id}).
 		ToSql()
 	if err != nil {
@@ -255,7 +256,7 @@ func (r *AnimalsRepo) Get(ctx context.Context, id int64) (*entity.Animal, error)
 	var animal entity.Animal
 	err = r.Pool.QueryRow(ctx, sql, args...).Scan(&animal.ID, &animal.LocationID, &animal.Photo, &animal.Name,
 		&animal.BirthDate, &animal.Type, &animal.Gender, &animal.Sterilized, &animal.ForAdoption, &animal.ForWalking,
-		&animal.AdopterID, &animal.PublicDescription, &animal.PrivateDescription)
+		&animal.AdopterID, &animal.PublicDescription, &animal.PrivateDescription, &animal.ShelterID)
 	if err != nil {
 		if errors.As(err, &pgx.ErrNoRows) {
 			return nil, nil

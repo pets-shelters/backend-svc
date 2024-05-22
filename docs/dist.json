@@ -3440,6 +3440,7 @@
         "description": "Animal response",
         "required": [
           "id",
+          "shelter_id",
           "location_id",
           "photo",
           "name",
@@ -3455,6 +3456,11 @@
             "type": "integer",
             "format": "int64",
             "description": "Animal's unique ID."
+          },
+          "shelter_id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Shelter's unique ID."
           },
           "location_id": {
             "type": "integer",
