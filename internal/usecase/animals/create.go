@@ -30,13 +30,13 @@ func (uc *UseCase) Create(ctx context.Context, req requests.CreateAnimal, userId
 		return 0, exceptions.NewPermissionDeniedException()
 	}
 
+	err = uc.repo.GetAnimalTypesEnumRepo().Create(ctx, req.Type)
+	if err != nil {
+		return 0, errors.Wrap(err, "failed to create animal_type value")
+	}
+
 	var id int64
 	err = uc.repo.Transaction(ctx, func(tx pgx.Tx) error {
-		err = uc.repo.GetAnimalTypesEnumRepo().Create(ctx, req.Type)
-		if err != nil {
-			return errors.Wrap(err, "failed to create animal_type value")
-		}
-
 		tempFile, err := uc.repo.GetTemporaryFilesRepo().DeleteWithConn(ctx, tx, req.Photo)
 		if err != nil {
 			return errors.Wrap(err, "failed to delete temporary_file entity")

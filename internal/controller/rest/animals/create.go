@@ -48,7 +48,7 @@ func (r *routes) create(ctx *gin.Context) {
 			ctx.AbortWithStatusJSON(http.StatusNotFound, helpers.FormCustomError(helpers.FileNotFound, ""))
 			return
 		}
-		r.log.Error(err.Error(), "failed to process usecase - create location")
+		r.log.Error(err.Error(), "failed to process usecase - create animal")
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, helpers.FormInternalError())
 		return
 	}

@@ -247,7 +247,7 @@ func (r *AnimalsRepo) Get(ctx context.Context, id int64) (*entity.Animal, error)
 		Select(fmt.Sprintf("%s.*, %s.shelter_id", animalsTableName, locationsTableName)).
 		From(animalsTableName).
 		LeftJoin(fmt.Sprintf("%s ON %s.location_id = %s.id", locationsTableName, animalsTableName, locationsTableName)).
-		Where(squirrel.Eq{"id": id}).
+		Where(squirrel.Eq{fmt.Sprintf("%s.id", animalsTableName): id}).
 		ToSql()
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to build get animal query")
