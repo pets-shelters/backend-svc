@@ -15,5 +15,6 @@ func (uc *UseCase) GetUserInfo(ctx context.Context, userId int64) (*responses.Us
 	return &responses.UserInfo{
 		ID:         userId,
 		Registered: user.ShelterID.Valid,
+		ShelterID:  user.ShelterID.Int64,
 	}, nil
 }

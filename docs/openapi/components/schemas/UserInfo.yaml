@@ -11,3 +11,7 @@ properties:
   registered:
     type: boolean
     description: IF user already registered.
+  shelter_id:
+    type: integer
+    format: int64
+    description: Unique shelter's ID.
