@@ -203,7 +203,7 @@ func (r *TasksRepo) SelectForAnimal(ctx context.Context, animalId int64) ([]enti
 		LeftJoin(fmt.Sprintf("%s ON %s.animal_id = %s.id", animalsTableName, tasksAnimalsTableName, animalsTableName)).
 		Where(squirrel.Eq{fmt.Sprintf("%s.id", animalsTableName): animalId}).
 		GroupBy(fmt.Sprintf("%s.id", tasksTableName)).
-		OrderBy("start_date", "time").
+		OrderBy("start_date DESC", "time DESC").
 		ToSql()
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to build select tasks for animal query")
