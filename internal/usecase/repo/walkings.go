@@ -57,7 +57,7 @@ func (r *WalkingsRepo) Select(ctx context.Context, filters entity.WalkingsFilter
 		From(walkingsTableName)
 	builder = r.applyFilters(builder, filters)
 	if pagination != nil {
-		builder = helpers.ApplyPagination(builder, "date,time", walkingsTableName, *pagination)
+		builder = helpers.ApplyPagination(builder, fmt.Sprintf("%s.date, %s.time", walkingsTableName, walkingsTableName), *pagination)
 	}
 	sql, args, err := builder.ToSql()
 	if err != nil {

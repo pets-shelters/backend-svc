@@ -114,7 +114,8 @@ type (
 		SelectShelterID(ctx context.Context, taskId int64) (int64, error)
 		Delete(ctx context.Context, id int64) (int64, error)
 		SelectWithExecutions(ctx context.Context, filters entity.TasksFilters) ([]entity.TaskWithExecutions, error)
-		SelectForAnimal(ctx context.Context, animalId int64) ([]entity.TaskForAnimal, error)
+		SelectForAnimal(ctx context.Context, animalId int64, pagination *entity.Pagination) ([]entity.TaskForAnimal, error)
+		Count(ctx context.Context, animalId int64) (int64, error)
 		SelectForEmails(ctx context.Context, date date.Date) ([]entity.EmployeeTasks, error)
 	}
 
@@ -190,7 +191,7 @@ type (
 		SetExecution(ctx context.Context, req requests.SetTaskDone, taskId int64, userId int64) error
 		Delete(ctx context.Context, userId int64, taskId int64) error
 		GetListWithExecutions(ctx context.Context, userId int64, req requests.TasksWithExecutionsFilters) ([]responses.TaskWithExecutions, error)
-		GetListForAnimal(ctx context.Context, userId int64, animalId int64) ([]responses.TaskForAnimal, error)
+		GetListForAnimal(ctx context.Context, userId int64, animalId int64, reqPagination *requests.Pagination) ([]responses.TaskForAnimal, *responses.PaginationMetadata, error)
 	}
 
 	IWalkings interface {

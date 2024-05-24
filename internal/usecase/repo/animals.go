@@ -58,7 +58,7 @@ func (r *AnimalsRepo) Select(ctx context.Context, filters entity.AnimalsFilters,
 		From(animalsTableName)
 	builder = r.applyFilters(builder, filters)
 	if pagination != nil {
-		builder = helpers.ApplyPagination(builder, "id", animalsTableName, *pagination)
+		builder = helpers.ApplyPagination(builder, fmt.Sprintf("%s.id", animalsTableName), *pagination)
 	}
 	sql, args, err := builder.ToSql()
 	if err != nil {

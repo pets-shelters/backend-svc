@@ -1579,6 +1579,12 @@
             "$ref": "#/components/parameters/accessTokenCookieParam"
           },
           {
+            "$ref": "#/components/parameters/paginationPageParam"
+          },
+          {
+            "$ref": "#/components/parameters/paginationLimitParam"
+          },
+          {
             "name": "id",
             "in": "path",
             "description": "Id of an animal to get tasks for.",

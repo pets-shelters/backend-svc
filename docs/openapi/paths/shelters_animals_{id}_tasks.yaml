@@ -7,6 +7,8 @@ get:
   operationId: getTasksForAnimal
   parameters:
     - $ref: ../components/parameters/accessTokenCookieParam.yaml
+    - $ref: ../components/parameters/paginationPageParam.yaml
+    - $ref: ../components/parameters/paginationLimitParam.yaml
     - name: id
       in: path
       description: Id of an animal to get tasks for.

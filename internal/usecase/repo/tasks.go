@@ -194,17 +194,19 @@ func (r *TasksRepo) applyFilters(builder squirrel.SelectBuilder, filters entity.
 	return builder
 }
 
-func (r *TasksRepo) SelectForAnimal(ctx context.Context, animalId int64) ([]entity.TaskForAnimal, error) {
-	sql, args, err := r.Builder.
+func (r *TasksRepo) SelectForAnimal(ctx context.Context, animalId int64, pagination *entity.Pagination) ([]entity.TaskForAnimal, error) {
+	builder := r.Builder.
 		Select(fmt.Sprintf("%s.*", tasksTableName), fmt.Sprintf("COUNT(%s.id)", tasksExecutionsTableName)).
 		From(tasksTableName).
 		LeftJoin(fmt.Sprintf("%s ON %s.task_id = %s.id", tasksExecutionsTableName, tasksExecutionsTableName, tasksTableName)).
 		LeftJoin(fmt.Sprintf("%s ON %s.task_id = %s.id", tasksAnimalsTableName, tasksAnimalsTableName, tasksTableName)).
 		LeftJoin(fmt.Sprintf("%s ON %s.animal_id = %s.id", animalsTableName, tasksAnimalsTableName, animalsTableName)).
 		Where(squirrel.Eq{fmt.Sprintf("%s.id", animalsTableName): animalId}).
-		GroupBy(fmt.Sprintf("%s.id", tasksTableName)).
-		OrderBy("start_date DESC", "time DESC").
-		ToSql()
+		GroupBy(fmt.Sprintf("%s.id", tasksTableName))
+	if pagination != nil {
+		builder = helpers.ApplyPagination(builder, fmt.Sprintf("%s.start_date DESC, %s.time DESC", tasksTableName, tasksTableName), *pagination)
+	}
+	sql, args, err := builder.ToSql()
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to build select tasks for animal query")
 	}
@@ -228,6 +230,30 @@ func (r *TasksRepo) SelectForAnimal(ctx context.Context, animalId int64) ([]enti
 	}
 
 	return tasksForAnimal, nil
+}
+
+// Count Reduce join level by one (use animal_id)
+func (r *TasksRepo) Count(ctx context.Context, animalId int64) (int64, error) {
+	sql, args, err := r.Builder.
+		Select(fmt.Sprintf("COUNT(%s.*)", tasksTableName)).
+		From(tasksTableName).
+		LeftJoin(fmt.Sprintf("%s ON %s.task_id = %s.id", tasksExecutionsTableName, tasksExecutionsTableName, tasksTableName)).
+		LeftJoin(fmt.Sprintf("%s ON %s.task_id = %s.id", tasksAnimalsTableName, tasksAnimalsTableName, tasksTableName)).
+		LeftJoin(fmt.Sprintf("%s ON %s.animal_id = %s.id", animalsTableName, tasksAnimalsTableName, animalsTableName)).
+		Where(squirrel.Eq{fmt.Sprintf("%s.id", animalsTableName): animalId}).
+		GroupBy(fmt.Sprintf("%s.id", tasksTableName)).
+		ToSql()
+	if err != nil {
+		return 0, errors.Wrap(err, "failed to build count tasks for animal query")
+	}
+
+	var totalEntities int64
+	err = r.Pool.QueryRow(ctx, sql, args...).Scan(&totalEntities)
+	if err != nil {
+		return 0, errors.Wrap(err, "failed to QueryRow count tasks for animal query")
+	}
+
+	return totalEntities, nil
 }
 
 func (r *TasksRepo) SelectForEmails(ctx context.Context, date date.Date) ([]entity.EmployeeTasks, error) {
