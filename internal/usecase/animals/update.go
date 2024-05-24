@@ -40,14 +40,14 @@ func (uc *UseCase) Update(ctx context.Context, req requests.UpdateAnimal, userId
 		return exceptions.NewPermissionDeniedException()
 	}
 
-	err = uc.repo.Transaction(ctx, func(tx pgx.Tx) error {
-		if req.Type != nil {
-			err = uc.repo.GetAnimalTypesEnumRepo().Create(ctx, *req.Type)
-			if err != nil {
-				return errors.Wrap(err, "failed to create animal_type value")
-			}
+	if req.Type != nil {
+		err = uc.repo.GetAnimalTypesEnumRepo().Create(ctx, *req.Type)
+		if err != nil {
+			return errors.Wrap(err, "failed to create animal_type value")
 		}
+	}
 
+	err = uc.repo.Transaction(ctx, func(tx pgx.Tx) error {
 		if req.Photo != nil {
 			tempFile, err := uc.repo.GetTemporaryFilesRepo().DeleteWithConn(ctx, tx, *req.Photo)
 			if err != nil {
