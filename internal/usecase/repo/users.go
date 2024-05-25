@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	sql2 "database/sql"
+	"fmt"
 	"github.com/Masterminds/squirrel"
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgx/v4"
@@ -109,6 +110,29 @@ func (r *UsersRepo) Get(ctx context.Context, id int64) (*entity.User, error) {
 			return nil, nil
 		}
 		return nil, errors.Wrap(err, "failed to Query get user query")
+	}
+
+	return &user, nil
+}
+
+func (r *UsersRepo) GetWithShelterName(ctx context.Context, id int64) (*entity.UserWithShelterName, error) {
+	sql, args, err := r.Builder.
+		Select(fmt.Sprintf("%s.*", usersTableName), fmt.Sprintf("%s.name", sheltersTableName)).
+		From(usersTableName).
+		LeftJoin(fmt.Sprintf("%s ON (%s.shelter_id IS NULL) OR %s.shelter_id = %s.id", sheltersTableName, usersTableName, usersTableName, sheltersTableName)).
+		Where(squirrel.Eq{fmt.Sprintf("%s.id", usersTableName): id}).
+		ToSql()
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to build get user with shelter_name query")
+	}
+
+	var user entity.UserWithShelterName
+	err = r.Pool.QueryRow(ctx, sql, args...).Scan(&user.ID, &user.Email, &user.ShelterID, &user.Role, &user.ShelterName)
+	if err != nil {
+		if errors.As(err, &pgx.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, errors.Wrap(err, "failed to Query get user with shelter_name query")
 	}
 
 	return &user, nil

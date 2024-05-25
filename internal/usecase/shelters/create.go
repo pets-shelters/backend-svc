@@ -51,5 +51,10 @@ func (uc *UseCase) Create(ctx context.Context, req requests.CreateShelter, userI
 		return 0, errors.Wrap(err, "failed to process transaction")
 	}
 
+	err = uc.cache.DeleteUserInfo(userId)
+	if err != nil {
+		return 0, errors.Wrap(err, "failed to delete user_info from cache")
+	}
+
 	return id, nil
 }

@@ -15,3 +15,6 @@ properties:
     type: integer
     format: int64
     description: Unique shelter's ID.
+  shelter_name:
+    type: string
+    description: Shelter's name.

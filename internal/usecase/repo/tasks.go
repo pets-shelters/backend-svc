@@ -232,7 +232,7 @@ func (r *TasksRepo) SelectForAnimal(ctx context.Context, animalId int64, paginat
 	return tasksForAnimal, nil
 }
 
-// Count Reduce join level by one (use animal_id)
+// Count TODO Reduce join level by one (use animal_id)
 func (r *TasksRepo) Count(ctx context.Context, animalId int64) (int64, error) {
 	sql, args, err := r.Builder.
 		Select(fmt.Sprintf("COUNT(%s.*)", tasksTableName)).

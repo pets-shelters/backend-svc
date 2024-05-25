@@ -15,7 +15,7 @@ import (
 
 const googleUserinfoUrl = "https://www.googleapis.com/oauth2/v2/userinfo"
 
-type userInfo struct {
+type callbackInfo struct {
 	Email string `json:"email"`
 }
 
@@ -56,21 +56,21 @@ func (uc *UseCase) Callback(ctx context.Context, cookie string, googleState stri
 }
 
 func (uc *UseCase) validateUsersGoogleState(cookie string, googleState string) error {
-	state, err := uc.cache.Get(cookie).Bytes()
+	state, err := uc.cache.GetGoogleState(cookie)
 	if err != nil {
 		if errors.Is(err, memcache.ErrCacheMiss) {
 			return exceptions.NewInvalidStateException()
 		}
 		return errors.Wrap(err, "failed to get googleState from cache")
 	}
-	if string(state) != googleState {
+	if state != googleState {
 		return exceptions.NewInvalidStateException()
 	}
 
 	return nil
 }
 
-func (uc *UseCase) getGoogleUserInfo(googleCode string) (*userInfo, error) {
+func (uc *UseCase) getGoogleUserInfo(googleCode string) (*callbackInfo, error) {
 	token, err := uc.oauth.Exchange(context.Background(), googleCode)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to exchange googleCode - token")
@@ -85,7 +85,7 @@ func (uc *UseCase) getGoogleUserInfo(googleCode string) (*userInfo, error) {
 		return nil, errors.Wrap(err, "failed to read google userinfo body")
 	}
 
-	var userinfo userInfo
+	var userinfo callbackInfo
 	err = json.Unmarshal(userinfoBytes, &userinfo)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to unmarshal google userinfo response body")

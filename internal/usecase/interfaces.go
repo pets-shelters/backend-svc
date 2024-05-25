@@ -53,6 +53,7 @@ type (
 		Select(ctx context.Context, filters entity.UsersFilters) ([]entity.User, error)
 		UpdateShelterIDWithConn(ctx context.Context, conn IConnection, userId int64, shelterId int64) (int64, error)
 		Get(ctx context.Context, id int64) (*entity.User, error)
+		GetWithShelterName(ctx context.Context, id int64) (*entity.UserWithShelterName, error)
 		DeleteWithConn(ctx context.Context, conn IConnection, id int64) (*entity.User, error)
 	}
 
@@ -218,5 +219,13 @@ type (
 
 	IFiles interface {
 		Upload(ctx context.Context, userId int64, fileContent []byte, fileType string) (int64, error)
+	}
+
+	IRedis interface {
+		GetGoogleState(cookieSession string) (string, error)
+		SetGoogleState(cookieSession string, state string) error
+		GetUserInfo(userId int64) (*responses.UserInfo, error)
+		SetUserInfo(userId int64, info responses.UserInfo) error
+		DeleteUserInfo(userId int64) error
 	}
 )

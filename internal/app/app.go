@@ -51,7 +51,7 @@ func Run(cfg *configs.Config) {
 	stateLifetimeSecs := cfg.OAuth.StateLifetime.Seconds()
 	dbRepo := repo.NewDBRepo(pg)
 	oauth := oauth.NewOAuth(cfg.OAuth, cfg.Infrastructure.ServiceUrl)
-	cache := redis.NewRedis(cfg.Redis)
+	cache := redis.NewRedis(cfg.Redis, cfg.OAuth.StateLifetime, cfg.Jwt.RefreshLifetime)
 	jwt := jwt.NewUseCase(cfg.Jwt)
 	s3Provider, err := s3.NewProvider(cfg.S3)
 	if err != nil {
@@ -59,9 +59,9 @@ func Run(cfg *configs.Config) {
 	}
 	emailsProvider := mailjet.NewMailjet(cfg.Mailjet)
 	useCases := usecase.UseCases{
-		Authorization: authorization.NewUseCase(dbRepo, *oauth, *cache, jwt),
+		Authorization: authorization.NewUseCase(dbRepo, *oauth, cache, jwt),
 		Jwt:           jwt,
-		Shelters:      shelters.NewUseCase(dbRepo, cfg.S3.ReadEndpoint),
+		Shelters:      shelters.NewUseCase(dbRepo, cache, cfg.S3.ReadEndpoint),
 		Files:         files.NewUseCase(dbRepo, s3Provider, cfg.S3.PublicReadBucket),
 		Employees:     employees.NewUseCase(dbRepo, emailsProvider),
 		Locations:     locations.NewUseCase(dbRepo),

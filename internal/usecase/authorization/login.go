@@ -10,7 +10,7 @@ import (
 func (uc *UseCase) Login() (*structs.LoginResult, error) {
 	state := generateState()
 	cookieSession := generateCookieSession()
-	err := uc.cache.Set(cookieSession, state, uc.oauth.GetStateLifetime()).Err()
+	err := uc.cache.SetGoogleState(cookieSession, state)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to set session to cache")
 	}

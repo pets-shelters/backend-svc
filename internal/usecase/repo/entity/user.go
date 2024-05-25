@@ -12,6 +12,11 @@ type User struct {
 	Role      structs.UserRole `db:"role" structs:"role"`
 }
 
+type UserWithShelterName struct {
+	User
+	ShelterName sql.NullString `db:"name" structs:"name"`
+}
+
 type UsersFilters struct {
 	Email     *string
 	ShelterID *int64
