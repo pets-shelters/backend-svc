@@ -8,6 +8,7 @@ import (
 	"github.com/pets-shelters/backend-svc/internal/structs/requests"
 	"github.com/pets-shelters/backend-svc/internal/structs/responses"
 	"github.com/pkg/errors"
+	"log"
 	"net/http"
 )
 
@@ -28,6 +29,7 @@ func (r *routes) create(ctx *gin.Context) {
 		ctx.Request.Context(),
 		request.Data,
 	)
+	log.Printf("rest %+v, %+v", id, err)
 	if err != nil {
 		if errors.As(err, &exceptions.AdopterExistsException{}) {
 			ctx.AbortWithStatusJSON(http.StatusConflict, helpers.FormCustomError(helpers.AdopterAlreadyExists, ""))

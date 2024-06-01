@@ -6,6 +6,7 @@ import (
 	"github.com/pets-shelters/backend-svc/internal/structs/requests"
 	"github.com/pets-shelters/backend-svc/internal/usecase/repo/entity"
 	"github.com/pkg/errors"
+	"log"
 )
 
 func (uc *UseCase) Create(ctx context.Context, req requests.CreateAdopter) (int64, error) {
@@ -26,5 +27,6 @@ func (uc *UseCase) Create(ctx context.Context, req requests.CreateAdopter) (int6
 		return 0, errors.Wrap(err, "failed to process transaction")
 	}
 
+	log.Printf("usecase %+v", id)
 	return id, nil
 }

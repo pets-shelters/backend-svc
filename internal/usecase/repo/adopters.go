@@ -10,6 +10,7 @@ import (
 	"github.com/pets-shelters/backend-svc/internal/usecase/repo/entity"
 	"github.com/pets-shelters/backend-svc/pkg/postgres"
 	"github.com/pkg/errors"
+	"log"
 )
 
 const (
@@ -38,6 +39,7 @@ func (r *AdoptersRepo) CreateWithConn(ctx context.Context, conn usecase.IConnect
 
 	var id int64
 	err = conn.QueryRow(ctx, sql, args...).Scan(&id)
+	log.Printf("repo %+v, %+v", id, err)
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) && pgErr.ConstraintName == phoneNumberUniqueConstraint {
