@@ -3036,6 +3036,8 @@
         "description": "User info response",
         "required": [
           "id",
+          "email",
+          "role",
           "registered"
         ],
         "properties": {
@@ -3043,6 +3045,18 @@
             "type": "integer",
             "format": "int64",
             "description": "Unique user's ID."
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email."
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "manager",
+              "employee"
+            ],
+            "description": "User's role in the shelter."
           },
           "registered": {
             "type": "boolean",
