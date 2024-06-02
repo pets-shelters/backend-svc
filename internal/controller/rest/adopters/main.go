@@ -19,7 +19,16 @@ func NewRoutes(handler *gin.RouterGroup, adoptersUseCase usecase.IAdopters,
 		log,
 	}
 
-	handler.POST("", middlewares.ValidateAccessJwt(jwtUseCase), r.create)
 	handler.GET("/:id", middlewares.ValidateAccessJwt(jwtUseCase), r.getById)
 	handler.GET("", middlewares.ValidateAccessJwt(jwtUseCase), r.getList)
+}
+
+func NewRoutesWithAnimalId(handler *gin.RouterGroup, adoptersUseCase usecase.IAdopters,
+	jwtUseCase usecase.IJwt, log logger.Interface) {
+	r := &routes{
+		adoptersUseCase,
+		log,
+	}
+
+	handler.POST("", middlewares.ValidateAccessJwt(jwtUseCase), r.create)
 }

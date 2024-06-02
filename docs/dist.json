@@ -433,95 +433,6 @@
       }
     },
     "/shelters/adopters": {
-      "post": {
-        "tags": [
-          "Adopters"
-        ],
-        "summary": "Create adopter",
-        "description": "Create adopter. Only for shelter's employees.",
-        "operationId": "postAdopter",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/accessTokenCookieParam"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "data": {
-                    "type": "object",
-                    "$ref": "#/components/schemas/CreateAdopter"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "data"
-                  ],
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "$ref": "#/components/schemas/CreatedID"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request error",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Conflict error",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdopterAlreadyExistsError"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal error",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InternalError"
-                }
-              }
-            }
-          }
-        }
-      },
       "get": {
         "tags": [
           "Adopters"
@@ -1653,6 +1564,97 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "#/components/schemas/EntityNotFoundError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shelters/animals/{id}/adopters": {
+      "post": {
+        "tags": [
+          "Adopters"
+        ],
+        "summary": "Create adopter",
+        "description": "Create adopter. Only for shelter's employees.",
+        "operationId": "postAdopter",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessTokenCookieParam"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/CreateAdopter"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/CreatedID"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict error",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdopterAlreadyExistsError"
                 }
               }
             }
@@ -3191,41 +3193,6 @@
           }
         }
       },
-      "CreateAdopter": {
-        "type": "object",
-        "description": "Create adopter request",
-        "required": [
-          "name",
-          "phone_number"
-        ],
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Adopter's name."
-          },
-          "phone_number": {
-            "type": "string",
-            "minLength": 12,
-            "maxLength": 12,
-            "description": "Adopter's phone number."
-          }
-        }
-      },
-      "AdopterAlreadyExistsError": {
-        "type": "object",
-        "required": [
-          "code"
-        ],
-        "properties": {
-          "code": {
-            "type": "string",
-            "enum": [
-              "adopter_already_exists"
-            ],
-            "description": "Custom error code."
-          }
-        }
-      },
       "EntityNotFoundError": {
         "type": "object",
         "required": [
@@ -3648,6 +3615,41 @@
             "type": "integer",
             "format": "int64",
             "description": "Number of executions made for the task."
+          }
+        }
+      },
+      "CreateAdopter": {
+        "type": "object",
+        "description": "Create adopter request",
+        "required": [
+          "name",
+          "phone_number"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Adopter's name."
+          },
+          "phone_number": {
+            "type": "string",
+            "minLength": 12,
+            "maxLength": 12,
+            "description": "Adopter's phone number."
+          }
+        }
+      },
+      "AdopterAlreadyExistsError": {
+        "type": "object",
+        "required": [
+          "code"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "adopter_already_exists"
+            ],
+            "description": "Custom error code."
           }
         }
       },

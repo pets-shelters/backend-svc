@@ -1,20 +1,23 @@
-get:
+post:
   tags:
     - Adopters
-  summary: Get adopters' list
+  summary: Create adopter
   description: >-
-    Get adopters' list. Available for shelters' employees.
-  operationId: getAdopters
+    Create adopter. Only for shelter's employees.
+  operationId: postAdopter
   parameters:
     - $ref: ../components/parameters/accessTokenCookieParam.yaml
-    - name: 'filter[phone_number]'
-      in: query
-      required: false
-      schema:
-        type: string
-      description: Filter by adopter's phone_number (LIKE).
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            data:
+              type: object
+              $ref: ../components/schemas/CreateAdopter.yaml
   responses:
-    200:
+    201:
       description: Success
       content:
         application/vnd.api+json:
@@ -24,10 +27,8 @@ get:
               - data
             properties:
               data:
-                type: array
-                items:
-                  type: object
-                  $ref: ../components/schemas/Adopter.yaml
+                type: object
+                $ref: ../components/schemas/CreatedID.yaml
     400:
       description: Bad request error
       content:
@@ -40,6 +41,12 @@ get:
         application/vnd.api+json:
           schema:
             $ref: ../components/errors/UnauthorizedError.yaml
+    409:
+      description: Conflict error
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ../components/errors/AdopterAlreadyExistsError.yaml
     500:
       description: Internal error
       content:

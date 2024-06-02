@@ -61,7 +61,7 @@ func (uc *UseCase) Update(ctx context.Context, req requests.UpdateAnimal, userId
 			}
 		}
 
-		rowsAffected, err := uc.repo.GetAnimalsRepo().Update(ctx, tx, animalId, entity.UpdateAnimal{
+		rowsAffected, err := uc.repo.GetAnimalsRepo().UpdateWithConn(ctx, tx, animalId, entity.UpdateAnimal{
 			LocationID:         req.LocationID,
 			Photo:              req.Photo,
 			Name:               req.Name,

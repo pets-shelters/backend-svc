@@ -89,7 +89,8 @@ type (
 		Create(ctx context.Context, animal entity.CreateAnimal) (int64, error)
 		Select(ctx context.Context, filters entity.AnimalsFilters, pagination *entity.Pagination) ([]entity.AnimalForList, error)
 		Count(ctx context.Context, filters entity.AnimalsFilters) (int64, error)
-		Update(ctx context.Context, conn IConnection, id int64, updateParams entity.UpdateAnimal) (int64, error)
+		UpdateWithConn(ctx context.Context, conn IConnection, id int64, updateParams entity.UpdateAnimal) (int64, error)
+		Update(ctx context.Context, id int64, updateParams entity.UpdateAnimal) (int64, error)
 		SelectShelterIDWithConn(ctx context.Context, conn IConnection, animalId int64) (int64, error)
 		SelectShelterID(ctx context.Context, animalId int64) (int64, error)
 		Get(ctx context.Context, id int64) (*entity.Animal, error)
@@ -104,6 +105,7 @@ type (
 	IAdoptersRepo interface {
 		CreateWithConn(ctx context.Context, conn IConnection, adopter entity.Adopter) (int64, error)
 		Create(ctx context.Context, adopter entity.Adopter) (int64, error)
+		GetByPhoneNumber(ctx context.Context, phoneNumber string) (*entity.Adopter, error)
 		Get(ctx context.Context, id int64) (*entity.Adopter, error)
 		Select(ctx context.Context, filterPhoneNumber string) ([]entity.Adopter, error)
 	}
@@ -182,7 +184,7 @@ type (
 	}
 
 	IAdopters interface {
-		Create(ctx context.Context, req requests.CreateAdopter) (int64, error)
+		Create(ctx context.Context, req requests.CreateAdopter, animalId int64) (int64, error)
 		GetById(ctx context.Context, adopterId int64) (*responses.Adopter, error)
 		GetList(ctx context.Context, filterPhoneNumber string) ([]responses.Adopter, error)
 	}

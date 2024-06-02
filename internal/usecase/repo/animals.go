@@ -154,7 +154,7 @@ func (r *AnimalsRepo) Count(ctx context.Context, filters entity.AnimalsFilters) 
 	return totalEntities, nil
 }
 
-func (r *AnimalsRepo) Update(ctx context.Context, conn usecase.IConnection, id int64, updateParams entity.UpdateAnimal) (int64, error) {
+func (r *AnimalsRepo) UpdateWithConn(ctx context.Context, conn usecase.IConnection, id int64, updateParams entity.UpdateAnimal) (int64, error) {
 	sql, args, err := r.applyUpdateParams(updateParams).
 		Where(squirrel.Eq{"id": id}).
 		Suffix("returning location_id, photo").
@@ -169,6 +169,10 @@ func (r *AnimalsRepo) Update(ctx context.Context, conn usecase.IConnection, id i
 	}
 
 	return commandTag.RowsAffected(), nil
+}
+
+func (r *AnimalsRepo) Update(ctx context.Context, id int64, updateParams entity.UpdateAnimal) (int64, error) {
+	return r.UpdateWithConn(ctx, r.Pool, id, updateParams)
 }
 
 func (r *AnimalsRepo) applyUpdateParams(updateParams entity.UpdateAnimal) squirrel.UpdateBuilder {

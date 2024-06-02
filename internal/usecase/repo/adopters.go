@@ -39,7 +39,6 @@ func (r *AdoptersRepo) CreateWithConn(ctx context.Context, conn usecase.IConnect
 
 	var id int64
 	err = conn.QueryRow(ctx, sql, args...).Scan(&id)
-	log.Printf("repo %+v, %+v", id, err)
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) && pgErr.ConstraintName == phoneNumberUniqueConstraint {
@@ -54,6 +53,29 @@ func (r *AdoptersRepo) CreateWithConn(ctx context.Context, conn usecase.IConnect
 
 func (r *AdoptersRepo) Create(ctx context.Context, adopter entity.Adopter) (int64, error) {
 	return r.CreateWithConn(ctx, r.Pool, adopter)
+}
+
+func (r *AdoptersRepo) GetByPhoneNumber(ctx context.Context, phoneNumber string) (*entity.Adopter, error) {
+	sql, args, err := r.Builder.
+		Select("*").
+		From(adoptersTableName).
+		Where(squirrel.Eq{"phone_number": phoneNumber}).
+		ToSql()
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to build get adopter query")
+	}
+
+	var adopter entity.Adopter
+	err = r.Pool.QueryRow(ctx, sql, args...).Scan(&adopter.ID, &adopter.Name, &adopter.PhoneNumber)
+	log.Printf("error %+v", err)
+	if err != nil {
+		if errors.As(err, &pgx.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, errors.Wrap(err, "failed to Query get adopter query")
+	}
+
+	return &adopter, nil
 }
 
 func (r *AdoptersRepo) Get(ctx context.Context, id int64) (*entity.Adopter, error) {

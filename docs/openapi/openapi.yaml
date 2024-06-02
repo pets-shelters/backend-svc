@@ -35,6 +35,8 @@ paths:
     $ref: paths/shelters_animals_{id}.yaml
   /shelters/animals/{id}/tasks:
     $ref: paths/shelters_animals_{id}_tasks.yaml
+  /shelters/animals/{id}/adopters:
+    $ref: paths/shelters_animals_{id}_adopters.yaml
   /shelters/animals/{id}/walks:
     $ref: paths/shelters_animals_{id}_walks.yaml
   /shelters/animals/{id}/walks/request:

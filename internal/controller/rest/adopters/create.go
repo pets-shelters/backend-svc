@@ -8,8 +8,8 @@ import (
 	"github.com/pets-shelters/backend-svc/internal/structs/requests"
 	"github.com/pets-shelters/backend-svc/internal/structs/responses"
 	"github.com/pkg/errors"
-	"log"
 	"net/http"
+	"strconv"
 )
 
 func (r *routes) create(ctx *gin.Context) {
@@ -25,14 +25,21 @@ func (r *routes) create(ctx *gin.Context) {
 		return
 	}
 
+	animalIdString := ctx.Param("id")
+	animalId, err := strconv.Atoi(animalIdString)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, helpers.FormBadRequestError(err.Error()))
+		return
+	}
+
 	id, err := r.useCase.Create(
 		ctx.Request.Context(),
 		request.Data,
+		int64(animalId),
 	)
-	log.Printf("rest %+v, %+v", id, err)
 	if err != nil {
-		if errors.As(err, &exceptions.AdopterExistsException{}) {
-			ctx.AbortWithStatusJSON(http.StatusConflict, helpers.FormCustomError(helpers.AdopterAlreadyExists, ""))
+		if errors.As(err, &exceptions.NotFoundException{}) {
+			ctx.AbortWithStatusJSON(http.StatusNotFound, helpers.FormCustomError(helpers.EntityNotFound, ""))
 			return
 		}
 		r.log.Error(err.Error(), "failed to process usecase - create adopter")
