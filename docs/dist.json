@@ -1592,6 +1592,15 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/accessTokenCookieParam"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of an animal.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "requestBody": {

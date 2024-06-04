@@ -7,6 +7,12 @@ post:
   operationId: postAdopter
   parameters:
     - $ref: ../components/parameters/accessTokenCookieParam.yaml
+    - name: id
+      in: path
+      description: Id of an animal.
+      required: true
+      schema:
+        type: integer
   requestBody:
     content:
       application/json:
